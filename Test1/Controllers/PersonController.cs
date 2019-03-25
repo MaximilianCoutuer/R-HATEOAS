@@ -102,5 +102,7 @@ namespace ExampleAPI.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+        // PATCH api/person/5
     }
 }
