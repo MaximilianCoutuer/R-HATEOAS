@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RD-HATEOAS\RD-HATEOAS.csproj" />
+    <ProjectReference Include="..\RD-HATEOAS\RDHATEOAS.csproj" />
   </ItemGroup>
 
 </Project>

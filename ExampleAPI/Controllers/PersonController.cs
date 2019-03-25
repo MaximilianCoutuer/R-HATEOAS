@@ -79,11 +79,21 @@ namespace ExampleAPI.Controllers
             // (may also return 400 Bad Request)
             if (id != person.Id) return NotFound();
 
-            // returns 204 No Content
-            // (may also return 200 OK)
-            _context.Entry(person).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return NoContent();
+            if (_context.Find<Person>(id) != null)
+            {
+                // returns 204 No Content
+                // (may also return 200 OK)
+                _context.Entry(person).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return NoContent();
+                // TODO: return 409 Conflict or 415 Unsupported Media Type if representation inconsistent
+            } else
+            {
+                // returns 201 Created
+                _context.Add<Person>(person);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetPerson), new { Id = person.Id }, person);
+            }
         }
 
         // DELETE api/person/5
