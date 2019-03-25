@@ -83,7 +83,9 @@ namespace ExampleAPI.Controllers
             {
                 // returns 204 No Content
                 // (may also return 200 OK)
-                _context.Entry(person).State = EntityState.Modified;
+                //_context.Entry(person).State = EntityState.Modified;
+                //await _context.SaveChangesAsync();
+                _context.Update<Person>(person);
                 await _context.SaveChangesAsync();
                 return NoContent();
                 // TODO: return 409 Conflict or 415 Unsupported Media Type if representation inconsistent

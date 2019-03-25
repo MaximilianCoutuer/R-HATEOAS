@@ -32,6 +32,7 @@ namespace RDHATEOAS.Middleware
             context.Response.Body = originResponseBody;
             // TODO: set content length
             await context.Response.WriteAsync("lol");
+            //context.Response.StatusCode = 418;
 
             // of: context.Response.OnStarting();
         }

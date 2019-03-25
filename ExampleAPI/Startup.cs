@@ -46,7 +46,7 @@ namespace ExampleAPI
             }
 
             app.UseHttpsRedirection();
-            app.UseMiddleware<HATEOASSupportMiddleware>();
+            //app.UseMiddleware<HATEOASSupportMiddleware>();
             app.UseMvc();
         }
     }
