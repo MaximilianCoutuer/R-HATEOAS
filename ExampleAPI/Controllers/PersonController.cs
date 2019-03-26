@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using ExampleAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RDHATEOAS.Services;
 
 namespace ExampleAPI.Controllers
@@ -49,10 +51,29 @@ namespace ExampleAPI.Controllers
             {
                 var testobject = new { Name = "Donald", Link = "Link" };
                 var testobject2 = new ExpandoObject();
+
+
+
+                var testobject3 = JsonConvert.SerializeObject(persons);
+
+
+                dynamic testobject4 = persons.ElementAt(0);
+
+
+                JObject testobject5 = JObject.FromObject(persons.ElementAt(0));
+                testobject5.Add("rofl", "lmao");
+                //string json = testobject5.ToString();
+
+                //dynamic original = JsonConvert.DeserializeObject(json, typeof(object));
+                //original.data[0].furit_items[0].quality = good;
+                //var modifiedJson = JsonConvert.SerializeObject(original, Formatting.Indented);
+
+
+
                 //testobject = persons.ElementAt(0);
                 //string output = _expand.ExpandOutput("test");
                 //return Ok(new { Value = output } );
-                return Ok(testobject);
+                return Ok(testobject5);
             }
 
     //        "_link": [
