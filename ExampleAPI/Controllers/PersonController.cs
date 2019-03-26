@@ -4,12 +4,15 @@ using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using ExampleAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RDHATEOAS.Controllers;
 using RDHATEOAS.Services;
 
 namespace ExampleAPI.Controllers
@@ -62,6 +65,9 @@ namespace ExampleAPI.Controllers
 
                 JObject testobject5 = JObject.FromObject(persons.ElementAt(0));
                 testobject5.Add("rofl", "lmao");
+
+                // 
+
                 //string json = testobject5.ToString();
 
                 //dynamic original = JsonConvert.DeserializeObject(json, typeof(object));
@@ -87,15 +93,18 @@ namespace ExampleAPI.Controllers
 
         // GET api/person/5
         [HttpGet("{id}")]
+        [HATEOASLinks("kek")]
         public async Task<ActionResult<Person>> GetPerson(int Id)
         {
+            var test = Attribute.GetCustomAttributes(typeof(RequireHttpsAttribute), true);
+
             Person person = await _context.FindAsync<Person>(Id);
             if (person == null)
             {
                 return NotFound();
             } else
             {
-                return Ok(person);
+                return Ok(test);
             }
         }
 
