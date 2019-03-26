@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ExampleAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using RDHATEOAS.Services;
 
 namespace ExampleAPI.Controllers
 {
@@ -15,10 +16,12 @@ namespace ExampleAPI.Controllers
     public class PersonController : ControllerBase
     {
         private readonly PersonContext _context;
+        private readonly IExpandOutput _expand;
 
-        public PersonController(PersonContext context)
+        public PersonController(IExpandOutput expandOutput, PersonContext context)
         {
             _context = context;
+            _expand = expandOutput;
             // seed database with one item so we don't need to start off by creating items
             if (_context.Persons.Count() == 0)
             {
@@ -35,7 +38,7 @@ namespace ExampleAPI.Controllers
 
         // GET api/person
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Person>>> GetAllPersons()
+        public async Task<ActionResult> GetAllPersons()
         {
             IEnumerable<Person> persons = await _context.Persons.ToListAsync();
             if (persons.Count() == 0)
@@ -43,8 +46,18 @@ namespace ExampleAPI.Controllers
                 return NotFound();
             } else
             {
-                return Ok(persons);
+                string output = _expand.ExpandOutput("test");
+                return Ok(new { Value = output } );
+                //return Ok(persons);
             }
+
+    //        "_link": [
+    //    {
+    //        "rel": "customers",
+    //        "method": "GET",
+    //        "href": "https://"
+    //    }
+    //]
         }
 
         // GET api/person/5
