@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -46,9 +47,12 @@ namespace ExampleAPI.Controllers
                 return NotFound();
             } else
             {
-                string output = _expand.ExpandOutput("test");
-                return Ok(new { Value = output } );
-                //return Ok(persons);
+                var testobject = new { Name = "Donald", Link = "Link" };
+                var testobject2 = new ExpandoObject();
+                //testobject = persons.ElementAt(0);
+                //string output = _expand.ExpandOutput("test");
+                //return Ok(new { Value = output } );
+                return Ok(testobject);
             }
 
     //        "_link": [
