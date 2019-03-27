@@ -94,7 +94,7 @@ namespace ExampleAPI.Controllers
 
         // GET api/person/5
         [HttpGet("{id}")]
-        [HATEOASLinks("kek")]
+        [HATEOASLinks("test25")]
         public async Task<ActionResult<Person>> GetPerson(int Id)
         {
             //var test = Attribute.GetCustomAttributes(typeof(RequireHttpsAttribute), true);
@@ -102,6 +102,7 @@ namespace ExampleAPI.Controllers
             var person = await _context.FindAsync<Person>(Id);
 
             var duck = _linkService.AddLinksToOutput(ref person);
+
 
             if (person == null)
             {

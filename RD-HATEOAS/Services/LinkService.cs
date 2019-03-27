@@ -9,6 +9,7 @@ namespace RDHATEOAS.Services
     {
         public string AddLinksToOutput<TResource>(ref TResource resource)
         {
+            HATEOASLinksAttribute[] AttributeArray2 = (HATEOASLinksAttribute[])(RouteMap.GetCurrentRoute().LinksAttributes());
             HATEOASLinksAttribute[] AttributeArray = (HATEOASLinksAttribute[])(resource.GetType()).GetCustomAttributes(typeof(HATEOASLinksAttribute), true);
             return ""+AttributeArray.Length;
         }
