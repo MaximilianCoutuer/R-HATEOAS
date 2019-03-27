@@ -4,8 +4,8 @@ using System.Text;
 
 namespace RDHATEOAS.Services
 {
-    public interface IExpandOutput
+    public interface ILinkService
     {
-        string ExpandOutput(string output);
+        string AddLinksToOutput<TResource>(ref TResource resource);
     }
 }

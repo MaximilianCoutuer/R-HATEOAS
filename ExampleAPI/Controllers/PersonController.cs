@@ -22,12 +22,13 @@ namespace ExampleAPI.Controllers
     public class PersonController : ControllerBase
     {
         private readonly PersonContext _context;
-        private readonly IExpandOutput _expand;
+        private readonly ILinkService _linkService;
 
-        public PersonController(IExpandOutput expandOutput, PersonContext context)
+        public PersonController(ILinkService linkService, PersonContext context)
         {
             _context = context;
-            _expand = expandOutput;
+            _linkService = linkService;
+
             // seed database with one item so we don't need to start off by creating items
             if (_context.Persons.Count() == 0)
             {
@@ -96,15 +97,18 @@ namespace ExampleAPI.Controllers
         [HATEOASLinks("kek")]
         public async Task<ActionResult<Person>> GetPerson(int Id)
         {
-            var test = Attribute.GetCustomAttributes(typeof(RequireHttpsAttribute), true);
+            //var test = Attribute.GetCustomAttributes(typeof(RequireHttpsAttribute), true);
 
-            Person person = await _context.FindAsync<Person>(Id);
+            var person = await _context.FindAsync<Person>(Id);
+
+            var duck = _linkService.AddLinksToOutput(ref person);
+
             if (person == null)
             {
                 return NotFound();
             } else
             {
-                return Ok(test);
+                return Ok(person);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using ExampleAPI.Models;
+using RDHATEOAS.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ExampleAPI.Models
 {
+    [HATEOASLinks("kek")]
     public class Person
     {
         public int Id { get; set; }

@@ -2,7 +2,7 @@
 
 namespace RDHATEOAS.Controllers
 {
-    [System.AttributeUsage(System.AttributeTargets.Method)]
+    [System.AttributeUsage(System.AttributeTargets.Method | System.AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class HATEOASLinksAttribute : Attribute
     {
         private string linksType;
@@ -14,6 +14,11 @@ namespace RDHATEOAS.Controllers
         public string getLinksType()
         {
             return linksType;
+        }
+
+        public string getDuckTest()
+        {
+            return "quack";
         }
     }
 }
