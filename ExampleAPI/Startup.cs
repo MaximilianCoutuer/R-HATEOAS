@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RDHATEOAS.Middleware;
+using RDHATEOAS.Options;
 using RDHATEOAS.Services;
 
 namespace ExampleAPI
@@ -29,10 +30,14 @@ namespace ExampleAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);    // otherwise UrlHelper crashes https://github.com/aspnet/AspNetCore/issues/4418
             services.AddDbContext<PersonContext>(options => options.UseInMemoryDatabase("Person"));
             services.AddEntityFrameworkInMemoryDatabase();
-            services.AddScoped<ILinkService, LinkService>();
+            //services.AddScoped<ILinkService, LinkService>();
+            //services.Configure<HATEOASLinksOptions>(Configuration);
+            //services.AddOptions<HATEOASLinksOptions>()
+            //    .Bind(Configuration.GetSection("HATEOASLinksOptions"))
+            //    .ValidateDataAnnotations();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,8 +53,14 @@ namespace ExampleAPI
             }
 
             app.UseHttpsRedirection();
-            //app.UseMiddleware<HATEOASSupportMiddleware>();
-            app.UseMvc();
+            //app.UseMiddleware<HATEOASSupportMiddleware>();    // not applicable 
+            //app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "Testroute",
+                    template: "api/{controller=Values}/{id?}");
+            }); // urlhelper
         }
     }
 }

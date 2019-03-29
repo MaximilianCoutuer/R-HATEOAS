@@ -6,6 +6,6 @@ namespace RDHATEOAS.Middleware
 {
     public enum RequestTypes
     {
-        int BadRequest = 200;
+        BadRequest = 200,
     }
 }

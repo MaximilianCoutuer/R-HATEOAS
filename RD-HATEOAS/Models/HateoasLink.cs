@@ -9,7 +9,7 @@ namespace RDHATEOAS.Models
     {
         public string Href { get; set; }
         public string Rel { get; set; }
-        public HttpMethod Method { get; set; }
-        public string kitten = "lol";
+        public HttpMethod Action { get; set; }  // TODO: other types such as self and next/previous??
+        public string TypeKeyword { get; set; } // "details" etc
     }
 }

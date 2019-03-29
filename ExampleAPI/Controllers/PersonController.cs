@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RDHATEOAS.Controllers;
+using RDHATEOAS.Filters;
 using RDHATEOAS.Services;
 
 namespace ExampleAPI.Controllers
@@ -24,10 +25,10 @@ namespace ExampleAPI.Controllers
         private readonly PersonContext _context;
         private readonly ILinkService _linkService;
 
-        public PersonController(ILinkService linkService, PersonContext context)
+        public PersonController(PersonContext context)
         {
             _context = context;
-            _linkService = linkService;
+            //_linkService = linkService; // ILinkService
 
             // seed database with one item so we don't need to start off by creating items
             if (_context.Persons.Count() == 0)
@@ -94,6 +95,7 @@ namespace ExampleAPI.Controllers
 
         // GET api/person/5
         [HttpGet("{id}")]
+        [LinkEnabled("Test")]
         [HATEOASLinks("test25")]
         public async Task<ActionResult<Person>> GetPerson(int Id)
         {
@@ -101,7 +103,7 @@ namespace ExampleAPI.Controllers
 
             var person = await _context.FindAsync<Person>(Id);
 
-            var duck = _linkService.AddLinksToOutput(ref person);
+            //var duck = _linkService.AddLinksToOutput(ref person);
 
 
             if (person == null)
