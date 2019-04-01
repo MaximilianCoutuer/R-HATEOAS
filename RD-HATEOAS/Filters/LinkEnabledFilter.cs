@@ -41,7 +41,8 @@ namespace RDHATEOAS.Filters
                 {
                     // result is a single object
                     var test = (new UrlHelper(response));
-                    var testlink = test.RouteUrl("Testroute", new { controller = "api/person/", id = 1 });
+                    var testlink = response.HttpContext.Request.Host.ToUriComponent();
+                    testlink += test.RouteUrl("Testroute", new { controller = "person", id = 1 }).Replace("%2F", "/");
                     //var testlink = test.Action("GetAllPersons", "PersonController");
 
                     IDictionary<string, object> itemWithLink = new ExpandoObject(); // initializing as a dictionary so we can use Add();
