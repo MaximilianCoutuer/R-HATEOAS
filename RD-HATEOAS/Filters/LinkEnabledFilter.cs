@@ -42,12 +42,17 @@ namespace RDHATEOAS.Filters
                     // result is a single object
                     var test = (new UrlHelper(response));
                     var testlink = response.HttpContext.Request.Host.ToUriComponent();
-                    testlink += test.RouteUrl("Testroute", new { controller = "person", id = 1 }).Replace("%2F", "/");
+                    testlink += test.RouteUrl("Testroute", new { controller = "person", id = 1 });
                     //var testlink = test.Action("GetAllPersons", "PersonController");
+                    // hardcode?
+
 
                     IDictionary<string, object> itemWithLink = new ExpandoObject(); // initializing as a dictionary so we can use Add();
+
+
                     // HACK HACK HACK
                     // this is horrible
+                    // isn't there a better way?
                     foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(item.GetType()))
                         itemWithLink.Add(property.Name, property.GetValue(item));
                     itemWithLink.Add("_link", testlink);
