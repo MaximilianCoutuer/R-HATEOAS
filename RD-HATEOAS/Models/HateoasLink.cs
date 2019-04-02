@@ -8,9 +8,23 @@ namespace RDHATEOAS.Models
 {
     public class HateoasLink
     {
-        [Required]
-        public string Href { get { return Href; } set { Href = value.Replace("%2F", "/"); } }
 
+        private string _href;
+
+        public HateoasLink(string Href, string Rel, HttpMethod Method)
+        {
+            this.Href = Href;
+            this.Rel = Rel;
+            this.Method = Method;
+        }
+        
+        [Required]
+        public string Href
+        {
+            get { return _href; }
+            set { _href = value.Replace("%2F", "/"); }
+        }
+        
         [Required]
         public string Rel { get; set; }
 

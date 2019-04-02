@@ -9,18 +9,20 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Dynamic;
 using System.ComponentModel;
+using RDHATEOAS.Services;
 using Microsoft.AspNetCore.Mvc.Routing;
+using RDHATEOAS.Builders;
+using RDHATEOAS.Models;
+using System.Net.Http;
 
 namespace RDHATEOAS.Filters
 {
     [System.AttributeUsage(System.AttributeTargets.Method | System.AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class LinkEnabledAttribute : ResultFilterAttribute
     {
-        private readonly string _test;
-
         public LinkEnabledAttribute(string test)
         {
-            _test = test;
+            //_urlHelper = urlHelper;
         }
 
         public override void OnResultExecuting(ResultExecutingContext response)
@@ -32,7 +34,6 @@ namespace RDHATEOAS.Filters
                 var actionAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(inherit: true);
             }
 
-
             //var enricher = _hyperMediaFilterOptions.ObjectContentResponseEnricherList.FirstOrDefault(x => x.CanEnrich(context));
             //if (enricher != null) Task.FromResult(enricher.Enrich(context));
 
@@ -40,12 +41,18 @@ namespace RDHATEOAS.Filters
                 if (okObjectResult.Value is Object item)
                 {
                     // result is a single object
-                    var test = (new UrlHelper(response));
-                    var testlink = response.HttpContext.Request.Host.ToUriComponent();
-                    testlink += test.RouteUrl("Testroute", new { controller = "person", id = 1 });
+
+                    IUrlHelper urlHelper = new UrlHelper(response);   // DI not possible because the filter is an attribute
+                    //var builtLink = response.HttpContext.Request.Host.ToUriComponent();
+                    //builtLink += urlHelper.RouteUrl("Testroute", new { controller = "person", id = 1 });
                     //var testlink = test.Action("GetAllPersons", "PersonController");
                     // hardcode?
 
+                    //var builtLink = GenerateLinkObject(new UrlHelper(response), response).Href;
+                    var builtLink = GenerateLinkObject(urlHelper, response);
+                    // 
+
+                    //var builtLink = (new HATEOASLinkObjectBuilder(new UrlHelper(response))).Build(response).Href;
 
                     IDictionary<string, object> itemWithLink = new ExpandoObject(); // initializing as a dictionary so we can use Add();
 
@@ -55,10 +62,11 @@ namespace RDHATEOAS.Filters
                     // isn't there a better way?
                     foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(item.GetType()))
                         itemWithLink.Add(property.Name, property.GetValue(item));
-                    itemWithLink.Add("_link", testlink);
+                    itemWithLink.Add("links", builtLink);
                     okObjectResult.Value = itemWithLink;
                 }
                 //else if (okObjectResult.Value.GetType().GetGenericTypeDefinition() == typeof(List<>)
+                //?
                 else if (okObjectResult.Value is List<Object> list)
                 {
                     Parallel.ForEach(list.ToList(), (element) =>
@@ -80,6 +88,18 @@ namespace RDHATEOAS.Filters
             //await Task.FromResult<object>(null);
 
             base.OnResultExecuting(response);
+        }
+
+        private HateoasLink[] GenerateLinkObject(IUrlHelper urlHelper, ResultExecutingContext response)
+        {
+            var builtLink = response.HttpContext.Request.Host.ToUriComponent();
+            builtLink += urlHelper.RouteUrl("Testroute", new { controller = "person", id = 1 });
+
+            HateoasLink[] test = {
+                new HateoasLink("Testlink1", "Testlink2", HttpMethod.Get),
+                new HateoasLink("Testlink2", "Testlink1", HttpMethod.Post)
+            };
+            return test;
         }
     }
 }

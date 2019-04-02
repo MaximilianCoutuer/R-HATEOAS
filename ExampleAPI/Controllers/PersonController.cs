@@ -16,6 +16,7 @@ using RDHATEOAS.Controllers;
 using RDHATEOAS.Filters;
 using RDHATEOAS.Services;
 
+// an example API that returns person data. Each person comes with a country.
 namespace ExampleAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -68,19 +69,6 @@ namespace ExampleAPI.Controllers
                 JObject testobject5 = JObject.FromObject(persons.ElementAt(0));
                 testobject5.Add("rofl", "lmao");
 
-                // 
-
-                //string json = testobject5.ToString();
-
-                //dynamic original = JsonConvert.DeserializeObject(json, typeof(object));
-                //original.data[0].furit_items[0].quality = good;
-                //var modifiedJson = JsonConvert.SerializeObject(original, Formatting.Indented);
-
-
-
-                //testobject = persons.ElementAt(0);
-                //string output = _expand.ExpandOutput("test");
-                //return Ok(new { Value = output } );
                 return Ok(testobject5);
             }
 

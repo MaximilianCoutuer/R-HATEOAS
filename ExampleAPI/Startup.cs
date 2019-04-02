@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,11 +35,30 @@ namespace ExampleAPI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);    // otherwise UrlHelper crashes https://github.com/aspnet/AspNetCore/issues/4418
             services.AddDbContext<PersonContext>(options => options.UseInMemoryDatabase("Person"));
             services.AddEntityFrameworkInMemoryDatabase();
+
+
+            //services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
+            //services.AddScoped<IUrlHelper>(x =>
+            //{
+            //    var actionContext = x.GetService<IActionContextAccessor>().ActionContext;
+            //    return new UrlHelper(actionContext);
+            //});
+
+            // boilerplate in order to initialise the UrlHelper with the correct context
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(x =>
+            {
+                var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+                var factory = x.GetRequiredService<IUrlHelperFactory>();
+                return factory.GetUrlHelper(actionContext);
+            });
+
             //services.AddScoped<ILinkService, LinkService>();
             //services.Configure<HATEOASLinksOptions>(Configuration);
             //services.AddOptions<HATEOASLinksOptions>()
             //    .Bind(Configuration.GetSection("HATEOASLinksOptions"))
             //    .ValidateDataAnnotations();
+            // add here
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
