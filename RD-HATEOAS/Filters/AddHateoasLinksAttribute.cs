@@ -28,7 +28,7 @@ namespace RDHATEOAS.Filters
             var controllerActionDescriptor = response.ActionDescriptor as ControllerActionDescriptor;
             if (controllerActionDescriptor != null)
             {
-                Attribute[] actionAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(inherit: true);
+                Attribute[] attrs = (Attribute[])controllerActionDescriptor.MethodInfo.GetCustomAttributes(inherit: true);
             }
             // TODO: do something with this
             return null;
@@ -64,6 +64,7 @@ namespace RDHATEOAS.Filters
             {
 
                 // TODO: invoke three get ruleset methods
+                // TODO: rulesets
                 // TODO: process the results
 
                 IUrlHelper urlHelper = new UrlHelper(response); // DI not possible?
