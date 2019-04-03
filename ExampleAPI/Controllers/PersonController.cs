@@ -47,6 +47,8 @@ namespace ExampleAPI.Controllers
 
         // GET api/person
         [HttpGet]
+        //[AddHateoasLinks("Test")]
+        [TypeFilter(typeof(AddHateoasLinksAttribute))]
         public async Task<ActionResult> GetAllPersons()
         {
             IEnumerable<Person> persons = await _context.Persons.ToListAsync();
@@ -55,44 +57,19 @@ namespace ExampleAPI.Controllers
                 return NotFound();
             } else
             {
-                var testobject = new { Name = "Donald", Link = "Link" };
-                var testobject2 = new ExpandoObject();
-
-
-
-                var testobject3 = JsonConvert.SerializeObject(persons);
-
-
-                dynamic testobject4 = persons.ElementAt(0);
-
-
-                JObject testobject5 = JObject.FromObject(persons.ElementAt(0));
-                testobject5.Add("rofl", "lmao");
-
-                return Ok(testobject5);
+                return Ok(persons);
             }
-
-    //        "_link": [
-    //    {
-    //        "rel": "customers",
-    //        "method": "GET",
-    //        "href": "https://"
-    //    }
-    //]
         }
 
         // GET api/person/5
         [HttpGet("{id}")]
-        [LinkEnabled("Test")]
+        [TypeFilter(typeof(AddHateoasLinksAttribute))]
         [HATEOASLinks("test25")]
         public async Task<ActionResult<Person>> GetPerson(int Id)
         {
             //var test = Attribute.GetCustomAttributes(typeof(RequireHttpsAttribute), true);
 
             var person = await _context.FindAsync<Person>(Id);
-
-            //var duck = _linkService.AddLinksToOutput(ref person);
-
 
             if (person == null)
             {

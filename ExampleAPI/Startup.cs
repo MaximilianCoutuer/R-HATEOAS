@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RDHATEOAS.LinkAdders;
 using RDHATEOAS.Middleware;
 using RDHATEOAS.Options;
 using RDHATEOAS.Services;
@@ -44,14 +45,24 @@ namespace ExampleAPI
             //    return new UrlHelper(actionContext);
             //});
 
-            // boilerplate in order to initialise the UrlHelper with the correct context
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddScoped<IUrlHelper>(x =>
-            {
-                var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
-                var factory = x.GetRequiredService<IUrlHelperFactory>();
-                return factory.GetUrlHelper(actionContext);
-            });
+
+
+            //// boilerplate in order to initialise the UrlHelper with the correct context
+            //services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            //services.AddScoped<IUrlHelper>(x =>
+            //{
+            //    var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+            //    var factory = x.GetRequiredService<IUrlHelperFactory>();
+            //    return factory.GetUrlHelper(actionContext);
+            //});
+
+
+
+            // hateoas configuration
+            var hateoasOptions = new HateoasOptions();
+            hateoasOptions.linkAddersModel.Add(new LinkAdderModelDefault<Person>());
+            services.AddSingleton(hateoasOptions);
+
 
             //services.AddScoped<ILinkService, LinkService>();
             //services.Configure<HATEOASLinksOptions>(Configuration);

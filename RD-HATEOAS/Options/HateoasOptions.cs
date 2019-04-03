@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using RDHATEOAS.LinkAdders;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,14 +7,13 @@ using System.Text;
 
 namespace RDHATEOAS.Options
 {
-    public class HATEOASLinksOptions
+    public class HateoasOptions
     {
-        public HATEOASLinksOptions()
+        public HateoasOptions()
         {
-            // options
+
         }
 
-        [Required]
-        public string testSetting1 { get; set; }
+        public List<ILinkAdderModel> linkAddersModel { get; set; } = new List<ILinkAdderModel>();
     }
 }

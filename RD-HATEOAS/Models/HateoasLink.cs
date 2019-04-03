@@ -10,12 +10,13 @@ namespace RDHATEOAS.Models
     {
 
         private string _href;
+        private HttpMethod _method;
 
-        public HateoasLink(string Href, string Rel, HttpMethod Method)
+        public HateoasLink(string Href, string Rel, HttpMethod HttpMethod)
         {
             this.Href = Href;
             this.Rel = Rel;
-            this.Method = Method;
+            this.HttpMethod = HttpMethod;
         }
         
         [Required]
@@ -26,14 +27,23 @@ namespace RDHATEOAS.Models
         }
         
         [Required]
-        public string Rel { get; set; }
+        public string Rel { get; set; } // ex. "Self"
 
         [Required]
-        public HttpMethod Method { get; set; }  // TODO: other types such as self and next/previous??
+        public HttpMethod HttpMethod {
+            set { _method = value; }
+        }
+
+        public string Method
+        {
+            get { return _method.Method; }
+        }
+        // TODO: other types such as self and next/previous??
 
         public string Hreflang { get; set; }
         public string Media { get; set; }
         public string Title { get; set; }
         public string Type { get; set; }
+        // Schema
     }
 }
