@@ -12,6 +12,7 @@ using System.Collections;
 using RDHATEOAS.Rulesets;
 using System.Threading.Tasks;
 using System.Linq;
+using RDHATEOAS.Extensions;
 
 namespace RDHATEOAS.Filters
 {
@@ -34,28 +35,28 @@ namespace RDHATEOAS.Filters
             return null;
         }
 
-        private IHateoasRuleset GetModelBasedLinkRulesets(OkObjectResult okObjectResult) {
-            if (IsList(okObjectResult))
-            {
-                // result is a list
-                List<Object> list = (List<Object>)okObjectResult.Value;
-                Attribute[] attrs = System.Attribute.GetCustomAttributes(list.First().GetType());
-                // TODO: do something with this
-            }
-            else
-            {
-                // result is a model
-                Object item = (Object)okObjectResult.Value;
-                Attribute[] attrs = System.Attribute.GetCustomAttributes(item.GetType());
-                // TODO: do something with this
-            }
-            return null;
-        }
+        //private IHateoasRuleset GetModelBasedLinkRulesets(OkObjectResult okObjectResult) {
+        //    if (IsList(okObjectResult))
+        //    {
+        //        // result is a list
+        //        List<Object> list = (List<Object>)okObjectResult.Value;
+        //        Attribute[] attrs = System.Attribute.GetCustomAttributes(list.First().GetType());
+        //        // TODO: do something with this
+        //    }
+        //    else
+        //    {
+        //        // result is a model
+        //        Object item = (Object)okObjectResult.Value;
+        //        Attribute[] attrs = System.Attribute.GetCustomAttributes(item.GetType());
+        //        // TODO: do something with this
+        //    }
+        //    return null;
+        //}
 
-        private IHateoasRuleset GetGlobalLinkRulesets(OkObjectResult okObjectResult)
-        {
-            return null;
-        }
+        //private IHateoasRuleset GetGlobalLinkRulesets(OkObjectResult okObjectResult)
+        //{
+        //    return null;
+        //}
 
 
         public override void OnResultExecuting(ResultExecutingContext response)
@@ -63,50 +64,23 @@ namespace RDHATEOAS.Filters
             if (response.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
 
-                // TODO: invoke three get ruleset methods
+                // TODO: invoke get ruleset method
                 // TODO: rulesets
                 // TODO: process the results
 
                 IUrlHelper urlHelper = new UrlHelper(response); // DI not possible?
-                if (IsList(okObjectResult))
+
+                if (okObjectResult.Value.GetType().IsList())
                 {
-                    List<Object> list = (List<Object>)okObjectResult.Value; // Is correct?
-                    Parallel.ForEach(list, (element) =>
-                    {
-                        // TODO
-                    });
+                    Parallel.ForEach ((List<Object>)(okObjectResult.Value), (element) =>
+                     {
+                         // TODO: send to link builder
+                     });
                 }
                 else
                 {
-                    // TODO
+                    // TODO: send to link builder
                 }
-
-
-
-                // check for rules related to model
-
-                // loop through all stored link adders
-
-                //if (okObjectResult.Value is List<Object> list)
-                //{
-                //    // result is a list of objects
-
-                //    iurlhelper urlhelper = new urlhelper(response);
-                //    parallel.foreach (list.tolist(), (element) =>
-                //     {
-                //         //insertlinks(ref element, urlhelper, response);
-                //     });
-                //    okObjectResult.Value = "kek";
-                //}
-                //else if (okObjectResult.Value is Object item)
-                //{
-                //    // result is a single object
-
-                //    IUrlHelper urlHelper = new UrlHelper(response);   // DI not possible because the filter is an attribute
-                //    InsertLinks(ref item, urlHelper, response);
-                //    okObjectResult.Value = item;
-
-                //}
 
 
 
@@ -153,10 +127,5 @@ namespace RDHATEOAS.Filters
             return test;
         }
 
-        private bool IsList(OkObjectResult okObjectResult)
-        {
-            var resultType = okObjectResult.Value.GetType();
-            return (resultType.IsGenericType && (resultType.GetGenericTypeDefinition() == typeof(List<>)));
-        }
     }
 }
