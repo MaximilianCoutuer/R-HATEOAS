@@ -7,18 +7,17 @@ using System.Text;
 
 namespace RDHATEOAS.Builders
 {
-    public sealed class HATEOASLinkObjectBuilder
+    public sealed class HATEOASLinkBuilder
     {
 
         private readonly IUrlHelper _urlHelper;
 
-        public HATEOASLinkObjectBuilder(IUrlHelper urlHelper) {
+        public HATEOASLinkBuilder(IUrlHelper urlHelper) {
             _urlHelper = urlHelper;
         }
 
         public HateoasLink Build(ActionContext response)
         {
-            //IUrlHelper urlHelper = new urlHelper(response);   // DI not possible because the filter is an attribute
             var builtLink = response.HttpContext.Request.Host.ToUriComponent();
             builtLink += _urlHelper.RouteUrl("Testroute", new { controller = "person", id = 1 });
 

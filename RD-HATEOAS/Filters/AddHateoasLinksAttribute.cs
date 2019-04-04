@@ -13,6 +13,7 @@ using RDHATEOAS.Rulesets;
 using System.Threading.Tasks;
 using System.Linq;
 using RDHATEOAS.Extensions;
+using RDHATEOAS.Builders;
 
 namespace RDHATEOAS.Filters
 {
@@ -100,7 +101,7 @@ namespace RDHATEOAS.Filters
 
         private void InsertLinks(ref Object item, IUrlHelper urlHelper, ResultExecutingContext response)
         {
-            var links = GenerateLinkObject(urlHelper, response);
+            var links = (new HATEOASLinkBuilder(urlHelper).Build(response));
 
             // initializing as a dictionary so we can use Add();
             IDictionary<string, object> itemWithLink = new ExpandoObject();
@@ -112,20 +113,20 @@ namespace RDHATEOAS.Filters
             item = itemWithLink;
         }
 
-        private HateoasLink[] GenerateLinkObject(IUrlHelper urlHelper, ResultExecutingContext response)
-        {
-            var builtLink = response.HttpContext.Request.Host.ToUriComponent()
-                + urlHelper.RouteUrl("Testroute", new {
-                    controller = "person",
-                    id = 1,
-                });
+        //private HateoasLink[] GenerateLinkObject(IUrlHelper urlHelper, ResultExecutingContext response)
+        //{
+        //    var builtLink = response.HttpContext.Request.Host.ToUriComponent()
+        //        + urlHelper.RouteUrl("Testroute", new {
+        //            controller = "person",
+        //            id = 1,
+        //        });
 
-            HateoasLink[] test = {
-                new HateoasLink(builtLink, "Testlink1", HttpMethod.Get),
-                new HateoasLink(builtLink, "Testlink2", HttpMethod.Post)
-            };
-            return test;
-        }
+        //    HateoasLink[] test = {
+        //        new HateoasLink(builtLink, "Testlink1", HttpMethod.Get),
+        //        new HateoasLink(builtLink, "Testlink2", HttpMethod.Post)
+        //    };
+        //    return test;
+        //}
 
     }
 }
