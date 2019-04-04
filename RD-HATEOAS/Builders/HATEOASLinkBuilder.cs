@@ -9,7 +9,6 @@ namespace RDHATEOAS.Builders
 {
     public sealed class HATEOASLinkBuilder
     {
-
         private readonly IUrlHelper _urlHelper;
 
         public HATEOASLinkBuilder(IUrlHelper urlHelper) {
@@ -20,6 +19,7 @@ namespace RDHATEOAS.Builders
         {
             var builtLink = response.HttpContext.Request.Host.ToUriComponent();
             builtLink += _urlHelper.RouteUrl("Testroute", new { controller = "person", id = 1 });
+            // TODO
 
             return new HateoasLink("Testlink", "Testlink", HttpMethod.Get);
         }

@@ -66,14 +66,13 @@ namespace RDHATEOAS.Filters
             {
 
                 // TODO: invoke get ruleset method
-                // TODO: rulesets
                 // TODO: process the results
 
                 IUrlHelper urlHelper = new UrlHelper(response); // DI not possible?
 
                 if (okObjectResult.Value.GetType().IsList())
                 {
-                    Parallel.ForEach ((List<Object>)(okObjectResult.Value), (element) =>
+                    Parallel.ForEach((List<Object>)(okObjectResult.Value), (element) =>
                      {
                          // TODO: send to link builder
                      });
@@ -95,7 +94,6 @@ namespace RDHATEOAS.Filters
                 //    });
                 //}
             }
-
             base.OnResultExecuting(response);
         }
 
