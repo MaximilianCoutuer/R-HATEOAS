@@ -99,7 +99,7 @@ namespace RDHATEOAS.Filters
 
         private void InsertLinks(ref Object item, IUrlHelper urlHelper, ResultExecutingContext response)
         {
-            var links = (new HATEOASLinkBuilder(urlHelper).Build(response));
+            var links = (new HateoasLinkBuilder(urlHelper).Build(response));
 
             // initializing as a dictionary so we can use Add();
             IDictionary<string, object> itemWithLink = new ExpandoObject();

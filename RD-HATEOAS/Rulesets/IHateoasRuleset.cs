@@ -7,6 +7,7 @@ namespace RDHATEOAS.Rulesets
 {
     interface IHateoasRuleset
     {
+
         HttpMethod[] GetHttpMethods();
     }
 }
