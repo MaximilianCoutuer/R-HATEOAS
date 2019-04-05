@@ -15,12 +15,21 @@ namespace RDHATEOAS.Builders
             _urlHelper = urlHelper;
         }
 
+        //public HateoasLink Build(ActionContext response)
+        //{
+        //    var builtLink = response.HttpContext.Request.Host.ToUriComponent();
+        //    builtLink += _urlHelper.RouteUrl("Testroute", new { controller = "person", id = 1 });
+        //    // TODO
+
+        //    return new HateoasLink("Testlink", "Testlink", HttpMethod.Get);
+        //}
+
         public HateoasLink Build(ActionContext response)
         {
-            var builtLink = response.HttpContext.Request.Host.ToUriComponent();
-            builtLink += _urlHelper.RouteUrl("Testroute", new { controller = "person", id = 1 });
-            // TODO
-
+            var uri = response.HttpContext.Request.Host.ToUriComponent()
+                + _urlHelper.RouteUrl("Testroute", new {
+                    controller = "person",
+                    id = 1 });
             return new HateoasLink("Testlink", "Testlink", HttpMethod.Get);
         }
 
