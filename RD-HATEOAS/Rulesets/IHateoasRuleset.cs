@@ -5,9 +5,13 @@ using System.Text;
 
 namespace RDHATEOAS.Rulesets
 {
-    interface IHateoasRuleset
+    public interface IHateoasRuleset
     {
 
         HttpMethod[] GetHttpMethods();
+
+        string GetType();
+
+
     }
 }

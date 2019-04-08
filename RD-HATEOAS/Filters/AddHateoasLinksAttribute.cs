@@ -75,6 +75,8 @@ namespace RDHATEOAS.Filters
                     Parallel.ForEach((List<Object>)(okObjectResult.Value), (element) =>
                      {
                          // TODO: send to link builder
+                         // get list of links from the ruleset
+                         // for each link, send to link builder and add resulting link to an array, then add to item
                      });
                 }
                 else
@@ -97,19 +99,39 @@ namespace RDHATEOAS.Filters
             base.OnResultExecuting(response);
         }
 
+
+        // TODO: needs item ID
         private void InsertLinks(ref Object item, IUrlHelper urlHelper, ResultExecutingContext response)
         {
-            var links = (new HateoasLinkBuilder(urlHelper).Build(response));
+            // HACK: we can't use DI in a filter
+            var hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
 
-            // initializing as a dictionary so we can use Add();
+
+            var links = (hateoasLinkBuilder.Build(response, null));
+
+
+
+
+
+            // HACK: Copy all object properties to an ExpandoObject so the link can be added
             IDictionary<string, object> itemWithLink = new ExpandoObject();
-
-            // HACK HACK HACK
             foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(item.GetType()))
                 itemWithLink.Add(property.Name, property.GetValue(item));
             itemWithLink.Add("links", links);
             item = itemWithLink;
         }
+
+        private void InsertLinksYay()
+        {
+            // convert to expando object
+            // add properties
+            // foreach:
+            // get link object
+            // add link object
+        }
+
+
+
 
         //private HateoasLink[] GenerateLinkObject(IUrlHelper urlHelper, ResultExecutingContext response)
         //{
