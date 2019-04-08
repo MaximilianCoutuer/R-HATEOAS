@@ -16,7 +16,7 @@ namespace RDHATEOAS.Builders
             _urlHelper = urlHelper;
         }
 
-        public HateoasLink Build(ActionContext response, IHateoasRuleset ruleset)
+        public HateoasLink Build(ActionContext response)
         {
             var uri = response.HttpContext.Request.Host.ToUriComponent()
                 + _urlHelper.RouteUrl("Testroute", new {

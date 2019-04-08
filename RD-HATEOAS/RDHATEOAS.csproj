@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Enums\" />
     <Folder Include="Helpers\" />
     <Folder Include="Policies\" />
   </ItemGroup>

@@ -11,6 +11,10 @@ namespace RDHATEOAS.Rulesets
         
         public override void AddDescribedLink(ref IDictionary<string, Object> itemDynamic) {
             // TODO: Full link implementation
+
+
+            // TODO: refactor to eliminate this line?
+            AddLinkObjectToRef(ref itemDynamic, null);
         }
 
 

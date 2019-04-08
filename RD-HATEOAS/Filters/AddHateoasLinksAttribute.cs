@@ -21,11 +21,11 @@ namespace RDHATEOAS.Filters
     public class AddHateoasLinksAttribute : ResultFilterAttribute
     {
 
-        public AddHateoasLinksAttribute(string test)
+        public AddHateoasLinksAttribute()
         {
         }
 
-        private IHateoasRuleset GetControllerBasedLinkRulesets(ResultExecutingContext response)
+        private IHateoasRuleset[] GetControllerBasedLinkRulesets(ResultExecutingContext response)
         {
             var controllerActionDescriptor = response.ActionDescriptor as ControllerActionDescriptor;
             if (controllerActionDescriptor != null)
@@ -64,7 +64,7 @@ namespace RDHATEOAS.Filters
         {
             if (response.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                // TODO: get rulesets
+                //IHateoasRuleset[] rulesets = GetControllerBasedLinkRulesets(response);
                 IHateoasRuleset[] rulesets = new IHateoasRuleset[] { new HateoasRulesetFullLinks() };
 
                 var urlHelper = new UrlHelper(response); // DI not possible?
@@ -92,12 +92,9 @@ namespace RDHATEOAS.Filters
                     {
                         ruleset.AddDescribedLink(ref itemDynamic);
                     }
-
-
                     // set result value to dynamic object
                     okObjectResult.Value = itemDynamic;
                 }
-
                 //else if (okObjectResult.Value is PagedSearchDTO<Object> pagedSearch)
                 //{
                 //    Parallel.ForEach(pagedSearch.List.ToList(), (element) =>
@@ -109,23 +106,5 @@ namespace RDHATEOAS.Filters
             }
             base.OnResultExecuting(response);
         }
-
-
-
-        //private HateoasLink[] GenerateLinkObject(IUrlHelper urlHelper, ResultExecutingContext response)
-        //{
-        //    var builtLink = response.HttpContext.Request.Host.ToUriComponent()
-        //        + urlHelper.RouteUrl("Testroute", new {
-        //            controller = "person",
-        //            id = 1,
-        //        });
-
-        //    HateoasLink[] test = {
-        //        new HateoasLink(builtLink, "Testlink1", HttpMethod.Get),
-        //        new HateoasLink(builtLink, "Testlink2", HttpMethod.Post)
-        //    };
-        //    return test;
-        //}
-
     }
 }

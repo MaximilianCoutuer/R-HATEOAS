@@ -14,7 +14,7 @@ namespace RDHATEOAS.Rulesets
             // default null implementation
         }
 
-        private void AddLinkObjectToRef(ref IDictionary<string, Object> itemDynamic, HateoasLink link)
+        protected void AddLinkObjectToRef(ref IDictionary<string, Object> itemDynamic, HateoasLink link)
         {
             itemDynamic.Add("links", link);
         }
