@@ -21,10 +21,10 @@ namespace RDHATEOAS.Builders
             var uri = response.HttpContext.Request.Host.ToUriComponent()
                 + _urlHelper.RouteUrl("Testroute", new {
                     controller = "person",
-                    id = 1      // TODO: softcode
+                    id = 1      // TODO: softcode based on ruleset
                 });
-            var rel = "next";   // TODO: softcode
-            var httpMethod = HttpMethod.Get;    // TODO: softcode
+            var rel = "next";   // TODO: softcode based on ruleset
+            var httpMethod = HttpMethod.Get;    // TODO: softcode based on ruleset
             var hateoasLink = new HateoasLink(uri, rel, HttpMethod.Get);
 
             // TODO: other params

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Net.Http;
 using System.Text;
 
@@ -7,10 +8,9 @@ namespace RDHATEOAS.Rulesets
 {
     public interface IHateoasRuleset
     {
+        // generates a link
 
-        HttpMethod[] GetHttpMethods();
-
-        string GetType();
+        void AddDescribedLink(ref IDictionary<string, Object> item);
 
 
     }

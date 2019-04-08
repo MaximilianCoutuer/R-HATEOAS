@@ -64,28 +64,39 @@ namespace RDHATEOAS.Filters
         {
             if (response.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
+                // TODO: get rulesets
+                IHateoasRuleset[] rulesets = new IHateoasRuleset[] { new HateoasRulesetFullLinks() };
 
-                // TODO: invoke get ruleset method
-                // TODO: process the results
-
-                IUrlHelper urlHelper = new UrlHelper(response); // DI not possible?
-
+                var urlHelper = new UrlHelper(response); // DI not possible?
+                var hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
+                               
                 if (okObjectResult.Value.GetType().IsList())
                 {
                     Parallel.ForEach((List<Object>)(okObjectResult.Value), (element) =>
                      {
                          // TODO: send to link builder
-                         // get list of links from the ruleset
-                         // for each link, send to link builder and add resulting link to an array, then add to item
                      });
                 }
                 else
                 {
-                    // TODO: send to link builder
+                    // HACK: Copy existing properties into dynamic object
+                    IDictionary<string, object> itemDynamic = new ExpandoObject();
+                    var item = okObjectResult.Value;
+                    foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(item.GetType()))
+                    {
+                        itemDynamic.Add(property.Name, property.GetValue(item));
+                    }
+
+                    // loop through rulesets and add them to dynamic object
+                    foreach (IHateoasRuleset ruleset in rulesets)
+                    {
+                        ruleset.AddDescribedLink(ref itemDynamic);
+                    }
+
+
+                    // set result value to dynamic object
+                    okObjectResult.Value = itemDynamic;
                 }
-
-
-
 
                 //else if (okObjectResult.Value is PagedSearchDTO<Object> pagedSearch)
                 //{
@@ -98,38 +109,6 @@ namespace RDHATEOAS.Filters
             }
             base.OnResultExecuting(response);
         }
-
-
-        // TODO: needs item ID
-        private void InsertLinks(ref Object item, IUrlHelper urlHelper, ResultExecutingContext response)
-        {
-            // HACK: we can't use DI in a filter
-            var hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
-
-
-            var links = (hateoasLinkBuilder.Build(response, null));
-
-
-
-
-
-            // HACK: Copy all object properties to an ExpandoObject so the link can be added
-            IDictionary<string, object> itemWithLink = new ExpandoObject();
-            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(item.GetType()))
-                itemWithLink.Add(property.Name, property.GetValue(item));
-            itemWithLink.Add("links", links);
-            item = itemWithLink;
-        }
-
-        private void InsertLinksYay()
-        {
-            // convert to expando object
-            // add properties
-            // foreach:
-            // get link object
-            // add link object
-        }
-
 
 
 
