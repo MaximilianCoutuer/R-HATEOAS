@@ -20,7 +20,6 @@ namespace RDHATEOAS.Filters
     [System.AttributeUsage(System.AttributeTargets.Method | System.AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class AddHateoasLinksAttribute : ResultFilterAttribute
     {
-
         public AddHateoasLinksAttribute()
         {
         }
@@ -33,6 +32,7 @@ namespace RDHATEOAS.Filters
                 Attribute[] attrs = (Attribute[])controllerActionDescriptor.MethodInfo.GetCustomAttributes(inherit: true);
             }
             // TODO: do something with this
+            // TODO: determine if one or more rulesets (probably one)
             return null;
         }
 
@@ -88,6 +88,7 @@ namespace RDHATEOAS.Filters
                 else
                 {
                     // HACK: Copy existing properties into dynamic object
+                    // this might be too slow in general
                     IDictionary<string, object> itemDynamic = new ExpandoObject();
                     var item = okObjectResult.Value;
                     foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(item.GetType()))
