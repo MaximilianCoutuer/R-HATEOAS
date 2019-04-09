@@ -72,10 +72,18 @@ namespace RDHATEOAS.Filters
                                
                 if (okObjectResult.Value.GetType().IsList())
                 {
-                    Parallel.ForEach((List<Object>)(okObjectResult.Value), (element) =>
-                     {
-                         // TODO: send to link builder
-                     });
+                    IEnumerable enumerable = okObjectResult.Value as IEnumerable;
+                    foreach(object item in enumerable.OfType<object>())
+                    {
+                        // TODO: parallel
+                        // TODO: send link to link builder
+                    }
+
+
+
+                    //Parallel.ForEach((List<Object>)(okObjectResult.Value), (element) =>
+                    // {
+                    // });
                 }
                 else
                 {
