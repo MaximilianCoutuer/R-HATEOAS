@@ -28,7 +28,7 @@ namespace RDHATEOAS.Builders
             var httpMethod = HttpMethod.Get;    // TODO: softcode based on ruleset
             var hateoasLink = new HateoasLink(uri, rel, HttpMethod.Get);
 
-            // TODO: other params
+            // TODO: other params if relevant
 
             return hateoasLink;
         }
