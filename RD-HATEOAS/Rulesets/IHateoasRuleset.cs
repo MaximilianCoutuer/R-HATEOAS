@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Net.Http;
@@ -10,8 +11,8 @@ namespace RDHATEOAS.Rulesets
     {
         // generates a link
 
-        void AddDescribedLink(ref IDictionary<string, Object> item);
-
+        void AddDescribedLink(ref IDictionary<string, Object> item, ResultExecutingContext context, dynamic data);
+        // ienumerable first()
 
     }
 }

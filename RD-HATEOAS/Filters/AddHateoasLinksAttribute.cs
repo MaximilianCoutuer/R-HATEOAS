@@ -98,7 +98,7 @@ namespace RDHATEOAS.Filters
                     // loop through rulesets and add them to dynamic object
                     foreach (IHateoasRuleset ruleset in rulesets)
                     {
-                        ruleset.AddDescribedLink(ref itemDynamic);
+                        ruleset.AddDescribedLink(ref itemDynamic, response, new Object());    // :(
                     }
                     // set result value to dynamic object
                     okObjectResult.Value = itemDynamic;
