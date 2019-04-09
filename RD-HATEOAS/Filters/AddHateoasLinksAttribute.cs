@@ -75,7 +75,7 @@ namespace RDHATEOAS.Filters
                     IEnumerable enumerable = okObjectResult.Value as IEnumerable;
                     foreach(object item in enumerable.OfType<object>())
                     {
-                        // TODO: parallel
+                        // TODO: parallel if possible
                         // TODO: send link to link builder
                     }
 
@@ -99,7 +99,7 @@ namespace RDHATEOAS.Filters
                     // loop through rulesets and add them to dynamic object
                     foreach (IHateoasRuleset ruleset in rulesets)
                     {
-                        ruleset.AddDescribedLink(ref itemDynamic, response, new Object());    // :(
+                        ruleset.AddDescribedLink(ref itemDynamic, response, new Object());    // TODO: why can't I just pass null
                     }
                     // set result value to dynamic object
                     okObjectResult.Value = itemDynamic;
