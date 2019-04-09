@@ -36,7 +36,7 @@ namespace RDHATEOAS.Filters
             return null;
         }
 
-        //private IHateoasRuleset GetModelBasedLinkRulesets(OkObjectResult okObjectResult) {
+        //private IHateoasRuleset[] GetModelBasedLinkRulesets(OkObjectResult okObjectResult) {
         //    if (IsList(okObjectResult))
         //    {
         //        // result is a list
@@ -54,7 +54,7 @@ namespace RDHATEOAS.Filters
         //    return null;
         //}
 
-        //private IHateoasRuleset GetGlobalLinkRulesets(OkObjectResult okObjectResult)
+        //private IHateoasRuleset[] GetGlobalLinkRulesets(OkObjectResult okObjectResult)
         //{
         //    return null;
         //}

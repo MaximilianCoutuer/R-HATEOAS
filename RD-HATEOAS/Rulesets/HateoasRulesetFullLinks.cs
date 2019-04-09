@@ -14,7 +14,7 @@ namespace RDHATEOAS.Rulesets
 
 
             // TODO: refactor to eliminate this line?
-            AddLinkObjectToRef(ref itemDynamic, null);
+            AddLinkObjectToRef(ref itemDynamic, new Models.HateoasLink("test", "test", HttpMethod.Get));
         }
 
 
