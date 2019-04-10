@@ -16,16 +16,15 @@ namespace RDHATEOAS.Builders
             _urlHelper = urlHelper;
         }
 
-        // TODO: Document
-        public HateoasLink Build(ActionContext response)
+        public HateoasLink Build(ActionContext response, string routeUrl, string linkController, int linkId, string linkRel, HttpMethod linkMethod)
         {
             var uri = response.HttpContext.Request.Host.ToUriComponent()
-                + _urlHelper.RouteUrl("Testroute", new {
-                    controller = "person",
-                    id = 1      // TODO: softcode based on ruleset
+                + _urlHelper.RouteUrl(routeUrl, new {
+                    controller = linkController,
+                    id = linkId
                 });
-            var rel = "next";   // TODO: softcode based on ruleset
-            var httpMethod = HttpMethod.Get;    // TODO: softcode based on ruleset
+            var rel = linkRel;
+            var httpMethod = linkMethod;
             var hateoasLink = new HateoasLink(uri, rel, HttpMethod.Get);
 
             // TODO: other params if relevant

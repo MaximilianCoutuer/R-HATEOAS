@@ -96,7 +96,7 @@ namespace RDHATEOAS.Filters
                         itemDynamic.Add(property.Name, property.GetValue(item));
                     }
 
-                    // loop through rulesets and add them to dynamic object
+                    // loop through rulesets and add them to this dynamic object
                     foreach (IHateoasRuleset ruleset in rulesets)
                     {
                         ruleset.AddDescribedLink(ref itemDynamic, response, new Object());    // TODO: why can't I just pass null

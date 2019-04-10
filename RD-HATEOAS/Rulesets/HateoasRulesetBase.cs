@@ -10,16 +10,14 @@ namespace RDHATEOAS.Rulesets
 {
     public abstract class HateoasRulesetBase : IHateoasRuleset
     {
-        
-        public virtual void AddDescribedLink(ref IDictionary<string, Object> itemDynamic, ResultExecutingContext context, dynamic data) {
-            // default null implementation
+        public void AddDescribedLink(ref IDictionary<string, Object> itemDynamic, ResultExecutingContext context, dynamic data) {
+            itemDynamic.Add("_links", AddLinkObjectToRef(itemDynamic, context, data));
         }
 
-        protected void AddLinkObjectToRef(ref IDictionary<string, Object> itemDynamic, HateoasLink link)
+        protected virtual HateoasLink[] AddLinkObjectToRef(IDictionary<string, Object> itemDynamic, ResultExecutingContext context, dynamic data)
         {
-            itemDynamic.Add("_links", link);
+            // default null implementation
+            return null;
         }
-
-
     }
 }
