@@ -10,6 +10,9 @@ namespace RDHATEOAS.Rulesets
 {
     public abstract class HateoasRulesetBase : IHateoasRuleset
     {
+
+        public HateoasRulesetBase() { }
+
         public void AddDescribedLink(ref IDictionary<string, Object> itemDynamic, ResultExecutingContext context, dynamic data) {
             itemDynamic.Add("_links", AddLinkObjectToRef(itemDynamic, context, data));
         }

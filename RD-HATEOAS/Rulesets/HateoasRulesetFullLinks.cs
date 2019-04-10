@@ -15,10 +15,10 @@ namespace RDHATEOAS.Rulesets
         protected override HateoasLink[] AddLinkObjectToRef(IDictionary<string, Object> itemDynamic, ResultExecutingContext context, dynamic data) {
 
             return new HateoasLink[] {
-                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", 1, "self", HttpMethod.Get),
-                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", 1, "self", HttpMethod.Get),
-                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", 1, "self", HttpMethod.Get),
-                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", 1, "self", HttpMethod.Get),
+                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Get),
+                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Get, 1),
+                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Post, null, "be-nl"),
+                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Delete),
             };
         }
 

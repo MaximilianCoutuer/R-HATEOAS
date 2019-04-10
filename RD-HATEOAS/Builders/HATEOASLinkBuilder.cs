@@ -16,7 +16,7 @@ namespace RDHATEOAS.Builders
             _urlHelper = urlHelper;
         }
 
-        public HateoasLink Build(ActionContext response, string routeUrl, string linkController, int linkId, string linkRel, HttpMethod linkMethod)
+        public HateoasLink Build(ActionContext response, string routeUrl, string linkController, string linkRel, HttpMethod linkMethod, int? linkId = null, string linkHreflang = null, string linkMedia = null, string linkTitle = null, string linkType = null)
         {
             var uri = response.HttpContext.Request.Host.ToUriComponent()
                 + _urlHelper.RouteUrl(routeUrl, new {
@@ -24,8 +24,13 @@ namespace RDHATEOAS.Builders
                     id = linkId
                 });
             var rel = linkRel;
-            var httpMethod = linkMethod;
-            var hateoasLink = new HateoasLink(uri, rel, HttpMethod.Get);
+            var hateoasLink = new HateoasLink(uri, linkRel, linkMethod)
+            {
+                Hreflang = linkHreflang,
+                Media = linkMedia,
+                Title = linkTitle,
+                Type = linkType
+            };
 
             // TODO: other params if relevant
 

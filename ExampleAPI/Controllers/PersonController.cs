@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RDHATEOAS.Controllers;
 using RDHATEOAS.Filters;
+using RDHATEOAS.Rulesets;
 using RDHATEOAS.Services;
 
 // an example API that returns person data. Each person comes with a country.
@@ -47,8 +48,8 @@ namespace ExampleAPI.Controllers
 
         // GET api/person
         [HttpGet]
-        //[AddHateoasLinks("Test")]
-        [TypeFilter(typeof(AddHateoasLinksAttribute))]
+        //[TypeFilter(typeof(AddHateoasLinksAttribute))]
+        [AddHateoasLinks("HateoasRulesetFullLinks")]
         public async Task<ActionResult> GetAllPersons()
         {
             IEnumerable<Person> persons = await _context.Persons.ToListAsync();
@@ -63,8 +64,8 @@ namespace ExampleAPI.Controllers
 
         // GET api/person/5
         [HttpGet("{id}")]
-        [TypeFilter(typeof(AddHateoasLinksAttribute))]
-        [HATEOASLinks("test25")]
+        [AddHateoasLinks(new string[] { "HateoasRulesetFullLinks" })]
+        //[HATEOASLinks("test25")]
         public async Task<ActionResult<Person>> GetPerson(int Id)
         {
             //var test = Attribute.GetCustomAttributes(typeof(RequireHttpsAttribute), true);
