@@ -86,6 +86,7 @@ namespace RDHATEOAS.Filters
                     {
                         // TODO: parallel if possible
                         // TODO: send link to link builder
+                        // TODO: also send ID and count to link builder
                     }
                     //Parallel.ForEach((List<Object>)(okObjectResult.Value), (element) =>
                     // {
@@ -105,7 +106,7 @@ namespace RDHATEOAS.Filters
                     // loop through rulesets and add them to this dynamic object
                     foreach (IHateoasRuleset ruleset in _rulesets)
                     {
-                        ruleset.AddDescribedLink(ref itemDynamic, response, null);    // TODO: why can't I just pass null
+                        ruleset.AddDescribedLink(ref itemDynamic, response, null);
                     }
                     // set result value to dynamic object
                     okObjectResult.Value = itemDynamic;
