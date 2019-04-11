@@ -7,10 +7,7 @@ namespace RDHATEOAS.Rulesets
 {
     public interface IHateoasRuleset
     {
-        // generates a link
         object Parameter { get; set; }
         void AddDescribedLink(ref IsHateoasEnabled item, ResultExecutingContext context, dynamic data);
-        // ienumerable first()
-
     }
 }

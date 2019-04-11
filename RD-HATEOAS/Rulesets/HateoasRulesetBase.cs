@@ -7,8 +7,9 @@ namespace RDHATEOAS.Rulesets
 {
     public abstract class HateoasRulesetBase : IHateoasRuleset
     {
-
         public HateoasRulesetBase() { }
+
+        public object Parameter { get; set; }
 
         public void AddDescribedLink(ref IsHateoasEnabled item, ResultExecutingContext context, dynamic data) {
             item._links = AddLinkObjectToRef(item, context, data);

@@ -46,22 +46,22 @@ namespace ExampleAPI.Controllers
             }
         }
 
-        //// GET api/person
-        //[HttpGet]
-        ////[TypeFilter(typeof(AddHateoasLinksAttribute))]
-        //[AddHateoasLinks("HateoasRulesetFullLinks")]
-        //public async Task<ActionResult> GetAllPersons()
-        //{
-        //    IEnumerable<Person> persons = await _context.Persons.ToListAsync();
-        //    if (persons.Count() == 0)
-        //    {
-        //        return NotFound();
-        //    }
-        //    else
-        //    {
-        //        return Ok(persons);
-        //    }
-        //}
+        // GET api/person
+        [HttpGet]
+        //[TypeFilter(typeof(AddHateoasLinksAttribute))]
+        [AddHateoasLinks(null, new[] { typeof(HateoasRulesetFullLinks) })]
+        public async Task<ActionResult> GetAllPersons()
+        {
+            IEnumerable<Person> persons = await _context.Persons.ToListAsync();
+            if (persons.Count() == 0)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(persons);
+            }
+        }
 
         // GET api/person/5
         [HttpGet("{id}")]
