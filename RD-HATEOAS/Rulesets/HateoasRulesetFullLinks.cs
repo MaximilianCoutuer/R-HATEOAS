@@ -12,7 +12,7 @@ namespace RDHATEOAS.Rulesets
 {
     public class HateoasRulesetFullLinks : HateoasRulesetBase
     {
-        protected override HateoasLink[] AddLinkObjectToRef(IDictionary<string, Object> itemDynamic, ResultExecutingContext context, dynamic data) {
+        protected override HateoasLink[] AddLinkObjectToRef(IsHateoasEnabled item, ResultExecutingContext context, dynamic data) {
 
             return new HateoasLink[] {
                 new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Get),

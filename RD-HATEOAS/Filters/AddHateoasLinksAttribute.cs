@@ -97,7 +97,7 @@ namespace RDHATEOAS.Filters
                     // HACK: Copy existing properties into dynamic object
                     // this might be too slow in general
                     IDictionary<string, object> itemDynamic = new ExpandoObject();
-                    var item = okObjectResult.Value;
+                    var item = (IsHateoasEnabled)okObjectResult.Value;
                     foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(item.GetType()))
                     {
                         itemDynamic.Add(property.Name, property.GetValue(item));
@@ -106,10 +106,13 @@ namespace RDHATEOAS.Filters
                     // loop through rulesets and add them to this dynamic object
                     foreach (IHateoasRuleset ruleset in _rulesets)
                     {
-                        ruleset.AddDescribedLink(ref itemDynamic, response, null);
+                        ruleset.AddDescribedLink(ref item, response, null);
                     }
                     // set result value to dynamic object
                     okObjectResult.Value = itemDynamic;
+
+
+
                 }
                 //else if (okObjectResult.Value is PagedSearchDTO<Object> pagedSearch)
                 //{

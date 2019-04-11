@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using RDHATEOAS.Models;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -11,7 +12,7 @@ namespace RDHATEOAS.Rulesets
     {
         // generates a link
 
-        void AddDescribedLink(ref IDictionary<string, Object> item, ResultExecutingContext context, dynamic data);
+        void AddDescribedLink(ref IsHateoasEnabled item, ResultExecutingContext context, dynamic data);
         // ienumerable first()
 
     }
