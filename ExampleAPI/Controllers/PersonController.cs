@@ -46,25 +46,26 @@ namespace ExampleAPI.Controllers
             }
         }
 
-        // GET api/person
-        [HttpGet]
-        //[TypeFilter(typeof(AddHateoasLinksAttribute))]
-        [AddHateoasLinks("HateoasRulesetFullLinks")]
-        public async Task<ActionResult> GetAllPersons()
-        {
-            IEnumerable<Person> persons = await _context.Persons.ToListAsync();
-            if (persons.Count() == 0)
-            {
-                return NotFound();
-            } else
-            {
-                return Ok(persons);
-            }
-        }
+        //// GET api/person
+        //[HttpGet]
+        ////[TypeFilter(typeof(AddHateoasLinksAttribute))]
+        //[AddHateoasLinks("HateoasRulesetFullLinks")]
+        //public async Task<ActionResult> GetAllPersons()
+        //{
+        //    IEnumerable<Person> persons = await _context.Persons.ToListAsync();
+        //    if (persons.Count() == 0)
+        //    {
+        //        return NotFound();
+        //    }
+        //    else
+        //    {
+        //        return Ok(persons);
+        //    }
+        //}
 
         // GET api/person/5
         [HttpGet("{id}")]
-        [AddHateoasLinks(new string[] { "HateoasRulesetFullLinks" })]
+        [AddHateoasLinks("Id", new[] { typeof(HateoasRulesetFullLinks) })]
         //[HATEOASLinks("test25")]
         public async Task<ActionResult<Person>> GetPerson(int Id)
         {
@@ -75,7 +76,8 @@ namespace ExampleAPI.Controllers
             if (person == null)
             {
                 return NotFound();
-            } else
+            }
+            else
             {
                 return Ok(person);
             }
@@ -109,7 +111,8 @@ namespace ExampleAPI.Controllers
                 await _context.SaveChangesAsync();
                 return NoContent();
                 // TODO: return 409 Conflict or 415 Unsupported Media Type if representation inconsistent
-            } else
+            }
+            else
             {
                 // returns 201 Created
                 _context.Add<Person>(person);

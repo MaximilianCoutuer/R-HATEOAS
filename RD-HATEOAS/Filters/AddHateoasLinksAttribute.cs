@@ -20,18 +20,19 @@ namespace RDHATEOAS.Filters
     [System.AttributeUsage(System.AttributeTargets.Method | System.AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class AddHateoasLinksAttribute : ResultFilterAttribute
     {
-        private List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
+        private readonly string _parameterName;
+        private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
 
-        public AddHateoasLinksAttribute(string[] rulesetNames)
+        public AddHateoasLinksAttribute(string parameterName, Type[] rulesetNames)
         {
-            foreach (string rulesetName in rulesetNames)
+            _parameterName = parameterName;
+            foreach (var type in rulesetNames)
             {
-                Type type = Type.GetType("RDHATEOAS.Rulesets." + rulesetName);   // HACK ALERT
                 _rulesets.Add((IHateoasRuleset)Activator.CreateInstance(type));
             }
         }
 
-        public AddHateoasLinksAttribute(string rulesetName) : this(new string[] { rulesetName })
+        public AddHateoasLinksAttribute(string parameterName, Type rulesetName) : this(parameterName, new Type[] { rulesetName })
         {
         }
 
@@ -103,9 +104,11 @@ namespace RDHATEOAS.Filters
                         itemDynamic.Add(property.Name, property.GetValue(item));
                     }
 
+                    var parameter = response.RouteData.Values[_parameterName];
                     // loop through rulesets and add them to this dynamic object
                     foreach (IHateoasRuleset ruleset in _rulesets)
                     {
+                        ruleset.Parameter = parameter;
                         ruleset.AddDescribedLink(ref itemDynamic, response, null);
                     }
                     // set result value to dynamic object

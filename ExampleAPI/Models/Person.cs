@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ExampleAPI.Models
 {
     [HATEOASLinks("test_links_in_model")]
-    public class Person
+    public class Person : BaseHateaos
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

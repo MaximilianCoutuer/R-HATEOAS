@@ -2,9 +2,6 @@
 using RDHATEOAS.Models;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Net.Http;
-using System.Text;
 
 namespace RDHATEOAS.Rulesets
 {
@@ -12,6 +9,8 @@ namespace RDHATEOAS.Rulesets
     {
 
         public HateoasRulesetBase() { }
+
+        public object Parameter { get; set; }
 
         public void AddDescribedLink(ref IDictionary<string, Object> itemDynamic, ResultExecutingContext context, dynamic data) {
             itemDynamic.Add("_links", AddLinkObjectToRef(itemDynamic, context, data));
