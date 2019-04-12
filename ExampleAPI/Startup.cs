@@ -90,7 +90,7 @@ namespace ExampleAPI
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "Testroute",
+                    name: "HateoasRoute",
                     template: "api/{controller=Values}/{id?}");
             }); // urlhelper
         }

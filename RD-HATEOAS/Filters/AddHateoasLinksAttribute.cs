@@ -9,6 +9,7 @@ using RDHATEOAS.Rulesets;
 using System.Linq;
 using RDHATEOAS.Extensions;
 using RDHATEOAS.Builders;
+using System.Threading.Tasks;
 
 namespace RDHATEOAS.Filters
 {
@@ -76,10 +77,17 @@ namespace RDHATEOAS.Filters
 
                 if (okObjectResult.Value.GetType().IsList())
                 {
-                    IEnumerable enumerable = okObjectResult.Value as IEnumerable;
-                    foreach(object item in enumerable.OfType<object>())
+                    IList enumerable = okObjectResult.Value as IList;
+                    for (int i = 0; i < enumerable.Count; i++)
+                    //foreach (IsHateoasEnabled item in enumerable.OfType<object>())
                     {
                         // TODO: parallel if possible, send ID and count to link builder
+                        foreach(IHateoasRuleset ruleset in _rulesets)
+                        {
+                            ruleset.Parameter = parameter;
+                            var item = (IsHateoasEnabled)enumerable[i];
+                            ruleset.AddLinksToRef(ref item, context);
+                        }
                     }
                     //Parallel.ForEach((List<Object>)(okObjectResult.Value), (element) =>
                     // {
