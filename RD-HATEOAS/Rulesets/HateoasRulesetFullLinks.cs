@@ -10,11 +10,12 @@ namespace RDHATEOAS.Rulesets
 {
     public class HateoasRulesetFullLinks : HateoasRulesetBase
     {
-        protected override HateoasLink[] AddLinkObjectToRef(IsHateoasEnabled item, ResultExecutingContext context, dynamic data) {
+        protected override HateoasLink[] GetLinks(IsHateoasEnabled item, ResultExecutingContext context, dynamic data) {
 
+            var test = Parameter;
             return new HateoasLink[] {
                 new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Get),
-                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Get, 1),
+                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Get, int.Parse((string)Parameter)),
                 new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Post, null, "be-nl"),
                 new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Delete),
             };

@@ -1,23 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using System.Dynamic;
-using System.ComponentModel;
 using Microsoft.AspNetCore.Mvc.Routing;
 using RDHATEOAS.Models;
-using System.Net.Http;
 using System.Collections;
 using RDHATEOAS.Rulesets;
-using System.Threading.Tasks;
 using System.Linq;
 using RDHATEOAS.Extensions;
 using RDHATEOAS.Builders;
 
 namespace RDHATEOAS.Filters
 {
-    [System.AttributeUsage(System.AttributeTargets.Method | System.AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
+    [System.AttributeUsage(System.AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class AddHateoasLinksAttribute : ResultFilterAttribute
     {
         private readonly string _parameterName;
@@ -32,9 +27,7 @@ namespace RDHATEOAS.Filters
             }
         }
 
-        public AddHateoasLinksAttribute(string parameterName, Type rulesetName) : this(parameterName, new Type[] { rulesetName })
-        {
-        }
+        public AddHateoasLinksAttribute(string parameterName, Type rulesetName) : this(parameterName, new Type[] { rulesetName }) { }
 
         //private IHateoasRuleset[] GetControllerBasedLinkRulesets(ResultExecutingContext response)
         //{
@@ -79,15 +72,14 @@ namespace RDHATEOAS.Filters
             {
                 var urlHelper = new UrlHelper(response); // DI not possible?
                 var hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
-                               
+                var parameter = response.RouteData.Values[_parameterName];
+
                 if (okObjectResult.Value.GetType().IsList())
                 {
                     IEnumerable enumerable = okObjectResult.Value as IEnumerable;
                     foreach(object item in enumerable.OfType<object>())
                     {
-                        // TODO: parallel if possible
-                        // TODO: send link to link builder
-                        // TODO: also send ID and count to link builder
+                        // TODO: parallel if possible, send ID and count to link builder
                     }
                     //Parallel.ForEach((List<Object>)(okObjectResult.Value), (element) =>
                     // {
@@ -99,11 +91,9 @@ namespace RDHATEOAS.Filters
                     // loop through rulesets and add them to this dynamic object
                     foreach (IHateoasRuleset ruleset in _rulesets)
                     {
-                        ruleset.AddDescribedLink(ref item, response, null);
+                        ruleset.Parameter = parameter;
+                        ruleset.AddLinksToRef(ref item, response, null);
                     }
-
-
-
                 }
                 //else if (okObjectResult.Value is PagedSearchDTO<Object> pagedSearch)
                 //{

@@ -8,6 +8,6 @@ namespace RDHATEOAS.Rulesets
     public interface IHateoasRuleset
     {
         object Parameter { get; set; }
-        void AddDescribedLink(ref IsHateoasEnabled item, ResultExecutingContext context, dynamic data);
+        void AddLinksToRef(ref IsHateoasEnabled item, ResultExecutingContext context, dynamic data);
     }
 }

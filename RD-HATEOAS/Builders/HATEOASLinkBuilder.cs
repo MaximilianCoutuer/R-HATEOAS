@@ -23,7 +23,6 @@ namespace RDHATEOAS.Builders
                     controller = linkController,
                     id = linkId
                 });
-            var rel = linkRel;
             var hateoasLink = new HateoasLink(uri, linkRel, linkMethod)
             {
                 Hreflang = linkHreflang,
@@ -31,9 +30,6 @@ namespace RDHATEOAS.Builders
                 Title = linkTitle,
                 Type = linkType
             };
-
-            // TODO: other params if relevant
-
             return hateoasLink;
         }
 
