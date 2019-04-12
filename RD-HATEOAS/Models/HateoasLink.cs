@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Dynamic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
-using System.Text;
 
 namespace RDHATEOAS.Models
 {
+    /// <summary>
+    /// A HATEOAS link.
+    /// Contains all relevant HATEOAS fields and getters and setters for each.
+    /// </summary>
     public class HateoasLink
     {
         #region fields
