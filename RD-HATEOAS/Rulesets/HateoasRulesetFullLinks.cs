@@ -14,8 +14,9 @@ namespace RDHATEOAS.Rulesets
 
             // TODO: sugar for self link
             // TODO: automatic first/last
+            int id;
             return new HateoasLink[] {
-                new HateoasLinkBuilder(_urlHelper).Build(context, "HateoasRoute", "person", "self", HttpMethod.Get, (Parameter != null) ? (int?)int.Parse((string)Parameter) : null),   // HACK: cast to int? is required for code to compile
+                new HateoasLinkBuilder(_urlHelper).Build(context, "HateoasRoute", "person", "self", HttpMethod.Get, int.TryParse((string)Parameter, out id) ? (int?)id : null),
                 new HateoasLinkBuilder(_urlHelper).Build(context, "HateoasRoute", "person", "list", HttpMethod.Get),
                 new HateoasLinkBuilder(_urlHelper).Build(context, "HateoasRoute", "person", "edit", HttpMethod.Post, null, "be-nl"),
                 new HateoasLinkBuilder(_urlHelper).Build(context, "HateoasRoute", "person", "delete", HttpMethod.Delete),
