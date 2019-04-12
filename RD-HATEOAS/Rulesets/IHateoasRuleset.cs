@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 namespace RDHATEOAS.Rulesets
 {
+    /// <summary>
+    /// The interface that defines a ruleset.
+    /// Individual rulesets should inherit from HateoasRulesetBase instead.
+    /// </summary>
     public interface IHateoasRuleset
     {
         object Parameter { get; set; }
