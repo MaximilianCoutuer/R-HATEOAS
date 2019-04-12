@@ -11,11 +11,11 @@ namespace RDHATEOAS.Rulesets
 
         public object Parameter { get; set; }
 
-        public void AddLinksToRef(ref IsHateoasEnabled item, ResultExecutingContext context, dynamic data) {
+        public void AddLinksToRef(ref IsHateoasEnabled item, ResultExecutingContext context) {
             item._links = GetLinks(item, context, data);
         }
 
-        protected virtual HateoasLink[] GetLinks(IsHateoasEnabled item, ResultExecutingContext context, dynamic data)
+        protected virtual HateoasLink[] GetLinks(IsHateoasEnabled item, ResultExecutingContext context)
         {
             // default null implementation
             return null;

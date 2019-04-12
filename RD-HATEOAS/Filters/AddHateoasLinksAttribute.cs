@@ -66,13 +66,13 @@ namespace RDHATEOAS.Filters
         //}
 
 
-        public override void OnResultExecuting(ResultExecutingContext response)
+        public override void OnResultExecuting(ResultExecutingContext context)
         {
-            if (response.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
+            if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                var urlHelper = new UrlHelper(response); // DI not possible?
+                var urlHelper = new UrlHelper(context); // DI not possible?
                 var hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
-                var parameter = response.RouteData.Values[_parameterName];
+                var parameter = _parameterName == null ? null : context.RouteData.Values[_parameterName];
 
                 if (okObjectResult.Value.GetType().IsList())
                 {
@@ -92,7 +92,7 @@ namespace RDHATEOAS.Filters
                     foreach (IHateoasRuleset ruleset in _rulesets)
                     {
                         ruleset.Parameter = parameter;
-                        ruleset.AddLinksToRef(ref item, response, null);
+                        ruleset.AddLinksToRef(ref item, context);
                     }
                 }
                 //else if (okObjectResult.Value is PagedSearchDTO<Object> pagedSearch)
