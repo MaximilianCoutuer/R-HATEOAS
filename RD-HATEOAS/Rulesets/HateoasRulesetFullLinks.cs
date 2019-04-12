@@ -12,13 +12,13 @@ namespace RDHATEOAS.Rulesets
     {
         protected override HateoasLink[] GetLinks(IsHateoasEnabled item, ResultExecutingContext context) {
 
-            var test = Parameter;
+            // TODO: sugar for self link
+            // TODO: automatic first/last
             return new HateoasLink[] {
-                // TODO: sugar for self link
-                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Get),
-                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Get, int.Parse((string)Parameter)),
-                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Post, null, "be-nl"),
-                new HateoasLinkBuilder(new UrlHelper(context)).Build(context, "Testroute", "person", "self", HttpMethod.Delete),
+                new HateoasLinkBuilder(_urlHelper).Build(context, "Testroute", "person", "self", HttpMethod.Get, int.Parse((string)Parameter)),
+                new HateoasLinkBuilder(_urlHelper).Build(context, "Testroute", "person", "list", HttpMethod.Get),
+                new HateoasLinkBuilder(_urlHelper).Build(context, "Testroute", "person", "edit", HttpMethod.Post, null, "be-nl"),
+                new HateoasLinkBuilder(_urlHelper).Build(context, "Testroute", "person", "delete", HttpMethod.Delete),
             };
         }
 

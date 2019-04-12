@@ -10,7 +10,7 @@ namespace RDHATEOAS.Builders
 {
     public sealed class HateoasLinkBuilder
     {
-        private readonly IUrlHelper _urlHelper;
+        private IUrlHelper _urlHelper;
 
         public HateoasLinkBuilder(IUrlHelper urlHelper) {
             _urlHelper = urlHelper;

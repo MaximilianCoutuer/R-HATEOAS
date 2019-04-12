@@ -72,7 +72,7 @@ namespace RDHATEOAS.Filters
             {
                 var urlHelper = new UrlHelper(context); // DI not possible?
                 var hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
-                var parameter = _parameterName == null ? null : context.RouteData.Values[_parameterName];
+                var parameter = _parameterName != null ? context.RouteData.Values[_parameterName] : null;
 
                 if (okObjectResult.Value.GetType().IsList())
                 {
@@ -104,7 +104,7 @@ namespace RDHATEOAS.Filters
                 //    });
                 //}
             }
-            base.OnResultExecuting(response);
+            base.OnResultExecuting(context);
         }
     }
 }
