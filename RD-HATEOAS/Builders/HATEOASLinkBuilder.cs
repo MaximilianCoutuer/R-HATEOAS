@@ -8,6 +8,8 @@ using System.Text;
 
 namespace RDHATEOAS.Builders
 {
+    //
+    //
     public sealed class HateoasLinkBuilder
     {
         private IUrlHelper _urlHelper;
@@ -16,20 +18,17 @@ namespace RDHATEOAS.Builders
             _urlHelper = urlHelper;
         }
 
-        public HateoasLink Build(ActionContext response, string routeUrl, string linkController, string linkRel, HttpMethod linkMethod, int? linkId = null, string linkHreflang = null, string linkMedia = null, string linkTitle = null, string linkType = null)
+        // <summary>
+        //
+        // </summary>
+        public HateoasLink Build(ActionContext response, string routeUrl, string linkController, string linkRel, HttpMethod linkMethod, int? linkId = null)
         {
             var uri = response.HttpContext.Request.Host.ToUriComponent()
                 + _urlHelper.RouteUrl(routeUrl, new {
                     controller = linkController,
                     id = linkId
                 });
-            var hateoasLink = new HateoasLink(uri, linkRel, linkMethod)
-            {
-                Hreflang = linkHreflang,
-                Media = linkMedia,
-                Title = linkTitle,
-                Type = linkType
-            };
+            var hateoasLink = new HateoasLink(uri, linkRel, linkMethod);
             return hateoasLink;
         }
 

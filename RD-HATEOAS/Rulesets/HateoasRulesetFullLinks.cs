@@ -18,7 +18,7 @@ namespace RDHATEOAS.Rulesets
             return new HateoasLink[] {
                 new HateoasLinkBuilder(_urlHelper).Build(context, "HateoasRoute", "person", "self", HttpMethod.Get, int.TryParse((string)Parameter, out id) ? id : default(int?)),
                 new HateoasLinkBuilder(_urlHelper).Build(context, "HateoasRoute", "person", "list", HttpMethod.Get),
-                new HateoasLinkBuilder(_urlHelper).Build(context, "HateoasRoute", "person", "edit", HttpMethod.Post, null, "be-nl", "doctype/jpg", "Photo of a duck", "photo"),
+                new HateoasLinkBuilder(_urlHelper).Build(context, "HateoasRoute", "person", "edit", HttpMethod.Post).AddHreflang("be-nl").AddMedia("doctype/jpg").AddTitle("Photo of a duck").AddType("image"),
                 new HateoasLinkBuilder(_urlHelper).Build(context, "HateoasRoute", "person", "delete", HttpMethod.Delete),
             };
         }

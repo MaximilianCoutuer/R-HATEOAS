@@ -55,5 +55,33 @@ namespace RDHATEOAS.Models
         }
         #endregion
 
+        #region methods
+
+        public HateoasLink AddHreflang(string Hreflang)
+        {
+            this.Hreflang = Hreflang;
+            return this;
+        }
+
+        public HateoasLink AddMedia(string Media)
+        {
+            this.Media = Media;
+            return this;
+        }
+
+        public HateoasLink AddTitle(string Title)
+        {
+            this.Title = Title;
+            return this;
+        }
+
+        public HateoasLink AddType(string Type)
+        {
+            this.Type = Type;
+            return this;
+        }
+
+        #endregion
+
     }
 }
