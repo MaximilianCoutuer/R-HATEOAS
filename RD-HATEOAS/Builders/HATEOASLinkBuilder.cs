@@ -21,12 +21,13 @@ namespace RDHATEOAS.Builders
         // <summary>
         //
         // </summary>
-        public HateoasLink Build(ActionContext response, string routeUrl, string linkController, string linkRel, HttpMethod linkMethod, int? linkId = null)
+        public HateoasLink Build(ActionContext response, string routeUrl, string linkController, string linkRel, HttpMethod linkMethod, Object linkId = null)
         {
+            int id;
             var uri = response.HttpContext.Request.Host.ToUriComponent()
                 + _urlHelper.RouteUrl(routeUrl, new {
                     controller = linkController,
-                    id = linkId
+                    id = (int.TryParse((string)(linkId ?? ""), out id) ? id : default(int?))
                 });
             var hateoasLink = new HateoasLink(uri, linkRel, linkMethod);
             return hateoasLink;

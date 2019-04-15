@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
+using RDHATEOAS.Builders;
 using RDHATEOAS.Models;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,11 @@ namespace RDHATEOAS.Rulesets
     {
         public object Parameter { get; set; }
         protected UrlHelper _urlHelper { get; set; }
+        protected HateoasLinkBuilder hateoasLinkBuilder { get; set; }
 
         public void AddLinksToRef(ref IsHateoasEnabled item, ResultExecutingContext context) {
             _urlHelper = new UrlHelper(context);
+            hateoasLinkBuilder = new HateoasLinkBuilder(_urlHelper);
             item._links = GetLinks(item, context);
         }
 
