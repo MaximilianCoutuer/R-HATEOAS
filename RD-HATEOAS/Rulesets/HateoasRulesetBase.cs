@@ -21,7 +21,7 @@ namespace RDHATEOAS.Rulesets
 
         protected virtual HateoasLink[] GetLinks(IsHateoasEnabled item, ResultExecutingContext context)
         {
-            // default null implementation
+            // default null implementation yields no links
             return null;
         }
     }

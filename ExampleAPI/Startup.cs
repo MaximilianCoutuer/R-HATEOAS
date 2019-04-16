@@ -37,39 +37,10 @@ namespace ExampleAPI
             services.AddDbContext<PersonContext>(options => options.UseInMemoryDatabase("Person"));
             services.AddEntityFrameworkInMemoryDatabase();
 
-
-            //services.AddScoped<IActionContextAccessor, ActionContextAccessor>();
-            //services.AddScoped<IUrlHelper>(x =>
-            //{
-            //    var actionContext = x.GetService<IActionContextAccessor>().ActionContext;
-            //    return new UrlHelper(actionContext);
-            //});
-
-
-
-            //// boilerplate in order to initialise the UrlHelper with the correct context
-            //services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            //services.AddScoped<IUrlHelper>(x =>
-            //{
-            //    var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
-            //    var factory = x.GetRequiredService<IUrlHelperFactory>();
-            //    return factory.GetUrlHelper(actionContext);
-            //});
-
-
-
             // hateoas configuration
             var hateoasOptions = new HateoasOptions();
             hateoasOptions.linkAddersModel.Add(new LinkAdderModelDefault<Person>());
             services.AddSingleton(hateoasOptions);
-
-
-            //services.AddScoped<ILinkService, LinkService>();
-            //services.Configure<HATEOASLinksOptions>(Configuration);
-            //services.AddOptions<HATEOASLinksOptions>()
-            //    .Bind(Configuration.GetSection("HATEOASLinksOptions"))
-            //    .ValidateDataAnnotations();
-            // add here
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,14 +56,13 @@ namespace ExampleAPI
             }
 
             app.UseHttpsRedirection();
-            //app.UseMiddleware<HATEOASSupportMiddleware>();    // not applicable 
-            //app.UseMvc();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "HateoasRoute",
                     template: "api/{controller=Values}/{id?}");
-            }); // urlhelper
+            });
         }
     }
 }
