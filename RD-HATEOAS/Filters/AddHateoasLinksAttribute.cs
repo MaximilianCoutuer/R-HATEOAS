@@ -54,9 +54,6 @@ namespace RDHATEOAS.Filters
 
                 if (okObjectResult.Value.GetType().IsList())
                 {
-                    // TODO: links attached to object list
-                    // We could use the first ruleset as an object list ruleset and the second as an object ruleset?
-                    // TODO: "first" and "last"?
                     var list = okObjectResult.Value as IList;
                     for (int i = 0; i < list.Count; i++)  // Foreach doesn't allow modifying objects
                     {
@@ -67,6 +64,8 @@ namespace RDHATEOAS.Filters
                             ruleset.AddLinksToRef(ref item, context);
                         }
                     }
+
+                    // TODO: "First" and "Last" are hardcoded because they are standard options
 
                     // HACK: This is horrible and needs a rewrite, there HAS to be a better way
                     var objectList = new ListHateoasEnabled();
