@@ -16,6 +16,7 @@ namespace RDHATEOAS.Rulesets
         public object Parameter { get; set; }
         protected UrlHelper _urlHelper { get; set; }
         protected HateoasLinkBuilder hateoasLinkBuilder { get; set; }
+        public virtual bool AppliesToEachListItem { get; set; } = false;
 
         /// <summary>
         /// Accepts a reference to an instance of a HATEOAS enabled object and adds links to it.

@@ -5,11 +5,9 @@ using System.Text;
 
 namespace RDHATEOAS.Models
 {
-    public abstract class IsHateoasEnabled
+    public class ListHateoasEnabled : IsHateoasEnabled
     {
-        // TODO: Multiple inheritance is problem?
-
-        [NotMapped]
-        public HateoasLink[] _links { get; set; }
+        // TODO: This is horrible and needs a rewrite
+        public List<Object> list = new List<Object>();
     }
 }

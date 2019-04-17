@@ -10,8 +10,9 @@ namespace RDHATEOAS.Rulesets
 {
     public class HateoasRulesetFullLinks : HateoasRulesetBase
     {
+        public override bool AppliesToEachListItem { get; set; } = true;
+
         protected override HateoasLink[] GetLinks(IsHateoasEnabled item, ResultExecutingContext context) {
-            // TODO: sugar for self link
             // TODO: automatic first/last
             return new HateoasLink[] {
                 hateoasLinkBuilder.BuildSelfLink(context, "HateoasRoute", "person"),

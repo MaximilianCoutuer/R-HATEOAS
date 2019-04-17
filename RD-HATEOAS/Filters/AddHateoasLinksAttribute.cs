@@ -60,13 +60,28 @@ namespace RDHATEOAS.Filters
                     var list = okObjectResult.Value as IList;
                     for (int i = 0; i < list.Count; i++)  // Foreach doesn't allow modifying objects
                     {
-                        foreach(IHateoasRuleset ruleset in _rulesets)
+                        foreach(IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
                         {
                             ruleset.Parameter = parameter;
                             var item = (IsHateoasEnabled)list[i];
                             ruleset.AddLinksToRef(ref item, context);
                         }
                     }
+
+                    // HACK: This is horrible and needs a rewrite, there HAS to be a better way
+                    var objectList = new ListHateoasEnabled();
+                    foreach (Object listitem in list)
+                    {
+                        objectList.list.Add((Object)listitem);
+                    }
+                    var hateoaslist = (IsHateoasEnabled)objectList;    // why do I need a cast if it inherits from it? oO
+                    foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
+                    {
+                        ruleset.Parameter = parameter;
+                        ruleset.AddLinksToRef(ref hateoaslist, context);
+                    }
+                    okObjectResult.Value = hateoaslist;
+                    // /This is horrible and needs a rewrite
                 }
                 else
                 {
