@@ -54,6 +54,8 @@ namespace RDHATEOAS.Filters
 
                 if (okObjectResult.Value.GetType().IsList())
                 {
+                    // TODO: links attached to object list
+                    // We could use the first ruleset as an object list ruleset and the second as an object ruleset?
                     // TODO: "first" and "last"?
                     var list = okObjectResult.Value as IList;
                     for (int i = 0; i < list.Count; i++)  // Foreach doesn't allow modifying objects
