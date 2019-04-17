@@ -21,14 +21,20 @@ namespace RDHATEOAS.Rulesets
         /// Accepts a reference to an instance of a HATEOAS enabled object and adds links to it.
         /// The logic determining which links are to be added is in GetLinks(), which should be overridden in subclasses.
         /// </summary>
-        /// <param name="item"></param>
-        /// <param name="context"></param>
+        /// <param name="item">An instance of a model that inherits the IsHateoasEnabled class and needs to have links added to it.</param>
+        /// <param name="context">The result context.</param>
         public void AddLinksToRef(ref IsHateoasEnabled item, ResultExecutingContext context) {
             _urlHelper = new UrlHelper(context);
             hateoasLinkBuilder = new HateoasLinkBuilder(_urlHelper);
             item._links = GetLinks(item, context);
         }
 
+        /// <summary>
+        /// Returns all links that should be added to this item, in HateoasLink format.
+        /// </summary>
+        /// <param name="item">An instance of a model that inherits the IsHateoasEnabled class and needs to have links added to it.</param>
+        /// <param name="context">The result context.</param>
+        /// <returns></returns>
         protected virtual HateoasLink[] GetLinks(IsHateoasEnabled item, ResultExecutingContext context)
         {
             // default null implementation yields no links

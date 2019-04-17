@@ -1,25 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
 using ExampleAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using RDHATEOAS.Controllers;
 using RDHATEOAS.Filters;
 using RDHATEOAS.Rulesets;
 using RDHATEOAS.Services;
 
-// an example API that returns person data. Each person comes with a country.
 namespace ExampleAPI.Controllers
 {
+    /// <summary>
+    /// This is an example controller that offers basic functionality.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class PersonController : ControllerBase
@@ -30,9 +24,8 @@ namespace ExampleAPI.Controllers
         public PersonController(PersonContext context)
         {
             _context = context;
-            //_linkService = linkService; // ILinkService
 
-            // seed database with one item so we don't need to start off by creating items
+            // Seed database with one item
             if (_context.Persons.Count() == 0)
             {
                 _context.Add(new Person()
@@ -40,7 +33,10 @@ namespace ExampleAPI.Controllers
                     FirstName = "Maximilian",
                     LastName = "Coutuer",
                     Age = 35,
-                    Country = new Country() { Name = "Belgium", Capital = "Brussels" },
+                    Country = new Country() {
+                        Name = "Belgium",
+                        Capital = "Brussels"
+                    },
                 });
                 _context.SaveChanges();
             }
@@ -66,11 +62,8 @@ namespace ExampleAPI.Controllers
         // GET api/person/5
         [HttpGet("{id}")]
         [AddHateoasLinks("Id", new[] { typeof(HateoasRulesetFullLinks) })]
-        //[HATEOASLinks("test25")]
         public async Task<ActionResult<Person>> GetPerson(int Id)
         {
-            //var test = Attribute.GetCustomAttributes(typeof(RequireHttpsAttribute), true);
-
             var person = await _context.FindAsync<Person>(Id);
 
             if (person == null)
@@ -105,8 +98,6 @@ namespace ExampleAPI.Controllers
             {
                 // returns 204 No Content
                 // (may also return 200 OK)
-                //_context.Entry(person).State = EntityState.Modified;
-                //await _context.SaveChangesAsync();
                 _context.Update<Person>(person);
                 await _context.SaveChangesAsync();
                 return NoContent();
@@ -138,6 +129,10 @@ namespace ExampleAPI.Controllers
             return NoContent();
         }
 
-        // PATCH api/person/5  
+        // PATCH api/person/5
+        public async Task<ActionResult<Person>> PatchPerson(int id, Person person)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
