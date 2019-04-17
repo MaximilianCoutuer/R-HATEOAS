@@ -12,10 +12,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using RDHATEOAS.LinkAdders;
-using RDHATEOAS.Middleware;
 using RDHATEOAS.Options;
 using RDHATEOAS.Services;
 

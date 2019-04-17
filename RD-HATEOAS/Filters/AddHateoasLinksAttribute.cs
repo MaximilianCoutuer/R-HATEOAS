@@ -16,8 +16,14 @@ namespace RDHATEOAS.Filters
     [System.AttributeUsage(System.AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class AddHateoasLinksAttribute : ResultFilterAttribute
     {
+        #region fields
+
         private readonly string _parameterName;
         private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
+
+        #endregion
+
+        #region constructors
 
         public AddHateoasLinksAttribute(string parameterName, Type[] rulesetNames)
         {
@@ -30,72 +36,38 @@ namespace RDHATEOAS.Filters
 
         public AddHateoasLinksAttribute(string parameterName, Type rulesetName) : this(parameterName, new Type[] { rulesetName }) { }
 
-        //private IHateoasRuleset[] GetControllerBasedLinkRulesets(ResultExecutingContext response)
-        //{
-        //    var controllerActionDescriptor = response.ActionDescriptor as ControllerActionDescriptor;
-        //    if (controllerActionDescriptor != null)
-        //    {
-        //        Attribute[] attrs = (Attribute[])controllerActionDescriptor.MethodInfo.GetCustomAttributes(inherit: true);
-        //    }
-        //    // TODO: do something with this
-        //    // TODO: determine if one or more rulesets (probably one)
-        //    return null;
-        //}
+        #endregion
 
+        #region methods
 
-        //private IHateoasRuleset[] GetModelBasedLinkRulesets(OkObjectResult okObjectResult) {
-        //    if (IsList(okObjectResult))
-        //    {
-        //        // result is a list
-        //        List<Object> list = (List<Object>)okObjectResult.Value;
-        //        Attribute[] attrs = System.Attribute.GetCustomAttributes(list.First().GetType());
-        //        // TODO: do something with this
-        //    }
-        //    else
-        //    {
-        //        // result is a model
-        //        Object item = (Object)okObjectResult.Value;
-        //        Attribute[] attrs = System.Attribute.GetCustomAttributes(item.GetType());
-        //        // TODO: do something with this
-        //    }
-        //    return null;
-        //}
-
-        //private IHateoasRuleset[] GetGlobalLinkRulesets(OkObjectResult okObjectResult)
-        //{
-        //    return null;
-        //}
-
-
+        /// <summary>
+        /// This method is invoked whenever a result is sent from a controller method with this attribute attached to it.
+        /// </summary>
+        /// <param name="context">The result context.</param>
         public override void OnResultExecuting(ResultExecutingContext context)
         {
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                var urlHelper = new UrlHelper(context); // DI not possible?
+                var urlHelper = new UrlHelper(context); // TODO: Is there no way to use DI?
                 var hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
                 var parameter = _parameterName != null ? context.RouteData.Values[_parameterName] : null;
 
                 if (okObjectResult.Value.GetType().IsList())
                 {
-                    IList enumerable = okObjectResult.Value as IList;
-                    for (int i = 0; i < enumerable.Count; i++)
-                    //foreach (IsHateoasEnabled item in enumerable.OfType<object>())
+                    var list = okObjectResult.Value as IList;
+                    for (int i = 0; i < list.Count; i++)  // Foreach doesn't allow modifying objects
                     {
                         foreach(IHateoasRuleset ruleset in _rulesets)
                         {
                             ruleset.Parameter = parameter;
-                            var item = (IsHateoasEnabled)enumerable[i];
+                            var item = (IsHateoasEnabled)list[i];
                             ruleset.AddLinksToRef(ref item, context);
                         }
                     }
-                    //Parallel.ForEach((List<Object>)(okObjectResult.Value), (element) =>
-                    // {
-                    // });
                 }
                 else
                 {
                     var item = (IsHateoasEnabled)okObjectResult.Value;
-                    // loop through rulesets and add them to this dynamic object
                     foreach (IHateoasRuleset ruleset in _rulesets)
                     {
                         ruleset.Parameter = parameter;
@@ -113,5 +85,44 @@ namespace RDHATEOAS.Filters
             }
             base.OnResultExecuting(context);
         }
+
+        #endregion
     }
+
+
+    //private IHateoasRuleset[] GetControllerBasedLinkRulesets(ResultExecutingContext response)
+    //{
+    //    var controllerActionDescriptor = response.ActionDescriptor as ControllerActionDescriptor;
+    //    if (controllerActionDescriptor != null)
+    //    {
+    //        Attribute[] attrs = (Attribute[])controllerActionDescriptor.MethodInfo.GetCustomAttributes(inherit: true);
+    //    }
+    //    // TODO: do something with this
+    //    // TODO: determine if one or more rulesets (probably one)
+    //    return null;
+    //}
+
+
+    //private IHateoasRuleset[] GetModelBasedLinkRulesets(OkObjectResult okObjectResult) {
+    //    if (IsList(okObjectResult))
+    //    {
+    //        // result is a list
+    //        List<Object> list = (List<Object>)okObjectResult.Value;
+    //        Attribute[] attrs = System.Attribute.GetCustomAttributes(list.First().GetType());
+    //        // TODO: do something with this
+    //    }
+    //    else
+    //    {
+    //        // result is a model
+    //        Object item = (Object)okObjectResult.Value;
+    //        Attribute[] attrs = System.Attribute.GetCustomAttributes(item.GetType());
+    //        // TODO: do something with this
+    //    }
+    //    return null;
+    //}
+
+    //private IHateoasRuleset[] GetGlobalLinkRulesets(OkObjectResult okObjectResult)
+    //{
+    //    return null;
+    //}
 }

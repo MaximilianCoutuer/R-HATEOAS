@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using RDHATEOAS.Models;
 using RDHATEOAS.Rulesets;
 using System;
@@ -8,8 +9,9 @@ using System.Text;
 
 namespace RDHATEOAS.Builders
 {
-    //
-    //
+    /// <summary>
+    /// This class is used to build a HATEOAS link based on its properties.
+    /// </summary>
     public sealed class HateoasLinkBuilder
     {
         private IUrlHelper _urlHelper;
@@ -18,9 +20,16 @@ namespace RDHATEOAS.Builders
             _urlHelper = urlHelper;
         }
 
-        // <summary>
-        //
-        // </summary>
+        /// <summary>
+        /// Build a HATEOAS link to insert into a response later.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="routeUrl"></param>
+        /// <param name="linkController"></param>
+        /// <param name="linkRel"></param>
+        /// <param name="linkMethod"></param>
+        /// <param name="linkId"></param>
+        /// <returns>A HATEOAS link object.</returns>
         public HateoasLink Build(ActionContext response, string routeUrl, string linkController, string linkRel, HttpMethod linkMethod, Object linkId = null)
         {
             int id;
@@ -31,6 +40,21 @@ namespace RDHATEOAS.Builders
                 });
             var hateoasLink = new HateoasLink(uri, linkRel, linkMethod);
             return hateoasLink;
+        }
+
+        /// <summary>
+        /// Similar to Build, but always returns a self link, filling out the necessary fields itself.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="routeUrl"></param>
+        /// <param name="linkController"></param>
+        /// <returns></returns>
+        public HateoasLink BuildSelfLink(ActionContext response, string routeUrl, string linkController)
+        {
+            var request = response.HttpContext.Request;
+            var uri = (new UriBuilder(request.Scheme, request.Host.Host, request.Host.Port.GetValueOrDefault(80), request.Path.ToString(), request.QueryString.ToString())).Uri.ToString();
+            var hateoasLink = new HateoasLink(uri, "self", HttpMethod.Get);
+            return new HateoasLink();
         }
 
     }
