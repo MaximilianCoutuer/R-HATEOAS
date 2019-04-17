@@ -54,6 +54,7 @@ namespace RDHATEOAS.Filters
 
                 if (okObjectResult.Value.GetType().IsList())
                 {
+                    // TODO: "first" and "last"?
                     var list = okObjectResult.Value as IList;
                     for (int i = 0; i < list.Count; i++)  // Foreach doesn't allow modifying objects
                     {

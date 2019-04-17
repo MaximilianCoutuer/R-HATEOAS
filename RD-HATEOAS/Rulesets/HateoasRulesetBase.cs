@@ -30,7 +30,9 @@ namespace RDHATEOAS.Rulesets
         }
 
         /// <summary>
-        /// Returns all links that should be added to this item, in HateoasLink format.
+        /// Returns an array containing all links that should be added to this item, in HateoasLink format.
+        /// Override this in a custom ruleset.
+        /// The default implementation returns no links.
         /// </summary>
         /// <param name="item">An instance of a model that inherits the IsHateoasEnabled class and needs to have links added to it.</param>
         /// <param name="context">The result context.</param>
