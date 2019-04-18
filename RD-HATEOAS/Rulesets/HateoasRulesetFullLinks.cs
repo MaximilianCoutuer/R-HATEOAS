@@ -16,7 +16,7 @@ namespace RDHATEOAS.Rulesets
             // TODO: automatic first/last
             return new HateoasLink[] {
                 hateoasLinkBuilder.BuildSelfLink(context, "HateoasRoute", "person"),
-                hateoasLinkBuilder.Build(context, "HateoasRoute", "person", "list", HttpMethod.Get, Parameter),
+                hateoasLinkBuilder.Build(context, "HateoasRoute", "person", "list", HttpMethod.Get, Parameters.GetValueOrDefault("Id")),
                 hateoasLinkBuilder.Build(context, "HateoasRoute", "person", "edit", HttpMethod.Post).AddHreflang("be-nl").AddMedia("doctype/jpg").AddTitle("Photo of a duck").AddType("image"),
                 hateoasLinkBuilder.Build(context, "HateoasRoute", "person", "delete", HttpMethod.Delete),
             };

@@ -59,9 +59,26 @@ namespace ExampleAPI.Controllers
             }
         }
 
+        // GET api/person
+        [HttpGet("{skip, page}")]
+        //[TypeFilter(typeof(AddHateoasLinksAttribute))]
+        [AddHateoasLinks(new[] { "skip", "page" }, new[] { typeof(HateoasRulesetFullLinks) })]
+        public async Task<ActionResult> GetPaginatedList(int skip, int pageSize)
+        {
+            IEnumerable<Person> persons = await _context.Persons.ToListAsync();
+            if (persons.Count() == 0)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(persons);
+            }
+        }
+
         // GET api/person/5
         [HttpGet("{id}")]
-        [AddHateoasLinks("Id", new[] { typeof(HateoasRulesetFullLinks) })]
+        [AddHateoasLinks(new[] { "Id" }, new[] { typeof(HateoasRulesetFullLinks) })]
         public async Task<ActionResult<Person>> GetPerson(int Id)
         {
             var person = await _context.FindAsync<Person>(Id);

@@ -18,23 +18,23 @@ namespace RDHATEOAS.Filters
     {
         #region fields
 
-        private readonly string _parameterName;
+        private readonly string[] _parameterNames;
         private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
 
         #endregion
 
         #region constructors
 
-        public AddHateoasLinksAttribute(string parameterName, Type[] rulesetNames)
+        public AddHateoasLinksAttribute(string[] parameterNames, Type[] rulesetNames)
         {
-            _parameterName = parameterName;
+            _parameterNames = parameterNames;
             foreach (var type in rulesetNames)
             {
                 _rulesets.Add((IHateoasRuleset)Activator.CreateInstance(type));
             }
         }
 
-        public AddHateoasLinksAttribute(string parameterName, Type rulesetName) : this(parameterName, new Type[] { rulesetName }) { }
+        public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName) : this(parameterNames, new Type[] { rulesetName }) { }
 
         #endregion
 
@@ -50,7 +50,14 @@ namespace RDHATEOAS.Filters
             {
                 var urlHelper = new UrlHelper(context); // TODO: Is there no way to use DI?
                 var hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
-                var parameter = _parameterName != null ? context.RouteData.Values[_parameterName] : null;
+                var parameters = new Dictionary<string, Object>();
+                if (_parameterNames != null)
+                {
+                    foreach (string parameterName in _parameterNames)
+                    {
+                        parameters.Add(parameterName, context.RouteData.Values[parameterName] ?? null);
+                    }
+                }
 
                 if (okObjectResult.Value.GetType().IsList())
                 {
@@ -59,13 +66,14 @@ namespace RDHATEOAS.Filters
                     {
                         foreach(IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
                         {
-                            ruleset.Parameter = parameter;
+                            ruleset.Parameters = parameters;
                             var item = (IsHateoasEnabled)list[i];
                             ruleset.AddLinksToRef(ref item, context);
                         }
                     }
 
-                    // TODO: "First" and "Last" are hardcoded because they are standard options
+                    // TODO: "first" and "last" are hardcoded because they are standard options?
+                    // TODO: "prev" and "next"?
 
                     // HACK: This is horrible and needs a rewrite, there HAS to be a better way
                     var objectList = new ListHateoasEnabled();
@@ -76,7 +84,7 @@ namespace RDHATEOAS.Filters
                     var hateoaslist = (IsHateoasEnabled)objectList;    // why do I need a cast if it inherits from it? oO
                     foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
                     {
-                        ruleset.Parameter = parameter;
+                        ruleset.Parameters = parameters;
                         ruleset.AddLinksToRef(ref hateoaslist, context);
                     }
                     okObjectResult.Value = hateoaslist;
@@ -87,7 +95,7 @@ namespace RDHATEOAS.Filters
                     var item = (IsHateoasEnabled)okObjectResult.Value;
                     foreach (IHateoasRuleset ruleset in _rulesets)
                     {
-                        ruleset.Parameter = parameter;
+                        ruleset.Parameters = parameters;
                         ruleset.AddLinksToRef(ref item, context);
                     }
                 }

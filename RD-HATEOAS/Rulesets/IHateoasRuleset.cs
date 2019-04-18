@@ -11,7 +11,7 @@ namespace RDHATEOAS.Rulesets
     /// </summary>
     public interface IHateoasRuleset
     {
-        object Parameter { get; set; }
+        Dictionary<string, Object> Parameters { get; set; }
 
         /// <summary>
         /// Determines whether this ruleset will apply to each item in a list or to the list itself.

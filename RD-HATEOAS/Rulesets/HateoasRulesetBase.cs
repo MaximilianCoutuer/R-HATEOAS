@@ -13,7 +13,7 @@ namespace RDHATEOAS.Rulesets
     /// </summary>
     public abstract class HateoasRulesetBase : IHateoasRuleset
     {
-        public object Parameter { get; set; }
+        public Dictionary<string, Object> Parameters { get; set; }
         protected UrlHelper _urlHelper { get; set; }
         protected HateoasLinkBuilder hateoasLinkBuilder { get; set; }
         public virtual bool AppliesToEachListItem { get; set; } = false;
@@ -27,7 +27,7 @@ namespace RDHATEOAS.Rulesets
         public void AddLinksToRef(ref IsHateoasEnabled item, ResultExecutingContext context) {
             _urlHelper = new UrlHelper(context);
             hateoasLinkBuilder = new HateoasLinkBuilder(_urlHelper);
-            item._links = GetLinks(item, context);
+            item.Links = GetLinks(item, context);
         }
 
         /// <summary>

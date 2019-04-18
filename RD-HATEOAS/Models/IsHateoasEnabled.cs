@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
@@ -10,6 +11,7 @@ namespace RDHATEOAS.Models
         // TODO: Multiple inheritance is problem?
 
         [NotMapped]
-        public HateoasLink[] _links { get; set; }
+        [JsonProperty(PropertyName = "_links")]
+        public HateoasLink[] Links { get; set; }
     }
 }

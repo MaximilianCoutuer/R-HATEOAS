@@ -14,11 +14,17 @@ namespace RDHATEOAS.Builders
     /// </summary>
     public sealed class HateoasLinkBuilder
     {
+        #region fields
+
         private IUrlHelper _urlHelper;
 
         public HateoasLinkBuilder(IUrlHelper urlHelper) {
             _urlHelper = urlHelper;
         }
+
+        #endregion
+
+        #region methods
 
         /// <summary>
         /// Build a HATEOAS link to insert into a response later.
@@ -32,11 +38,11 @@ namespace RDHATEOAS.Builders
         /// <returns>A HATEOAS link object.</returns>
         public HateoasLink Build(ActionContext response, string routeUrl, string linkController, string linkRel, HttpMethod linkMethod, Object linkId = null)
         {
-            int id;
             var uri = response.HttpContext.Request.Host.ToUriComponent()
-                + _urlHelper.RouteUrl(routeUrl, new {
+                + _urlHelper.RouteUrl(routeUrl, new
+                {
                     controller = linkController,
-                    id = (int.TryParse((string)(linkId ?? ""), out id) ? id : default(int?))
+                    id = (int.TryParse((string)(linkId ?? ""), out int id) ? id : default(int?))
                 });
             var hateoasLink = new HateoasLink(uri, linkRel, linkMethod);
             return hateoasLink;
@@ -56,6 +62,8 @@ namespace RDHATEOAS.Builders
             var hateoasLink = new HateoasLink(uri, "self", HttpMethod.Get);
             return new HateoasLink();
         }
+
+        #endregion
 
     }
 }
