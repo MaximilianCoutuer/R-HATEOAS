@@ -42,7 +42,7 @@ namespace RDHATEOAS.Builders
                 + _urlHelper.RouteUrl(routeUrl, new
                 {
                     controller = linkController,
-                    id = (int.TryParse((string)(linkId ?? ""), out int id) ? id : default(int?))
+                    id = (int.TryParse((linkId ?? "").ToString(), out int id) ? id : default(int?))
                 });
             var hateoasLink = new HateoasLink(uri, linkRel, linkMethod);
             return hateoasLink;

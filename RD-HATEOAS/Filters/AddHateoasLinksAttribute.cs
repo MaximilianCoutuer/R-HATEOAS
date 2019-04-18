@@ -62,11 +62,12 @@ namespace RDHATEOAS.Filters
                 if (okObjectResult.Value.GetType().IsList())
                 {
                     var list = okObjectResult.Value as IList;
-                    for (int i = 0; i < list.Count; i++)  // Foreach doesn't allow modifying objects
+                    for (int i = 0; i < list.Count; i++)
                     {
                         foreach(IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
                         {
                             ruleset.Parameters = parameters;
+                            ruleset.Parameters.Add("Count", list.Count);
                             var item = (IsHateoasEnabled)list[i];
                             ruleset.AddLinksToRef(ref item, context);
                         }
