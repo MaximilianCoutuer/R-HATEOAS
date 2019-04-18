@@ -60,7 +60,7 @@ namespace RDHATEOAS.Builders
             var request = response.HttpContext.Request;
             var uri = (new UriBuilder(request.Scheme, request.Host.Host, request.Host.Port.GetValueOrDefault(80), request.Path.ToString(), request.QueryString.ToString())).Uri.ToString();
             var hateoasLink = new HateoasLink(uri, "self", HttpMethod.Get);
-            return new HateoasLink();
+            return hateoasLink;
         }
 
         #endregion
