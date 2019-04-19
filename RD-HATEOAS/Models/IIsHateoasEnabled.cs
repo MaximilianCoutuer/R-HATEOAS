@@ -6,9 +6,5 @@ namespace RDHATEOAS.Models
 {
     interface IIsHateoasEnabled
     {
-
-    [NotMapped]
-    [JsonProperty(PropertyName = "_links")]
-    public HateoasLink[] Links { get; set; }
     }
 }

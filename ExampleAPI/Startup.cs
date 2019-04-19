@@ -58,7 +58,7 @@ namespace ExampleAPI
             {
                 routes.MapRoute(
                     name: "HateoasRoute",
-                    template: "api/{controller=Values}/{id?}");
+                    template: "api/{controller}/{id?}");
             });
         }
     }
