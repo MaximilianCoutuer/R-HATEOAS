@@ -38,6 +38,17 @@ namespace ExampleAPI.Controllers
                         Capital = "Brussels"
                     },
                 });
+                _context.Add(new Person()
+                {
+                    FirstName = "Nicolas",
+                    LastName = "Zawada",
+                    Age = 40,
+                    Country = new Country()
+                    {
+                        Name = "Belgium",
+                        Capital = "Brussels"
+                    },
+                });
                 _context.SaveChanges();
             }
         }
@@ -45,7 +56,7 @@ namespace ExampleAPI.Controllers
         // GET api/person
         [HttpGet]
         //[TypeFilter(typeof(AddHateoasLinksAttribute))]
-        [AddHateoasLinks(null, new[] { typeof(HateoasRulesetFullLinks) })]
+        [AddHateoasLinks(null, new[] { typeof(DemoRulesetFullLinks) })]
         public async Task<ActionResult> GetAllPersons()
         {
             IEnumerable<Person> persons = await _context.Persons.ToListAsync();
@@ -59,13 +70,13 @@ namespace ExampleAPI.Controllers
             }
         }
 
-        // GET api/person
-        [HttpGet("{skip, page}")]
+        // GET api/person (paginated)
+        [HttpGet("{skip, take}")]
         //[TypeFilter(typeof(AddHateoasLinksAttribute))]
-        [AddHateoasLinks(new[] { "skip", "page" }, new[] { typeof(HateoasRulesetFullLinks) })]
-        public async Task<ActionResult> GetPaginatedList(int skip, int pageSize)
+        [AddHateoasLinks(new[] { "skip", "take" }, new[] { typeof(DemoRulesetFullLinks) })]
+        public async Task<ActionResult> GetPaginatedList(int skip, int take)
         {
-            IEnumerable<Person> persons = await _context.Persons.ToListAsync();
+            IEnumerable<Person> persons = await _context.Persons.Skip(skip * take).Take(take).ToListAsync();
             if (persons.Count() == 0)
             {
                 return NotFound();
@@ -78,7 +89,7 @@ namespace ExampleAPI.Controllers
 
         // GET api/person/5
         [HttpGet("{id}")]
-        [AddHateoasLinks(new[] { "Id" }, new[] { typeof(HateoasRulesetFullLinks) })]
+        [AddHateoasLinks(new[] { "Id" }, new[] { typeof(DemoRulesetFullLinks) })]
         public async Task<ActionResult<Person>> GetPerson(int Id)
         {
             var person = await _context.FindAsync<Person>(Id);

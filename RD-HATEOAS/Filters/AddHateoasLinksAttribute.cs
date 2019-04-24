@@ -52,11 +52,9 @@ namespace RDHATEOAS.Filters
         {
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                // Initialise helper class fields with context
                 urlHelper = new UrlHelper(context);
                 hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
 
-                // Fill out parameters based on context
                 if (_parameterNames != null)
                 {
                     foreach (string parameterName in _parameterNames)
@@ -75,6 +73,7 @@ namespace RDHATEOAS.Filters
                         {
                             ruleset.SetHelpers(context);
                             ruleset.Parameters = parameters;
+                            ruleset.Parameters["Id"] = i;
                             ruleset.Parameters["Count"] = list.Count;
 
                             var listitem = (IIsHateoasEnabled)list[i];
@@ -85,18 +84,17 @@ namespace RDHATEOAS.Filters
                         }
                     }
 
-                    // HACK: This is horrible and needs a rewrite, there HAS to be a better way
-                    var objectList = new ListHateoasEnabled();
+                    ListHateoasEnabled objectList = new ListHateoasEnabled();
                     foreach (Object listitem in list)
                     {
                         objectList.list.Add((Object)listitem);
                     }
-                    var hateoaslist = (IIsHateoasEnabled)objectList;    // why do I need a cast if it inherits from it? oO
+                    var hateoaslist = (IIsHateoasEnabled)objectList;    // HACK: Why do I need a cast if it inherits from it? oO
                     foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
                     {
                         ruleset.SetHelpers(context);
                         ruleset.Parameters = parameters;
-                        foreach (HateoasLink link in ruleset.GetLinks(hateoaslist))
+                        foreach (HateoasLink link in ruleset.GetLinks(objectList))
                         {
                             hateoaslist.Links.Add(link);
                         }
