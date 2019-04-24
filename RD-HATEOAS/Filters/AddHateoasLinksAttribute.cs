@@ -61,7 +61,7 @@ namespace RDHATEOAS.Filters
                 {
                     foreach (string parameterName in _parameterNames)
                     {
-                        parameters.Add(parameterName, context.RouteData.Values[parameterName] ?? null);
+                        parameters[parameterName] = context.RouteData.Values[parameterName] ?? null;
                     }
                 }
 
@@ -74,8 +74,8 @@ namespace RDHATEOAS.Filters
                         foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
                         {
                             ruleset.SetHelpers(context);
-                            ruleset.Parameters = parameters;    // TODO: can this be better?
-                            ruleset.Parameters.Add("Count", list.Count);
+                            ruleset.Parameters = parameters;
+                            ruleset.Parameters["Count"] = list.Count;
 
                             var listitem = (IsHateoasEnabled)list[i];
                             foreach (HateoasLink link in ruleset.GetLinks(listitem))
@@ -96,7 +96,7 @@ namespace RDHATEOAS.Filters
                     {
                         ruleset.SetHelpers(context);
                         ruleset.Parameters = parameters;
-                        foreach (HateoasLink link in ruleset.GetLinks(hateoaslist, context))
+                        foreach (HateoasLink link in ruleset.GetLinks(hateoaslist))
                         {
                             hateoaslist.Links.Add(link);
                         }
@@ -114,20 +114,12 @@ namespace RDHATEOAS.Filters
                     {
                         ruleset.SetHelpers(context);
                         ruleset.Parameters = parameters;
-                        foreach (HateoasLink link in ruleset.GetLinks(item, context))
+                        foreach (HateoasLink link in ruleset.GetLinks(item))
                         {
                             item.Links.Add(link);
                         }
                     }
                 }
-                //else if (okObjectResult.Value is PagedSearchDTO<Object> pagedSearch)
-                //{
-                //    Parallel.ForEach(pagedSearch.List.ToList(), (element) =>
-                //    {
-                //        // result is a paged search??
-                //        //test(element, urlHelper);
-                //    });
-                //}
             }
             base.OnResultExecuting(context);
         }

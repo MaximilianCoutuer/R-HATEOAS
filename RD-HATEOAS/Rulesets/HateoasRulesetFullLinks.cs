@@ -12,9 +12,9 @@ namespace RDHATEOAS.Rulesets
     {
         public override bool AppliesToEachListItem { get; set; } = true;
 
-        protected override HateoasLink[] GetLinks(IsHateoasEnabled item, ResultExecutingContext context) {
+        public  override List<HateoasLink> GetLinks(IsHateoasEnabled item) {
             // TODO: automatic first/last
-            return new HateoasLink[] {
+            return new List<HateoasLink> {
                 hateoasLinkBuilder.BuildSelfLink(context, "HateoasRoute", "person"),
                 hateoasLinkBuilder.Build(context, "HateoasRoute", "person", "list", HttpMethod.Get, Parameters.GetValueOrDefault("Id")),    // custom rulesets can access the ID of an object via the last field
                 hateoasLinkBuilder.Build(context, "HateoasRoute", "person", "edit", HttpMethod.Post).AddHreflang("be-nl").AddMedia("doctype/jpg").AddTitle("Photo of a duck").AddType("image"),
