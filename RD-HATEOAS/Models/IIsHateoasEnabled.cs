@@ -6,5 +6,6 @@ namespace RDHATEOAS.Models
 {
     interface IIsHateoasEnabled
     {
+
     }
 }

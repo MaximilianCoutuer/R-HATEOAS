@@ -20,6 +20,10 @@ namespace RDHATEOAS.Filters
 
         private readonly string[] _parameterNames;
         private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
+        private Dictionary<string, Object> parameters = new Dictionary<string, Object>();
+
+        private UrlHelper urlHelper;
+        private HateoasLinkBuilder hateoasLinkBuilder;
 
         #endregion
 
@@ -43,14 +47,16 @@ namespace RDHATEOAS.Filters
         /// <summary>
         /// This method is invoked whenever a result is sent from a controller method with this attribute attached to it.
         /// </summary>
-        /// <param name="context">The result context.</param>
+        /// <param name="context">The result context from the result that caused this to be run.</param>
         public override void OnResultExecuting(ResultExecutingContext context)
         {
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                var urlHelper = new UrlHelper(context); // TODO: Is there no way to use DI?
-                var hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
-                var parameters = new Dictionary<string, Object>();
+                // Initialise helper class fields with context
+                urlHelper = new UrlHelper(context);
+                hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
+
+                // Fill out parameters based on context
                 if (_parameterNames != null)
                 {
                     foreach (string parameterName in _parameterNames)
@@ -59,22 +65,25 @@ namespace RDHATEOAS.Filters
                     }
                 }
 
+                // TODO: Any better way than this monstrous function?
                 if (okObjectResult.Value.GetType().IsList())
                 {
                     var list = okObjectResult.Value as IList;
                     for (int i = 0; i < list.Count; i++)
                     {
-                        foreach(IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
+                        foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
                         {
-                            ruleset.Parameters = parameters;
+                            ruleset.SetHelpers(context);
+                            ruleset.Parameters = parameters;    // TODO: can this be better?
                             ruleset.Parameters.Add("Count", list.Count);
-                            var item = (IsHateoasEnabled)list[i];
-                            ruleset.AddLinksToRef(ref item, context);
+
+                            var listitem = (IsHateoasEnabled)list[i];
+                            foreach (HateoasLink link in ruleset.GetLinks(listitem))
+                            {
+                                listitem.Links.Add(link);
+                            }
                         }
                     }
-
-                    // TODO: "first" and "last" are hardcoded because they are standard options?
-                    // TODO: "prev" and "next"?
 
                     // HACK: This is horrible and needs a rewrite, there HAS to be a better way
                     var objectList = new ListHateoasEnabled();
@@ -85,19 +94,30 @@ namespace RDHATEOAS.Filters
                     var hateoaslist = (IsHateoasEnabled)objectList;    // why do I need a cast if it inherits from it? oO
                     foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
                     {
+                        ruleset.SetHelpers(context);
                         ruleset.Parameters = parameters;
-                        ruleset.AddLinksToRef(ref hateoaslist, context);
+                        foreach (HateoasLink link in ruleset.GetLinks(hateoaslist, context))
+                        {
+                            hateoaslist.Links.Add(link);
+                        }
                     }
                     okObjectResult.Value = hateoaslist;
-                    // /This is horrible and needs a rewrite
+
+                    // TODO: "first" and "last" are hardcoded because they are standard options?
+                    // TODO: "prev" and "next"?
+
                 }
                 else
                 {
                     var item = (IsHateoasEnabled)okObjectResult.Value;
                     foreach (IHateoasRuleset ruleset in _rulesets)
                     {
+                        ruleset.SetHelpers(context);
                         ruleset.Parameters = parameters;
-                        ruleset.AddLinksToRef(ref item, context);
+                        foreach (HateoasLink link in ruleset.GetLinks(item, context))
+                        {
+                            item.Links.Add(link);
+                        }
                     }
                 }
                 //else if (okObjectResult.Value is PagedSearchDTO<Object> pagedSearch)

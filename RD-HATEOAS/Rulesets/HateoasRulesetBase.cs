@@ -14,31 +14,32 @@ namespace RDHATEOAS.Rulesets
     public abstract class HateoasRulesetBase : IHateoasRuleset
     {
         public Dictionary<string, Object> Parameters { get; set; }
-        protected UrlHelper _urlHelper { get; set; }
+        protected UrlHelper urlHelper { get; set; }
+        protected ResultExecutingContext context { get; set; }
         protected HateoasLinkBuilder hateoasLinkBuilder { get; set; }
         public virtual bool AppliesToEachListItem { get; set; } = false;
 
-        /// <summary>
-        /// Accepts a reference to an instance of a HATEOAS enabled object and adds links to it.
-        /// The logic determining which links are to be added is in GetLinks(), which should be overridden in subclasses.
-        /// </summary>
-        /// <param name="item">An instance of a model that inherits the IsHateoasEnabled class and needs to have links added to it.</param>
-        /// <param name="context">The result context.</param>
-        public void AddLinksToRef(ref IsHateoasEnabled item, ResultExecutingContext context) {
-            _urlHelper = new UrlHelper(context);
-            hateoasLinkBuilder = new HateoasLinkBuilder(_urlHelper);
-            item.Links = GetLinks(item, context);
+
+        public void SetHelpers(ResultExecutingContext context)
+        {
+            this.context = context;
+            urlHelper = new UrlHelper(context);
+            hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
         }
 
-        /// <summary>
-        /// Returns an array containing all links that should be added to this item, in HateoasLink format.
-        /// Override this in a custom ruleset.
-        /// The default implementation returns no links.
-        /// </summary>
-        /// <param name="item">An instance of a model that inherits the IsHateoasEnabled class and needs to have links added to it.</param>
-        /// <param name="context">The result context.</param>
-        /// <returns></returns>
-        protected virtual HateoasLink[] GetLinks(IsHateoasEnabled item, ResultExecutingContext context)
+        //public IsHateoasEnabled AddLinksToItem(IsHateoasEnabled item, ResultExecutingContext context) {
+        //    _urlHelper = new UrlHelper(context);
+        //    hateoasLinkBuilder = new HateoasLinkBuilder(_urlHelper);
+
+        //    var links = GetLinks(item, context);
+        //    foreach (HateoasLink link in links)
+        //    {
+        //        item.Links.Add(link);
+        //    }
+        //    return item;
+        //}
+
+        public virtual List<HateoasLink> GetLinks(IsHateoasEnabled item)
         {
             // default null implementation yields no links
             return null;

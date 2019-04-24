@@ -18,6 +18,8 @@ namespace RDHATEOAS.Rulesets
         /// </summary>
         bool AppliesToEachListItem { get; set; }
 
-        void AddLinksToRef(ref IsHateoasEnabled item, ResultExecutingContext context);
+        void SetHelpers(ResultExecutingContext context);
+
+        List<HateoasLink> GetLinks(IsHateoasEnabled item);
     }
 }

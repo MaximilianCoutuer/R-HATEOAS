@@ -10,7 +10,7 @@ using System.Text;
 namespace RDHATEOAS.Builders
 {
     /// <summary>
-    /// This class is used to build a HATEOAS link based on its properties.
+    /// This class is used to build a HATEOAS link.
     /// </summary>
     public sealed class HateoasLinkBuilder
     {
@@ -27,7 +27,7 @@ namespace RDHATEOAS.Builders
         #region methods
 
         /// <summary>
-        /// Build a HATEOAS link to insert into a response later.
+        /// Build a HATEOAS link (type HateoasLink) based on the provided parameters.
         /// </summary>
         /// <param name="response"></param>
         /// <param name="routeUrl"></param>
@@ -49,7 +49,8 @@ namespace RDHATEOAS.Builders
         }
 
         /// <summary>
-        /// Similar to Build, but always returns a self link, filling out the necessary fields itself.
+        /// Build a HATEOAS link (type HateoasLink) based on the provided parameters.
+        /// However, this is always a self link.
         /// </summary>
         /// <param name="response"></param>
         /// <param name="routeUrl"></param>

@@ -12,6 +12,6 @@ namespace RDHATEOAS.Models
 
         [NotMapped]
         [JsonProperty(PropertyName = "_links")]
-        public HateoasLink[] Links { get; set; }
+        public List<HateoasLink> Links { get; set; }
     }
 }

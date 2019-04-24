@@ -5,11 +5,12 @@ namespace RDHATEOAS.Models
 {
     /// <summary>
     /// A HATEOAS link.
-    /// Contains all relevant HATEOAS fields and getters and setters for each.
+    /// The link contains all relevant HATEOAS fields and getters and setters for each.
     /// </summary>
     public class HateoasLink
     {
         #region fields
+
         private string _href;
         private HttpMethod _method;
 
@@ -40,9 +41,11 @@ namespace RDHATEOAS.Models
         public string Media { get; set; }
         public string Title { get; set; }
         public string Type { get; set; }
+
         #endregion
 
         #region constructors
+
         public HateoasLink(string Href, string Rel, HttpMethod HttpMethod)
         {
             this.Href = Href;
@@ -50,9 +53,8 @@ namespace RDHATEOAS.Models
             this.HttpMethod = HttpMethod;
         }
 
-        public HateoasLink() : this("", "self", HttpMethod.Get)
-        {
-        }
+        public HateoasLink() : this("", "self", HttpMethod.Get) { }
+
         #endregion
 
         #region methods
