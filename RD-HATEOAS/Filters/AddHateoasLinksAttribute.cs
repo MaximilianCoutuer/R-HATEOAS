@@ -77,7 +77,7 @@ namespace RDHATEOAS.Filters
                             ruleset.Parameters = parameters;
                             ruleset.Parameters["Count"] = list.Count;
 
-                            var listitem = (IsHateoasEnabled)list[i];
+                            var listitem = (IIsHateoasEnabled)list[i];
                             foreach (HateoasLink link in ruleset.GetLinks(listitem))
                             {
                                 listitem.Links.Add(link);
@@ -91,7 +91,7 @@ namespace RDHATEOAS.Filters
                     {
                         objectList.list.Add((Object)listitem);
                     }
-                    var hateoaslist = (IsHateoasEnabled)objectList;    // why do I need a cast if it inherits from it? oO
+                    var hateoaslist = (IIsHateoasEnabled)objectList;    // why do I need a cast if it inherits from it? oO
                     foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
                     {
                         ruleset.SetHelpers(context);
@@ -109,7 +109,7 @@ namespace RDHATEOAS.Filters
                 }
                 else
                 {
-                    var item = (IsHateoasEnabled)okObjectResult.Value;
+                    var item = (IIsHateoasEnabled)okObjectResult.Value;
                     foreach (IHateoasRuleset ruleset in _rulesets)
                     {
                         ruleset.SetHelpers(context);

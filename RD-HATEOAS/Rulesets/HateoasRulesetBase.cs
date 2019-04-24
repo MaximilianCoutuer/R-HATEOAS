@@ -39,7 +39,7 @@ namespace RDHATEOAS.Rulesets
         //    return item;
         //}
 
-        public virtual List<HateoasLink> GetLinks(IsHateoasEnabled item)
+        public virtual List<HateoasLink> GetLinks(IIsHateoasEnabled item)
         {
             // default null implementation yields no links
             return null;

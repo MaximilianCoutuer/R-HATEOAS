@@ -20,6 +20,6 @@ namespace RDHATEOAS.Rulesets
 
         void SetHelpers(ResultExecutingContext context);
 
-        List<HateoasLink> GetLinks(IsHateoasEnabled item);
+        List<HateoasLink> GetLinks(IIsHateoasEnabled item);
     }
 }
