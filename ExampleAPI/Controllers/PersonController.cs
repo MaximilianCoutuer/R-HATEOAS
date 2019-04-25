@@ -49,6 +49,17 @@ namespace ExampleAPI.Controllers
                         Capital = "Brussels"
                     },
                 });
+                _context.Add(new Person()
+                {
+                    FirstName = "Wim",
+                    LastName = "Bellemans",
+                    Age = 45,
+                    Country = new Country()
+                    {
+                        Name = "Belgium",
+                        Capital = "Brussels"
+                    },
+                });
                 _context.SaveChanges();
             }
         }

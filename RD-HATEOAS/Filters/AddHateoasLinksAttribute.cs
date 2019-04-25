@@ -94,6 +94,7 @@ namespace RDHATEOAS.Filters
                     {
                         ruleset.SetHelpers(context);
                         ruleset.Parameters = parameters;
+                        ruleset.Parameters["Count"] = list.Count;
                         foreach (HateoasLink link in ruleset.GetLinks(objectList))
                         {
                             hateoaslist.Links.Add(link);
