@@ -18,10 +18,10 @@ namespace ExampleAPI.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-        private readonly PersonContext _context;
+        private readonly PeopleContext _context;
         private readonly ILinkService _linkService;
 
-        public PersonController(PersonContext context)
+        public PersonController(PeopleContext context)
         {
             _context = context;
 

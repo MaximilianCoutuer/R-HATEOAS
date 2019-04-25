@@ -16,6 +16,8 @@ using RDHATEOAS.LinkAdders;
 using RDHATEOAS.Options;
 using RDHATEOAS.Services;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace ExampleAPI
 {
     public class Startup
@@ -31,8 +33,12 @@ namespace ExampleAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);    // otherwise UrlHelper crashes https://github.com/aspnet/AspNetCore/issues/4418
-            services.AddDbContext<PersonContext>(options => options.UseInMemoryDatabase("Person"));
-            services.AddEntityFrameworkInMemoryDatabase();
+
+            var connection = @"Data Source=.\SQLEXPRESS;Initial Catalog=exampleapi;Integrated Security=True";
+            services.AddDbContext<PeopleContext>(options => options.UseSqlServer(connection));
+
+            //services.AddDbContext<PersonContext>(options => options.UseInMemoryDatabase("Person"));
+            //services.AddEntityFrameworkInMemoryDatabase();
 
             // hateoas configuration
             var hateoasOptions = new HateoasOptions();

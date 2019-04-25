@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace ExampleAPI.Models
 {
-    public class PersonContext : DbContext
+    public class PeopleContext : DbContext
     {
-        public PersonContext(DbContextOptions<PersonContext> options) : base(options) { }
+        public PeopleContext(DbContextOptions<PeopleContext> options) : base(options) { }
 
         public DbSet<Person> Persons { get; set; }
+        public DbSet<Person> Countrys { get; set; }
     }
 }
