@@ -101,10 +101,6 @@ namespace RDHATEOAS.Filters
                         }
                     }
                     okObjectResult.Value = hateoaslist;
-
-                    // TODO: "first" and "last" are hardcoded because they are standard options?
-                    // TODO: "prev" and "next"? 
-
                 }
                 else
                 {
