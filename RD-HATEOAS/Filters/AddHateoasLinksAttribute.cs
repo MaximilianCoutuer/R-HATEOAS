@@ -46,7 +46,7 @@ namespace RDHATEOAS.Filters
 
         /// <summary>
         /// This method is invoked whenever a result is sent from a controller method with this attribute attached to it.
-        /// </summary>
+        /// </summary> 
         /// <param name="context">The result context from the result that caused this to be run.</param>
         public override void OnResultExecuting(ResultExecutingContext context)
         {
