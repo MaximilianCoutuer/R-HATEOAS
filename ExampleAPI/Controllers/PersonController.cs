@@ -25,7 +25,7 @@ namespace ExampleAPI.Controllers
         {
             _context = context;
 
-            // Seed database with one item
+            // Seed database with some items
             if (_context.Persons.Count() == 0)
             {
                 _context.Add(new Person()
@@ -70,7 +70,7 @@ namespace ExampleAPI.Controllers
         [AddHateoasLinks(null, new[] { typeof(DemoRulesetFullLinks) })]
         public async Task<ActionResult> GetAllPersons()
         {
-            IEnumerable<Person> persons = await _context.Persons.ToListAsync();
+            IEnumerable<Person> persons = await _context.Persons.Include(p => p.Country).ToListAsync();
             if (persons.Count() == 0)
             {
                 return NotFound();

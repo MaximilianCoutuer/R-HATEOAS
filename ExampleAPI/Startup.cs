@@ -60,7 +60,7 @@ namespace ExampleAPI
 
             app.UseHttpsRedirection();
 
-            app.UseMvc(routes =>
+            app.UseMvc(routes =>  
             {
                 routes.MapRoute(
                     name: "HateoasRoute",
