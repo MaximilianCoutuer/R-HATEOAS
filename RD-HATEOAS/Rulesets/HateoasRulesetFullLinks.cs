@@ -16,10 +16,10 @@ namespace RDHATEOAS.Rulesets
             // TODO: automatic first/last
             var test = Parameters;
             return new List<HateoasLink> {
-                hateoasLinkBuilder.BuildSelfLink(context, "HateoasRoute", "person"),
-                hateoasLinkBuilder.Build(context, "HateoasRoute", "person", "list", HttpMethod.Get, Parameters.GetValueOrDefault("Id")),    // custom rulesets can access the ID of an object via the last field
-                hateoasLinkBuilder.Build(context, "HateoasRoute", "person", "edit", HttpMethod.Post).AddHreflang("be-nl").AddMedia("doctype/jpg").AddTitle("Photo of a duck").AddType("image"),
-                hateoasLinkBuilder.Build(context, "HateoasRoute", "person", "delete", HttpMethod.Delete),
+                hateoasLinkBuilder.BuildSelfLink(context, "default", "person"),
+                hateoasLinkBuilder.Build(context, "default", "person", "list", HttpMethod.Get, Parameters.GetValueOrDefault("Id")),    // custom rulesets can access the ID of an object via the last field
+                hateoasLinkBuilder.Build(context, "default", "person", "edit", HttpMethod.Post).AddHreflang("be-nl").AddMedia("doctype/jpg").AddTitle("Photo of a duck").AddType("image"),
+                hateoasLinkBuilder.Build(context, "default", "person", "delete", HttpMethod.Delete),
             };
         }
 
