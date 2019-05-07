@@ -19,7 +19,6 @@ namespace ExampleAPI.Controllers
     public class PersonController : ControllerBase
     {
         private readonly PeopleContext _context;
-        private readonly ILinkService _linkService;
 
         public PersonController(PeopleContext context)
         {
@@ -68,7 +67,7 @@ namespace ExampleAPI.Controllers
         [HttpGet]
         //[TypeFilter(typeof(AddHateoasLinksAttribute))]
         [AddHateoasLinks(null, new[] { typeof(DemoRulesetFullLinks) })]
-        public async Task<ActionResult> GetAllPersons()
+        public async Task<ActionResult<List<Person>>> GetAllPersons()
         {
             IEnumerable<Person> persons = await _context.Persons.Include(p => p.Country).ToListAsync();
             if (persons.Count() == 0)
