@@ -24,43 +24,43 @@ namespace ExampleAPI.Controllers
         {
             _context = context;
 
-            // Seed database with some items
-            if (_context.Persons.Count() == 0)
-            {
-                _context.Add(new Person()
-                {
-                    FirstName = "Maximilian",
-                    LastName = "Coutuer",
-                    Age = 35,
-                    Country = new Country() {
-                        Name = "Belgium",
-                        Capital = "Brussels"
-                    },
-                });
-                _context.Add(new Person()
-                {
-                    FirstName = "Nicolas",
-                    LastName = "Zawada",
-                    Age = 40,
-                    Country = new Country()
-                    {
-                        Name = "Belgium",
-                        Capital = "Brussels"
-                    },
-                });
-                _context.Add(new Person()
-                {
-                    FirstName = "Wim",
-                    LastName = "Bellemans",
-                    Age = 45,
-                    Country = new Country()
-                    {
-                        Name = "Belgium",
-                        Capital = "Brussels"
-                    },
-                });
-                _context.SaveChanges();
-            }
+            //// Seed database with some items
+            //if (_context.Persons.Count() == 0)
+            //{
+            //    _context.Add(new Person()
+            //    {
+            //        FirstName = "Maximilian",
+            //        LastName = "Coutuer",
+            //        Age = 35,
+            //        Country = new Country() {
+            //            Name = "Belgium",
+            //            Capital = "Brussels"
+            //        },
+            //    });
+            //    _context.Add(new Person()
+            //    {
+            //        FirstName = "Nicolas",
+            //        LastName = "Zawada",
+            //        Age = 40,
+            //        Country = new Country()
+            //        {
+            //            Name = "Belgium",
+            //            Capital = "Brussels"
+            //        },
+            //    });
+            //    _context.Add(new Person()
+            //    {
+            //        FirstName = "Wim",
+            //        LastName = "Bellemans",
+            //        Age = 45,
+            //        Country = new Country()
+            //        {
+            //            Name = "Belgium",
+            //            Capital = "Brussels"
+            //        },
+            //    });
+            //    _context.SaveChanges();
+            //}
         }
 
         // GET api/person
@@ -84,9 +84,9 @@ namespace ExampleAPI.Controllers
         [HttpGet("{skip, take}")]
         //[TypeFilter(typeof(AddHateoasLinksAttribute))]
         [AddHateoasLinks(new[] { "skip", "take" }, new[] { typeof(DemoRulesetFullLinks) })]
-        public async Task<ActionResult> GetPaginatedList(int skip, int take)
+        public async Task<ActionResult<Person>> GetPaginatedList(int skip, int take)
         {
-            IEnumerable<Person> persons = await _context.Persons.Skip(skip * take).Take(take).ToListAsync();
+            IEnumerable<Person> persons = await _context.Persons.Skip(skip * take).Take(take).Include(p => p.Country).ToListAsync();
             if (persons.Count() == 0)
             {
                 return NotFound();
