@@ -10,37 +10,38 @@ using Xunit;
 using Microsoft.EntityFrameworkCore.InMemory;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Text;
 
 namespace ExampleAPI.Tests
 {
     public class DatabaseFixture : IDisposable
     {
-
         public PersonController personController;
         public readonly Person[] testPersons = new Person[10];
         public PeopleContext mockPeopleContext;
 
         public DatabaseFixture()
         {
+            // establish an in-memory database
             var dbOptions = new DbContextOptionsBuilder<PeopleContext>()
                 .UseInMemoryDatabase(databaseName: "exampleapi")
                 .Options;
             mockPeopleContext = new PeopleContext(dbOptions);
             this.personController = new PersonController(mockPeopleContext);
 
-            // seed database with test persons
+            // seed database with randomly generated test persons
             mockPeopleContext.SaveChanges();
             for (int i = 0; i < 10; i++)
             {
                 testPersons[i] = new Person()
                 {
-                    FirstName = "Maximilian",
-                    LastName = "Coutuer",
-                    Age = 35,
+                    FirstName = GetRandomString(16),
+                    LastName = GetRandomString(16),
+                    Age = new Random().Next(10,99),
                     Country = new Country()
                     {
-                        Name = "Belgium",
-                        Capital = "Brussels"
+                        Name = GetRandomString(16),
+                        Capital = GetRandomString(16),
                     },
                 };
                 mockPeopleContext.Add(testPersons[i]);
@@ -55,6 +56,17 @@ namespace ExampleAPI.Tests
                 mockPeopleContext.Remove(person);
             }
         }
+
+        public static string GetRandomString(int length)
+        {
+            var r = new Random();
+            var s = new StringBuilder();
+            for (int i = 0; i < length; i++)
+            {
+                s.Append((char)r.Next(65, 91));
+            }
+            return s.ToString();
+        }
     }
 
     public class PersonControllerTests : IClassFixture<DatabaseFixture> {
@@ -67,7 +79,7 @@ namespace ExampleAPI.Tests
         }
 
         [Fact]
-        public async void GetPerson_FirstId_ShouldRetrievePerson()
+        public async void GetPerson_FirstId_ShouldRetrievePersonAsync()
         {
             // arrange
 
@@ -81,7 +93,7 @@ namespace ExampleAPI.Tests
         }
 
         [Fact]
-        public async void GetAllPersons_ShouldRetrievePersonList()
+        public async void GetAllPersons_ShouldRetrievePersonListAsync()
         {
             // arrange
 
@@ -110,7 +122,7 @@ namespace ExampleAPI.Tests
         }
 
         [Fact]
-        public async void GetPaginatedList_ShouldRetrieveCorrectPerson()
+        public async void GetPaginatedList_ShouldRetrieveCorrectPersonAsync()
         {
             // arrange
 
@@ -122,6 +134,36 @@ namespace ExampleAPI.Tests
             // assert
             Assert.NotNull(person);
             Assert.Equal(new List<Person>() { _fixture.testPersons[1] }, person);
+        }
+
+        [Fact]
+        public async void PostPerson_ShouldPostPersonAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public async void PostPerson_NullPerson_ShouldThrowAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public async void PostPerson_DuplicatePerson_ShouldPostPersonAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public async void DeletePerson_ShouldDeletePersonAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public async void DeletePerson_InvalidPerson_ShouldThrowAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

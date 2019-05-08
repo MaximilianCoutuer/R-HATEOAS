@@ -13,7 +13,7 @@ namespace RDHATEOAS.Rulesets
     {
         public override bool AppliesToEachListItem { get; set; } = true;
 
-        public  override List<HateoasLink> GetLinks(IIsHateoasEnabled item) {
+        public override List<HateoasLink> GetLinks(IIsHateoasEnabled item) {
 
             return new List<HateoasLink> {
                 hateoasLinkBuilder.BuildSelfLink(context, "HateoasRoute", "person"),
