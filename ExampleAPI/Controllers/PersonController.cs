@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RDHATEOAS.Filters;
 using RDHATEOAS.Rulesets;
-using RDHATEOAS.Services;
 
 namespace ExampleAPI.Controllers
 {

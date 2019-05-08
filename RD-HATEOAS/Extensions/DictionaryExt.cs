@@ -4,6 +4,7 @@ using System.Text;
 
 namespace RDHATEOAS.Extensions
 {
+    [Obsolete]
     public static class DictionaryExt
     {
         /// <summary>

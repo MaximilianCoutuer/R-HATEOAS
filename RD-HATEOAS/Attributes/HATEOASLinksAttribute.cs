@@ -2,6 +2,7 @@
 
 namespace RDHATEOAS.Controllers
 {
+    [Obsolete]
     [System.AttributeUsage(System.AttributeTargets.Method | System.AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class HATEOASLinksAttribute : Attribute
     {

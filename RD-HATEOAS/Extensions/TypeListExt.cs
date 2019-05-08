@@ -4,7 +4,7 @@ using System.Text;
 
 namespace RDHATEOAS.Extensions
 {
-    public static class TypeListExtMethod
+    public static class TypeListExt
     {
         public static bool IsList(this Type type)
         {
