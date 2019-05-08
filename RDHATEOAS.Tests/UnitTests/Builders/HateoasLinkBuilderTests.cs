@@ -2,13 +2,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using RDHATEOAS.Builders;
+using RDHATEOAS.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Text;
 using Xunit;
 
-namespace RDHATEOAS.Tests.Builders
+namespace RDHATEOAS.Tests.UnitTests.Builders
 {
     public class LinkBuilderFixture : IDisposable
     {
@@ -30,89 +32,75 @@ namespace RDHATEOAS.Tests.Builders
 
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
     }
 
-
     public class HateoasLinkBuilderTests : IClassFixture<LinkBuilderFixture>
     {
-        [Fact]
-        public async void BuildLink_ShouldBuildLink()
+        LinkBuilderFixture _fixture;
+
+        public HateoasLinkBuilderTests(LinkBuilderFixture fixture)
         {
-            Assert.NotNull(null);
+            this._fixture = fixture;
         }
 
-        [Fact]
-        public async void BuildLink_InvalidUrlHelper_ShouldThrow()
+        [Theory]
+        [MemberData(nameof(ValidLinkData))]
+        public async void BuildLink_ShouldBuildLink(string routeUrl, string linkController, string linkRef, HttpMethod linkMethod, int linkId)
         {
-            Assert.NotNull(null);
+            // arrange
+
+            // act
+            HateoasLink link = _fixture._linkBuilder.Build(_fixture._mockContext, routeUrl, linkController, linkRef, linkMethod, linkId);
+
+            // assert
+            //Uri uriResult;
+            //bool refIsLink = Uri.TryCreate(link.Href, UriKind.RelativeOrAbsolute, out uriResult) && uriResult.Scheme == Uri.UriSchemeHttp;
+
+            Assert.True(Uri.IsWellFormedUriString(link.Href, UriKind.RelativeOrAbsolute));
+            Assert.Equal(link.Method, linkMethod.Method);
         }
 
-        [Fact]
-        public async void BuildLink_InvalidContext_ShouldThrow()
+        [Theory]
+        [MemberData(nameof(NullLinkData))]
+        public async void BuildLink_NullData_ShouldThrow(string routeUrl, string linkController, string linkRef, HttpMethod linkMethod, int linkId)
         {
-            Assert.NotNull(null);
+            // arrange
+
+            // act
+
+            // assert
+            Assert.Throws<ArgumentNullException>(() => _fixture._linkBuilder.Build(_fixture._mockContext, routeUrl, linkController, linkRef, linkMethod, linkId));
         }
 
-        [Fact]
-        public async void BuildLink_NullResponse_ShouldBuildLink()
+        #region helpers
+
+        public static IEnumerable<Object[]> ValidLinkData
         {
-            Assert.NotNull(null);
+            get
+            {
+                return new[]
+                {
+                    new Object[] { "default", "person", "list", HttpMethod.Get, 5 },
+                    new Object[] { "default", "person", "list", HttpMethod.Get, null },
+            };
+            }
         }
 
-        [Fact]
-        public async void BuildLink_NullRouteUrl_ShouldBuildLink()
+        public static IEnumerable<Object[]> NullLinkData
         {
-            Assert.NotNull(null);
+            get
+            {
+                return new[]
+                {
+                    new Object[] { null, "person", "list", HttpMethod.Get, 5 },
+                    new Object[] { "default", null, "list", HttpMethod.Get, 5 },
+                    new Object[] { "default", "person", null, HttpMethod.Get, 5 },
+                    new Object[] { "default", "person", "list", null, 5 },
+            };
+            }
         }
 
-        [Fact]
-        public async void BuildLink_NullLinkController_ShouldBuildLink()
-        {
-            Assert.NotNull(null);
-        }
-
-        [Fact]
-        public async void BuildLink_NullLinkRel_ShouldBuildLink()
-        {
-            Assert.NotNull(null);
-        }
-
-        [Fact]
-        public async void BuildLink_InvalidLinkMethod_ShouldThrow()
-        {
-            Assert.NotNull(null);
-        }
-
-        [Fact]
-        public async void BuildLink_NullLinkId_ShouldBuildLink()
-        {
-            Assert.NotNull(null);
-        }
-
-        [Fact]
-        public async void BuildSelfLink_ShouldBuildLink()
-        {
-            Assert.NotNull(null);
-        }
-
-        [Fact]
-        public async void BuildSelfLink_NullResponse_ShouldBuildLink()
-        {
-            Assert.NotNull(null);
-        }
-
-        [Fact]
-        public async void BuildSelfLink_NullRouteUrl_ShouldBuildLink()
-        {
-            Assert.NotNull(null);
-        }
-
-        [Fact]
-        public async void BuildSelfLink_NullLinkController_ShouldBuildLink()
-        {
-            Assert.NotNull(null);
-        }
+        #endregion
     }
 }

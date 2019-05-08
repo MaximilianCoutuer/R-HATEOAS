@@ -27,18 +27,6 @@ namespace RDHATEOAS.Rulesets
             hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
         }
 
-        //public IsHateoasEnabled AddLinksToItem(IsHateoasEnabled item, ResultExecutingContext context) {
-        //    _urlHelper = new UrlHelper(context);
-        //    hateoasLinkBuilder = new HateoasLinkBuilder(_urlHelper);
-
-        //    var links = GetLinks(item, context);
-        //    foreach (HateoasLink link in links)
-        //    {
-        //        item.Links.Add(link);
-        //    }
-        //    return item;
-        //}
-
         public virtual List<HateoasLink> GetLinks(IIsHateoasEnabled item)
         {
             // default null implementation yields no links

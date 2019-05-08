@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace RDHATEOAS.Tests.UnitTests.Entities
+namespace RDHATEOAS.Tests.UnitTests.Filters
 {
-    public class HateoasLinkBuilderEntityTests
+    public class AddHateoasLinksTests
     {
-        // TODO: test link builder construction
-
         [Fact]
         public async void testtest()
         {

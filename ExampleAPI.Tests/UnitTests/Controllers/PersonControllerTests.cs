@@ -11,8 +11,9 @@ using Microsoft.EntityFrameworkCore.InMemory;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Text;
+using NSubstitute.ExceptionExtensions;
 
-namespace ExampleAPI.Tests
+namespace ExampleAPI.Tests.UnitTests.Controllers
 {
     public class DatabaseFixture : IDisposable
     {
@@ -33,17 +34,7 @@ namespace ExampleAPI.Tests
             mockPeopleContext.SaveChanges();
             for (int i = 0; i < 10; i++)
             {
-                testPersons[i] = new Person()
-                {
-                    FirstName = GetRandomString(16),
-                    LastName = GetRandomString(16),
-                    Age = new Random().Next(10,99),
-                    Country = new Country()
-                    {
-                        Name = GetRandomString(16),
-                        Capital = GetRandomString(16),
-                    },
-                };
+                testPersons[i] = CreateRandomPerson();
                 mockPeopleContext.Add(testPersons[i]);
             }
             mockPeopleContext.SaveChanges();
@@ -55,6 +46,22 @@ namespace ExampleAPI.Tests
             {
                 mockPeopleContext.Remove(person);
             }
+        }
+
+        public static Person CreateRandomPerson()
+        {
+            return new Person()
+            {
+                FirstName = GetRandomString(16),
+                LastName = GetRandomString(16),
+                Age = new Random().Next(10, 99),
+                Country = new Country()
+                {
+                    Name = GetRandomString(16),
+                    Capital = GetRandomString(16),
+                    Population = new Random().Next(0, 5000000),
+                },
+            };
         }
 
         public static string GetRandomString(int length)
@@ -139,31 +146,117 @@ namespace ExampleAPI.Tests
         [Fact]
         public async void PostPerson_ShouldPostPersonAsync()
         {
-            throw new NotImplementedException();
+            // arrange
+            var testPerson = DatabaseFixture.CreateRandomPerson();
+
+            // act
+            await _fixture.personController.PostPerson(testPerson);
+
+            // assert
+            var retrievedPerson = await _fixture.personController.GetPerson(testPerson.Id);
+            Assert.Equal(testPerson, retrievedPerson);
+
         }
 
         [Fact]
         public async void PostPerson_NullPerson_ShouldThrowAsync()
         {
-            throw new NotImplementedException();
+            // arrange
+            Person emptyPerson = null;
+
+            // act
+
+            // assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _fixture.personController.PostPerson(emptyPerson));
         }
 
         [Fact]
         public async void PostPerson_DuplicatePerson_ShouldPostPersonAsync()
         {
-            throw new NotImplementedException();
+            // arrange
+            var testPerson = DatabaseFixture.CreateRandomPerson();
+
+            // act
+            await _fixture.personController.PostPerson(testPerson);
+
+
+            // assert
+            await Assert.ThrowsAsync<ArgumentException>(() => _fixture.personController.PostPerson(testPerson));
+        }
+
+        [Fact]
+        public async void PutPerson_NewPerson_ShouldPutPersonAsync()
+        {
+            // arrange
+            var testPerson = DatabaseFixture.CreateRandomPerson();
+
+            // act
+            await _fixture.personController.PutPerson(testPerson.Id, testPerson);
+
+            // assert
+            var retrievedPerson = await _fixture.personController.GetPerson(testPerson.Id);
+            Assert.Equal(testPerson, retrievedPerson);
+
+        }
+
+        [Fact]
+        public async void PutPerson_NullPerson_ShouldThrowAsync()
+        {
+            // arrange
+            Person emptyPerson = null;
+
+            // act
+
+            // assert
+            await Assert.ThrowsAsync<NullReferenceException>(async () => await _fixture.personController.PutPerson(5, emptyPerson));
+        }
+
+        [Fact]
+        public async void PutPerson_ExistingPerson_ShouldPutPersonAsync()
+        {
+            // arrange
+            var testPerson = DatabaseFixture.CreateRandomPerson();
+
+            // act
+            await _fixture.personController.PostPerson(testPerson);
+            testPerson.FirstName = DatabaseFixture.GetRandomString(16);
+            await _fixture.personController.PutPerson(testPerson.Id, testPerson);
+
+            // assert
+            var retrievedPerson = await _fixture.personController.GetPerson(testPerson.Id);
+            Assert.Equal(testPerson, retrievedPerson);
         }
 
         [Fact]
         public async void DeletePerson_ShouldDeletePersonAsync()
         {
-            throw new NotImplementedException();
+            // arrange
+            var testPerson = DatabaseFixture.CreateRandomPerson();
+
+            // act
+            await _fixture.personController.PostPerson(testPerson);
+            await _fixture.personController.DeletePerson(testPerson.Id);
+
+            var actionResult = await _fixture.personController.GetPerson(testPerson.Id);
+            var notFoundResult = (actionResult.Result as NotFoundResult);
+
+            // assert
+            Assert.NotNull(notFoundResult);
+            Assert.Equal(404, notFoundResult.StatusCode);
         }
 
         [Fact]
-        public async void DeletePerson_InvalidPerson_ShouldThrowAsync()
+        public async void DeletePerson_InvalidID_Should404Async()
         {
-            throw new NotImplementedException();
+            // arrange
+
+            // act
+            var actionResult = await _fixture.personController.DeletePerson(9999);
+            var notFoundResult = (actionResult as NotFoundResult);
+
+            // assert
+            Assert.NotNull(notFoundResult);
+            Assert.Equal(404, notFoundResult.StatusCode);
         }
     }
 }

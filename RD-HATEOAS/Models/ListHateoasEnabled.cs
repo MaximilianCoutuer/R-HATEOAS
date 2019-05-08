@@ -6,7 +6,9 @@ using System.Text;
 
 namespace RDHATEOAS.Models
 {
-    // TODO: This is horrible and needs a rewrite
+    /// <summary>
+    /// Model class that contains both a list and relevant HATEOAS links.
+    /// </summary>
     public class ListHateoasEnabled : IIsHateoasEnabled
     {
         public List<Object> list = new List<Object>();

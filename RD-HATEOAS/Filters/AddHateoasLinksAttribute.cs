@@ -121,41 +121,4 @@ namespace RDHATEOAS.Filters
 
         #endregion
     }
-
-
-    //private IHateoasRuleset[] GetControllerBasedLinkRulesets(ResultExecutingContext response)
-    //{
-    //    var controllerActionDescriptor = response.ActionDescriptor as ControllerActionDescriptor;
-    //    if (controllerActionDescriptor != null)
-    //    {
-    //        Attribute[] attrs = (Attribute[])controllerActionDescriptor.MethodInfo.GetCustomAttributes(inherit: true);
-    //    }
-    //    // TODO: do something with this
-    //    // TODO: determine if one or more rulesets (probably one)
-    //    return null;
-    //}
-
-
-    //private IHateoasRuleset[] GetModelBasedLinkRulesets(OkObjectResult okObjectResult) {
-    //    if (IsList(okObjectResult))
-    //    {
-    //        // result is a list
-    //        List<Object> list = (List<Object>)okObjectResult.Value;
-    //        Attribute[] attrs = System.Attribute.GetCustomAttributes(list.First().GetType());
-    //        // TODO: do something with this
-    //    }
-    //    else
-    //    {
-    //        // result is a model
-    //        Object item = (Object)okObjectResult.Value;
-    //        Attribute[] attrs = System.Attribute.GetCustomAttributes(item.GetType());
-    //        // TODO: do something with this
-    //    }
-    //    return null;
-    //}
-
-    //private IHateoasRuleset[] GetGlobalLinkRulesets(OkObjectResult okObjectResult)
-    //{
-    //    return null;
-    //}
 }

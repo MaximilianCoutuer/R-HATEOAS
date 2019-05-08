@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace RDHATEOAS.Tests
+namespace RDHATEOAS.Tests.UnitTests.Rulesets
 {
     public class HateoasRulesetBaseTests
     {
@@ -11,16 +11,8 @@ namespace RDHATEOAS.Tests
         }
 
         [Fact]
-        public async void GetPerson_FirstId_ShouldRetrievePerson()
+        public async void test()
         {
-            // arrange
-
-            //public HateoasLink Build(ActionContext response, string routeUrl, string linkController, string linkRel, HttpMethod linkMethod, Object linkId = null)
-
-
-            // act
-
-            // assert
             Assert.NotNull(null);
         }
     }

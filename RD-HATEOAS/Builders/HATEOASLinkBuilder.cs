@@ -38,7 +38,11 @@ namespace RDHATEOAS.Builders
         /// <returns>A HATEOAS link object.</returns>
         public HateoasLink Build(ActionContext response, string routeUrl, string linkController, string linkRel, HttpMethod linkMethod, Object linkId = null)
         {
-            var uri = response.HttpContext.Request.Host.ToUriComponent()
+            if (routeUrl == null || linkController == null || linkRel == null || linkMethod == null)
+            {
+                throw new ArgumentNullException();
+            }
+            var uri = response.HttpContext.Request.Host.ToUriComponent() ?? "localhost"
                 + _urlHelper.RouteUrl(routeUrl, new
                 {
                     controller = linkController,

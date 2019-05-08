@@ -3,8 +3,22 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace RDHATEOAS.Tests.Integration
+namespace RDHATEOAS.Tests.IntegrationTests
 {
+    public class IntegrationTests
+    {
+        // create a ruleset
+        // create a context
+        // see what happens
+
+
+        [Fact]
+        public async void testtest()
+        {
+            Assert.NotNull(null);
+        }
+    }
+
     //public class IntegrationTests : IClassFixture<WebApplicationFactory<RazorPagesProject.Startup>>
     //{
     //    private readonly WebApplicationFactory<RazorPagesProject.Startup> _factory;

@@ -151,7 +151,7 @@ namespace ExampleAPI.Controllers
 
         // DELETE api/person/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePerson(int id)
+        public async Task<ActionResult> DeletePerson(int id)
         {
             // returns 404 Not Found if ID invalid
             // returns 200 OK
