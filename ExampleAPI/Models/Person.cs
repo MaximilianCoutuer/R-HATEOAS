@@ -30,7 +30,7 @@ namespace ExampleAPI.Models
             }
             set {
 
-                if (age > 0 && age < 150) // future proofing
+                if (value >= 0 && value <= 150) // future proofing
                 {
                     this.age = value;
                 } else

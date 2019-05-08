@@ -29,7 +29,7 @@ namespace RDHATEOAS.Models
         // HTTP method
         [Required]
         public HttpMethod HttpMethod {
-            set { _method = value ?? HttpMethod.Get; }
+            set { _method = value; }
         }
         public string Method
         {

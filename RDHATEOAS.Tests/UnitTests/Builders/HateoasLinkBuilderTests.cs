@@ -83,7 +83,6 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
                 {
                     new Object[] { "default", "person", "list", HttpMethod.Get, 5 },
                     new Object[] { "default", "person", "list", HttpMethod.Get, null },
-                    new Object[] { "default", "person", "list", null, 5 },
             };
             }
         }
@@ -97,6 +96,7 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
                     new Object[] { null, "person", "list", HttpMethod.Get, 5 },
                     new Object[] { "default", null, "list", HttpMethod.Get, 5 },
                     new Object[] { "default", "person", null, HttpMethod.Get, 5 },
+                    new Object[] { "default", "person", "list", null, 5 },
             };
             }
         }

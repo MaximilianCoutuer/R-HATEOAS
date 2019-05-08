@@ -62,8 +62,6 @@ namespace RDHATEOAS.Filters
                         parameters[parameterName] = context.RouteData.Values[parameterName] ?? null;
                     }
                 }
-
-                // TODO: Any better way than this monstrous function?
                 if (okObjectResult.Value.GetType().IsList())
                 {
                     var list = okObjectResult.Value as IList;
