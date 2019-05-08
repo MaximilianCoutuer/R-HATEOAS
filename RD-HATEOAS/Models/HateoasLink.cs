@@ -23,13 +23,13 @@ namespace RDHATEOAS.Models
         public string Href
         {
             get { return _href; }
-            set { _href = value.Replace("%2F", "/"); }
+            set { _href = (value != null ? value.Replace("%2F", "/") : null); }
         }
 
         // HTTP method
         [Required]
         public HttpMethod HttpMethod {
-            set { _method = value; }
+            set { _method = value ?? HttpMethod.Get; }
         }
         public string Method
         {

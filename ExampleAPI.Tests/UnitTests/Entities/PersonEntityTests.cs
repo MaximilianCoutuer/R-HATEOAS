@@ -20,6 +20,7 @@ namespace ExampleAPI.Tests.UnitTests.Entities
             // act
 
             // assert
+            Assert.NotNull(person);
         }
 
         [Theory]
