@@ -82,12 +82,12 @@ namespace RDHATEOAS.Filters
                         }
                     }
 
-                    ListHateoasEnabled objectList = new ListHateoasEnabled();
-                    foreach (Object listitem in list)
+                    var objectList = new ListHateoasEnabled();
+                    foreach (object listitem in list)
                     {
-                        objectList.list.Add((Object)listitem);
+                        objectList.List.Add(listitem);
                     }
-                    var hateoaslist = (IIsHateoasEnabled)objectList;    // HACK: Why do I need a cast if it inherits from it? oO
+
                     foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
                     {
                         ruleset.SetHelpers(context);
@@ -95,10 +95,10 @@ namespace RDHATEOAS.Filters
                         ruleset.Parameters["Count"] = list.Count;
                         foreach (HateoasLink link in ruleset.GetLinks(objectList))
                         {
-                            hateoaslist.Links.Add(link);
+                            objectList.Links.Add(link);
                         }
                     }
-                    okObjectResult.Value = hateoaslist;
+                    okObjectResult.Value = objectList;
                 }
                 else
                 {
