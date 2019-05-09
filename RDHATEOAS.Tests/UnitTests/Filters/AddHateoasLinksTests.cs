@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using ExampleAPI.Controllers;
+using ExampleAPI.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using RDHATEOAS.Filters;
 using RDHATEOAS.Rulesets;
 using System;
 using System.Collections.Generic;
@@ -12,15 +16,20 @@ namespace RDHATEOAS.Tests.UnitTests.Filters
         [Fact]
         public async void AddLinksToEmptyObject_ShouldAddLinks()
         {
-            //// can't unit test parameters
-            //var context = new ResultExecutingContext();
-            //AddHateosLinksAttribute filter = new AddHateosLinksAttribute(new Object[] { new string[] { }, typeof(HateoasRulesetBase) });
-            //filter.OnResultExecuting(context);
+            // arrange
+            var actionContext = new ActionContext();
+            var value = new Object();
+            var actionResult = new OkObjectResult(value);
+            var peopleContext = new PeopleContext(null);
+            var resultExecutingContext = new ResultExecutingContext(actionContext,null, actionResult, new PersonController(peopleContext));
+            var filter = new AddHateoasLinksAttribute(new string[] { }, typeof(HateoasRulesetBase));
 
+            // act
+            filter.OnResultExecuting(resultExecutingContext);
 
-            // instanciate filter
-            // feed it a fake context
-            // feed it a fake ruleset
+            // assert
+
+            Assert.True(false);
 
         }
 

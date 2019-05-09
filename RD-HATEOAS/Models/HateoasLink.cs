@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 
 namespace RDHATEOAS.Models
@@ -35,6 +36,7 @@ namespace RDHATEOAS.Models
         {
             get { return _method.Method; }
         }
+        
 
         // optional properties
         public string Hreflang { get; private set; }

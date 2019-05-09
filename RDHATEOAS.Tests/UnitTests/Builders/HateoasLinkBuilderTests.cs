@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using RDHATEOAS.Builders;
 using RDHATEOAS.Models;
 using System;
@@ -17,16 +18,16 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
         public readonly HateoasLinkBuilder _linkBuilder;
         public readonly ActionContext _mockContext;
         public readonly UrlHelper _urlHelper;
+        public readonly RouteData _routeData;
 
         public LinkBuilderFixture()
         {
             // "We all know how painful it is to mock a HttpContext"
             _mockContext = new ActionContext();
             _mockContext.HttpContext = new DefaultHttpContext();
-            //mockContext.Response.Body = new MemoryStream();
-            //mockContext.Response.Body.Seek(0, SeekOrigin.Begin);
-
-            _urlHelper = new UrlHelper(this._mockContext);
+            _routeData = new RouteData();
+            _mockContext.RouteData = _routeData;
+            _urlHelper = new UrlHelper(_mockContext);
             _linkBuilder = new HateoasLinkBuilder(_urlHelper);
         }
 
@@ -46,7 +47,7 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
 
         [Theory]
         [MemberData(nameof(ValidLinkData))]
-        public async void BuildLink_ShouldBuildLink(string routeUrl, string linkController, string linkRef, HttpMethod linkMethod, int linkId)
+        public void BuildLink_ShouldBuildLink(string routeUrl, string linkController, string linkRef, HttpMethod linkMethod, int linkId)
         {
             // arrange
 
@@ -63,7 +64,7 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
 
         [Theory]
         [MemberData(nameof(NullLinkData))]
-        public async void BuildLink_NullData_ShouldThrow(string routeUrl, string linkController, string linkRef, HttpMethod linkMethod, int linkId)
+        public void BuildLink_NullData_ShouldThrow(string routeUrl, string linkController, string linkRef, HttpMethod linkMethod, int linkId)
         {
             // arrange
 

@@ -31,7 +31,7 @@ namespace ExampleAPI.Tests.UnitTests.Controllers
             this.personController = new PersonController(mockPeopleContext);
 
             // seed database with randomly generated test persons
-            mockPeopleContext.SaveChanges();
+            mockPeopleContext.Database.EnsureCreated();
             for (int i = 0; i < 10; i++)
             {
                 testPersons[i] = CreateRandomPerson();

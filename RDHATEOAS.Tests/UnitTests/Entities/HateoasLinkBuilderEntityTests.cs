@@ -83,7 +83,7 @@ namespace RDHATEOAS.Tests.UnitTests.Entities
             var link = new HateoasLink();
 
             // act
-            link.AddMedia(data)
+            link.AddMedia(data);
 
             // assert
             Assert.Equal(data, link.Media);

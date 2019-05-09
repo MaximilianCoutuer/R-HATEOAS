@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -32,7 +33,7 @@ namespace RDHATEOAS.Tests.IntegrationTests
 
             // act
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-            var value = await httpResponseMessage.Content.ReadAsStringAsync();
+            var value = await httpResponseMessage.Content.ReadAsAsync<Person>();
 
             // assert
             httpResponseMessage.EnsureSuccessStatusCode();
