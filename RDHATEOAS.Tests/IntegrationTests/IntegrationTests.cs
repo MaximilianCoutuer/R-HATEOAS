@@ -1,50 +1,49 @@
-﻿using System;
+﻿using ExampleAPI.Models;
+using Microsoft.AspNetCore.Mvc.Testing;
+using RDHATEOAS.Models;
+using RDHATEOAS.Tests.Factories;
+using RDHATEOAS.Tests.Mocks;
+using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace RDHATEOAS.Tests.IntegrationTests
 {
-    public class IntegrationTests
+    public class IntegrationTests : IClassFixture<WebApplicationFactory<TestStartup>>
     {
-        // create a ruleset
-        // create a context
-        // see what happens
+        private readonly WebApplicationFactory<TestStartup> _factory;
 
-
-        [Fact]
-        public async void testtest()
+        public IntegrationTests(WebApplicationFactory<TestStartup> factory)
         {
-            Assert.NotNull(null);
+            _factory = factory;
+        }
+
+        [Theory]
+        [InlineData("/api/person/5")]
+        public async void GetPerson_ShouldReturnPersonAsync(string url)
+        {
+            // arrange
+            var httpClient = _factory.CreateClient();
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+
+            // act
+            var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+            var value = await httpResponseMessage.Content.ReadAsStringAsync();
+
+            // assert
+            httpResponseMessage.EnsureSuccessStatusCode();
+            Assert.True(value is Person);   // this won't work but it'll tell me what it actually is
+        }
+
+        public bool ContainsHateoasLink(string value, HateoasLink link)
+        {
+            // TODO: parse
+
+            return false;
         }
     }
-
-    //public class IntegrationTests : IClassFixture<WebApplicationFactory<RazorPagesProject.Startup>>
-    //{
-    //    private readonly WebApplicationFactory<RazorPagesProject.Startup> _factory;
-
-    //    public BasicTests(WebApplicationFactory<RazorPagesProject.Startup> factory)
-    //    {
-    //        _factory = factory;
-    //    }
-
-    //    [Theory]
-    //    [InlineData("/")]
-    //    [InlineData("/Index")]
-    //    [InlineData("/About")]
-    //    [InlineData("/Privacy")]
-    //    [InlineData("/Contact")]
-    //    public async void GetEndpoints_Success(string url)
-    //    {
-    //        // arrange
-    //        var client = _factory.CreateClient();
-
-    //        // act
-    //        var response = await client.GetAsync(url);
-
-    //        // assert
-    //        response.EnsureSuccessStatusCode(); // Status Code 200-299
-    //        Assert.Equal("text/html; charset=utf-8", response.Content.Headers.ContentType.ToString());
-    //    }
-    //}
 }
