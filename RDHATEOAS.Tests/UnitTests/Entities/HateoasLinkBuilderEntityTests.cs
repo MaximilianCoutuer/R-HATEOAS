@@ -67,7 +67,7 @@ namespace RDHATEOAS.Tests.UnitTests.Entities
             var link = new HateoasLink();
 
             // act
-            link.Hreflang = data;
+            link.AddHreflang(data);
 
             // assert
             Assert.Equal(data, link.Hreflang);
@@ -83,7 +83,7 @@ namespace RDHATEOAS.Tests.UnitTests.Entities
             var link = new HateoasLink();
 
             // act
-            link.Media = data;
+            link.AddMedia(data)
 
             // assert
             Assert.Equal(data, link.Media);

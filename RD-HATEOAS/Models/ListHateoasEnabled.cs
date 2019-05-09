@@ -11,11 +11,11 @@ namespace RDHATEOAS.Models
     /// </summary>
     public class ListHateoasEnabled : IIsHateoasEnabled
     {
-        public List<Object> list = new List<Object>();
+        public List<Object> List { get; set; } = new List<Object>();
 
         // Hateoas Enabled
         [NotMapped]
         [JsonProperty(PropertyName = "_links")]
-        List<HateoasLink> IIsHateoasEnabled.Links { get; set; } = new List<HateoasLink>();
+        public List<HateoasLink> Links { get; set; } = new List<HateoasLink>();
     }
 }

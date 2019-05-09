@@ -37,8 +37,8 @@ namespace RDHATEOAS.Models
         }
 
         // optional properties
-        public string Hreflang { get; set; }
-        public string Media { get; set; }
+        public string Hreflang { get; private set; }
+        public string Media { get; private set; }
         public string Title { get; set; }
         public string Type { get; set; }
 
