@@ -71,7 +71,7 @@ namespace ExampleAPI.Controllers
             IEnumerable<Person> persons = await _context.Persons.Include(p => p.Country).ToListAsync();
             if (persons.Count() == 0)
             {
-                return NotFound();
+                return Ok(new Person());
             }
             else
             {

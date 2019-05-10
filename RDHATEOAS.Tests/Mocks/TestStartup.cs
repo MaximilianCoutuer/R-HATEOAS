@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ExampleAPI.Models;
+using System.Reflection;
 
 namespace RDHATEOAS.Tests.Mocks
 {
@@ -26,6 +27,7 @@ namespace RDHATEOAS.Tests.Mocks
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //services.AddMvc().AddApplicationPart(Assembly.Load(new AssemblyName("ExampleAPI")));
             services.AddDbContext<PeopleContext>(options => options.UseInMemoryDatabase("Person"));
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

@@ -8,18 +8,19 @@ using System.Text;
 
 namespace RDHATEOAS.Tests.Factories
 {
-    //public class CustomAPIFactory : WebApplicationFactory<TestStartup>
-    //{
-    //    protected override IWebHostBuilder CreateWebHostBuilder()
-    //    {
-    //        return WebHost.CreateDefaultBuilder()
-    //            .UseStartup<TestStartup>();
-    //    }
+    public class CustomAPIFactory : WebApplicationFactory<TestStartup>
+    {
+        protected override IWebHostBuilder CreateWebHostBuilder()
+        {
+            return WebHost.CreateDefaultBuilder()
+                .UseStartup<TestStartup>()
+                .UseEnvironment("Development");
+        }
 
-    //    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    //    {
-    //        builder.UseContentRoot(".");
-    //        base.ConfigureWebHost(builder);
-    //    }
-    //}
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        {
+            builder.UseContentRoot(".");
+            base.ConfigureWebHost(builder);
+        }
+    }
 }

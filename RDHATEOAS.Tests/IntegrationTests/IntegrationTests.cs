@@ -14,24 +14,46 @@ using Xunit;
 
 namespace RDHATEOAS.Tests.IntegrationTests
 {
-    public class IntegrationTests : IClassFixture<WebApplicationFactory<TestStartup>>
+    public class IntegrationTests : IClassFixture<CustomAPIFactory>
     {
-        private readonly WebApplicationFactory<TestStartup> _factory;
+        private readonly CustomAPIFactory _factory;
 
-        public IntegrationTests(WebApplicationFactory<TestStartup> factory)
+        public IntegrationTests(CustomAPIFactory factory)
         {
             _factory = factory;
         }
 
         [Theory]
-        [InlineData("/api/person/5")]
+        [InlineData("/api/person")]
+        public async void GetAllPersons_ShouldReturnPersonsAsync(string url)
+        {
+            // arrange
+            var httpClient = _factory.CreateClient();
+            var uri = new Uri("https://localhost:44356/api/person");
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+            var person = new Person();
+
+            // act
+            var httpResponseMessage = await httpClient.GetAsync(uri);
+            var value = await httpResponseMessage.Content.ReadAsAsync<Person>();
+
+            // assert
+            httpResponseMessage.EnsureSuccessStatusCode();
+            Assert.True(value is Person);   // this won't work but it'll tell me what it actually is
+        }
+
+        [Theory]
+        [InlineData("/api/person/1")]
         public async void GetPerson_ShouldReturnPersonAsync(string url)
         {
             // arrange
             var httpClient = _factory.CreateClient();
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+            var person = new Person();
 
             // act
+            var postContent = new ObjectContent(typeof(Person), new Person(), new JsonMediaTypeFormatter());
+            var qq = await httpClient.PostAsync("api/person", postContent);
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
             var value = await httpResponseMessage.Content.ReadAsAsync<Person>();
 
