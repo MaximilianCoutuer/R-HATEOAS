@@ -12,6 +12,7 @@ namespace ExampleAPI.Controllers
 {
     /// <summary>
     /// This is an example controller that offers basic functionality.
+    /// It supports basic CRUD operations.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -22,56 +23,17 @@ namespace ExampleAPI.Controllers
         public PersonController(PeopleContext context)
         {
             _context = context;
-
-            //// Seed database with some items
-            //if (_context.Persons.Count() == 0)
-            //{
-            //    _context.Add(new Person()
-            //    {
-            //        FirstName = "Maximilian",
-            //        LastName = "Coutuer",
-            //        Age = 35,
-            //        Country = new Country() {
-            //            Name = "Belgium",
-            //            Capital = "Brussels"
-            //        },
-            //    });
-            //    _context.Add(new Person()
-            //    {
-            //        FirstName = "Nicolas",
-            //        LastName = "Zawada",
-            //        Age = 40,
-            //        Country = new Country()
-            //        {
-            //            Name = "Belgium",
-            //            Capital = "Brussels"
-            //        },
-            //    });
-            //    _context.Add(new Person()
-            //    {
-            //        FirstName = "Wim",
-            //        LastName = "Bellemans",
-            //        Age = 45,
-            //        Country = new Country()
-            //        {
-            //            Name = "Belgium",
-            //            Capital = "Brussels"
-            //        },
-            //    });
-            //    _context.SaveChanges();
-            //}
         }
 
         // GET api/person
         [HttpGet]
-        //[TypeFilter(typeof(AddHateoasLinksAttribute))]
         [AddHateoasLinks(null, new[] { typeof(DemoRulesetFullLinks) })]
         public async Task<ActionResult<List<Person>>> GetAllPersons()
         {
             IEnumerable<Person> persons = await _context.Persons.Include(p => p.Country).ToListAsync();
             if (persons.Count() == 0)
             {
-                return Ok(new Person());
+                return NotFound();
             }
             else
             {
@@ -81,7 +43,6 @@ namespace ExampleAPI.Controllers
 
         // GET api/person (paginated)
         [HttpGet("{skip, take}")]
-        //[TypeFilter(typeof(AddHateoasLinksAttribute))]
         [AddHateoasLinks(new[] { "skip", "take" }, new[] { typeof(DemoRulesetFullLinks) })]
         public async Task<ActionResult<Person>> GetPaginatedList(int skip, int take)
         {
@@ -117,7 +78,7 @@ namespace ExampleAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(Person person)
         {
-            // returns 201 with location header containing GET link to newly created object in DB
+            // returns 201 Created with location header containing GET link to newly created object in DB
             _context.Add<Person>(person);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetPerson), new { Id = person.Id }, person);
@@ -138,7 +99,6 @@ namespace ExampleAPI.Controllers
                 _context.Update<Person>(person);
                 await _context.SaveChangesAsync();
                 return NoContent();
-                // TODO: return 409 Conflict or 415 Unsupported Media Type if representation inconsistent
             }
             else
             {
@@ -163,13 +123,7 @@ namespace ExampleAPI.Controllers
             }
             _context.Persons.Remove(person);
             await _context.SaveChangesAsync();
-            return NoContent();
-        }
-
-        // PATCH api/person/5
-        public async Task<ActionResult<Person>> PatchPerson(int id, Person person)
-        {
-            throw new NotImplementedException();
+            return Ok();
         }
     }
 }
