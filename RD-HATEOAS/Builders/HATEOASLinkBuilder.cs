@@ -25,13 +25,13 @@ namespace RDHATEOAS.Builders
         /// <summary>
         /// Builds a HATEOAS link based on the provided parameters.
         /// </summary>
-        /// <param name="response"></param>
-        /// <param name="routeUrl"></param>
-        /// <param name="routeUrlController"></param>
-        /// <param name="routeUrlAction"></param>
-        /// <param name="linkRel"></param>
-        /// <param name="linkMethod"></param>
-        /// <param name="linkId"></param>
+        /// <param name="response">The response for which links are generated.</param>
+        /// <param name="routeUrl">The name of the route map.</param>
+        /// <param name="routeUrlController">The name of the controller that handles the link.</param>
+        /// <param name="routeUrlAction">The name of the action that handles the link.</param>
+        /// <param name="linkRel">The link rel property.</param>
+        /// <param name="linkMethod">The link HTTP method.</param>
+        /// <param name="linkId">If the link has an ID number, use this.</param>
         /// <returns>A HATEOAS link object.</returns>
         public HateoasLink Build(ActionContext response, string routeUrl, string routeUrlController, string routeUrlAction, string linkRel, HttpMethod linkMethod, Object linkId = null)
         {
@@ -56,11 +56,13 @@ namespace RDHATEOAS.Builders
         /// <summary>
         /// Builds a HATEOAS self link based on the provided parameters.
         /// </summary>
-        /// <param name="response"></param>
-        /// <param name="routeUrl"></param>
-        /// <param name="linkController"></param>
+        /// <remarks>
+        /// This is based on the request URL.
+        /// According to HATEOAS specs, only the top level item can have a self link.
+        /// </remarks>
+        /// <param name="response">The response for which links are generated.</param>
         /// <returns>A HATEOAS link object.</returns>
-        public HateoasLink BuildSelfLink(ActionContext response, string routeUrl, string linkController)
+        public HateoasLink BuildSelfLink(ActionContext response)
         {
             var request = response.HttpContext.Request;
             var uri = (new UriBuilder(request.Scheme, request.Host.Host, request.Host.Port.GetValueOrDefault(80), request.Path.ToString(), request.QueryString.ToString())).Uri.ToString();

@@ -12,7 +12,7 @@ namespace RDHATEOAS.Rulesets
         public override List<HateoasLink> GetLinks(IIsHateoasEnabled item) {
 
             return new List<HateoasLink> {
-                hateoasLinkBuilder.BuildSelfLink(context, "default", "Person")
+                hateoasLinkBuilder.BuildSelfLink(context)
                     .AddHreflang("be-nl")
                     .AddTitle("Properties of this requested person")
                     .AddType("json"),
@@ -21,11 +21,11 @@ namespace RDHATEOAS.Rulesets
                     .AddTitle("List of persons")
                     .AddType("json"),
                 hateoasLinkBuilder.Build(context, "default", "Person", "Edit", "edit", HttpMethod.Post, Parameters.GetValueOrDefault("Id") ?? ((Person)item).Id)
-                    .AddHrefLang("be-nl")
+                    .AddHreflang("be-nl")
                     .AddTitle("Edit this person")
                     .AddType("json"),
                 hateoasLinkBuilder.Build(context, "default", "Person", "Delete", "delete", HttpMethod.Delete, Parameters.GetValueOrDefault("Id") ?? ((Person)item).Id)
-                    .AddHrefLang("be-nl")
+                    .AddHreflang("be-nl")
                     .AddTitle("Delete this person")
                     .AddType("json"),
             };
