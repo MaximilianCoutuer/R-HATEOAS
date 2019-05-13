@@ -6,6 +6,7 @@ using RDHATEOAS.Tests.Mocks;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Text;
@@ -50,16 +51,20 @@ namespace RDHATEOAS.Tests.IntegrationTests
             var httpClient = _factory.CreateClient();
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
             var person = new Person();
+            person.FirstName = "Test";
+            person.LastName = "Test";
+            var postContent = new ObjectContent(typeof(Person), person, new JsonMediaTypeFormatter());
 
             // act
-            var postContent = new ObjectContent(typeof(Person), new Person(), new JsonMediaTypeFormatter());
-            var qq = await httpClient.PostAsync("api/person", postContent); // TODO: Bad request
+            // TODO: is added
+            var postResponseMessage = await httpClient.PostAsync("api/person", postContent); // TODO: Bad request
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
             var value = await httpResponseMessage.Content.ReadAsAsync<Person>();
 
             // assert
+            Assert.Equal(HttpStatusCode.Created, postResponseMessage.StatusCode);
             httpResponseMessage.EnsureSuccessStatusCode();
-            Assert.True(value is Person);   // this won't work but it'll tell me what it actually is
+            Assert.True(value is Person);
         }
 
         public bool ContainsHateoasLink(string value, HateoasLink link)
