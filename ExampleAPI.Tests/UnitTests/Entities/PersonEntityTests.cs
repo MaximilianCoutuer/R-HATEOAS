@@ -1,9 +1,7 @@
 ﻿using ExampleAPI.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
-using Xunit.Extensions;
 
 namespace ExampleAPI.Tests.UnitTests.Entities
 {

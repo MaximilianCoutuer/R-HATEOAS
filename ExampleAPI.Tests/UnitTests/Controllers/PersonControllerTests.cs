@@ -1,17 +1,11 @@
 using ExampleAPI.Controllers;
 using ExampleAPI.Models;
-using Microsoft.EntityFrameworkCore;
-using NSubstitute;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using Xunit;
-using Microsoft.EntityFrameworkCore.InMemory;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Text;
-using NSubstitute.ExceptionExtensions;
+using Xunit;
 
 namespace ExampleAPI.Tests.UnitTests.Controllers
 {
@@ -19,32 +13,32 @@ namespace ExampleAPI.Tests.UnitTests.Controllers
     {
         public PersonController personController;
         public readonly Person[] testPersons = new Person[10];
-        public PeopleContext mockPeopleContext;
+        public ExampleDbContext mockExampleDbContext;
 
         public DatabaseFixture()
         {
             // establish an in-memory database
-            var dbOptions = new DbContextOptionsBuilder<PeopleContext>()
+            var dbOptions = new DbContextOptionsBuilder<ExampleDbContext>()
                 .UseInMemoryDatabase(databaseName: "exampleapi")
                 .Options;
-            mockPeopleContext = new PeopleContext(dbOptions);
-            this.personController = new PersonController(mockPeopleContext);
+            mockExampleDbContext = new ExampleDbContext(dbOptions);
+            this.personController = new PersonController(mockExampleDbContext);
 
             // seed database with randomly generated test persons
-            mockPeopleContext.Database.EnsureCreated();
+            mockExampleDbContext.Database.EnsureCreated();
             for (int i = 0; i < 10; i++)
             {
                 testPersons[i] = CreateRandomPerson();
-                mockPeopleContext.Add(testPersons[i]);
+                mockExampleDbContext.Add(testPersons[i]);
             }
-            mockPeopleContext.SaveChanges();
+            mockExampleDbContext.SaveChanges();
         }
 
         public void Dispose()
         {
-            foreach (var person in mockPeopleContext.Persons)
+            foreach (var person in mockExampleDbContext.Persons)
             {
-                mockPeopleContext.Remove(person);
+                mockExampleDbContext.Remove(person);
             }
         }
 

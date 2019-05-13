@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RDHATEOAS.Models;
-using RDHATEOAS.Rulesets;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 
 namespace RDHATEOAS.Builders
 {
@@ -27,7 +23,7 @@ namespace RDHATEOAS.Builders
         #region methods
 
         /// <summary>
-        /// Build a HATEOAS link (type HateoasLink) based on the provided parameters.
+        /// Builds a HATEOAS link based on the provided parameters.
         /// </summary>
         /// <param name="response"></param>
         /// <param name="routeUrl"></param>
@@ -53,13 +49,12 @@ namespace RDHATEOAS.Builders
         }
 
         /// <summary>
-        /// Build a HATEOAS link (type HateoasLink) based on the provided parameters.
-        /// However, this is always a self link.
+        /// Builds a HATEOAS self link based on the provided parameters.
         /// </summary>
         /// <param name="response"></param>
         /// <param name="routeUrl"></param>
         /// <param name="linkController"></param>
-        /// <returns></returns>
+        /// <returns>A HATEOAS link object.</returns>
         public HateoasLink BuildSelfLink(ActionContext response, string routeUrl, string linkController)
         {
             var request = response.HttpContext.Request;

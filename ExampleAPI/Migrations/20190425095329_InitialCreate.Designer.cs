@@ -4,11 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExampleAPI.Migrations
 {
-    [DbContext(typeof(PeopleContext))]
+    [DbContext(typeof(ExampleDbContext))]
     [Migration("20190425095329_InitialCreate")]
     partial class InitialCreate
     {

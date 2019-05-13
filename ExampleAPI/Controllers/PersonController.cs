@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ExampleAPI.Models;
+﻿using ExampleAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RDHATEOAS.Filters;
 using RDHATEOAS.Rulesets;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ExampleAPI.Controllers
 {
@@ -23,13 +22,13 @@ namespace ExampleAPI.Controllers
     {
         #region fields
 
-        private readonly PeopleContext _context;
+        private readonly ExampleDbContext _context;
 
         #endregion
 
         #region constructors
 
-        public PersonController(PeopleContext context)
+        public PersonController(ExampleDbContext context)
         {
             _context = context;
         }

@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Routing;
-using RDHATEOAS.Builders;
-using RDHATEOAS.Models;
-using System;
+﻿using RDHATEOAS.Models;
 using System.Collections.Generic;
 using System.Net.Http;
 

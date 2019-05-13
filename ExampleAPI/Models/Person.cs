@@ -1,15 +1,16 @@
-﻿using ExampleAPI.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using RDHATEOAS.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ExampleAPI.Models
 {
+    /// <summary>
+    /// An example class.
+    /// This class supports HATEOAS links because it implements IIsHateoasEnabled.
+    /// </summary>
     public class Person : IIsHateoasEnabled
     {
         private int age;
@@ -42,7 +43,7 @@ namespace ExampleAPI.Models
 
         public Country Country { get; set; }
 
-        // Implements Hateoas Enabled
+        // implements IHateoasEnabled
         [NotMapped]
         [JsonProperty(PropertyName = "_links")]
         List<HateoasLink> IIsHateoasEnabled.Links { get; set; } = new List<HateoasLink>();

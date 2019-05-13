@@ -1,9 +1,5 @@
 ﻿using ExampleAPI.Models;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Routing;
-using RDHATEOAS.Builders;
 using RDHATEOAS.Models;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 

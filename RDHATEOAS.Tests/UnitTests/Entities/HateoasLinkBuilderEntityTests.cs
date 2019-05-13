@@ -1,8 +1,4 @@
 ﻿using RDHATEOAS.Models;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 using Xunit;
 
 namespace RDHATEOAS.Tests.UnitTests.Entities
@@ -99,7 +95,7 @@ namespace RDHATEOAS.Tests.UnitTests.Entities
             var link = new HateoasLink();
 
             // act
-            link.Title = data;
+            link.AddTitle(data);
 
             // assert
             Assert.Equal(data, link.Title);
@@ -115,7 +111,7 @@ namespace RDHATEOAS.Tests.UnitTests.Entities
             var link = new HateoasLink();
 
             // act
-            link.Type = data;
+            link.AddType(data);
 
             // assert
             Assert.Equal(data, link.Type);

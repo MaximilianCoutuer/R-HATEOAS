@@ -20,8 +20,8 @@ namespace RDHATEOAS.Tests.UnitTests.Filters
             var actionContext = new ActionContext();
             var value = new Object();
             var actionResult = new OkObjectResult(value);
-            var peopleContext = new PeopleContext(null);
-            var resultExecutingContext = new ResultExecutingContext(actionContext,null, actionResult, new PersonController(peopleContext));
+            var ExampleDbContext = new ExampleDbContext(null);
+            var resultExecutingContext = new ResultExecutingContext(actionContext,null, actionResult, new PersonController(ExampleDbContext));
             var filter = new AddHateoasLinksAttribute(new string[] { }, typeof(HateoasRulesetBase));
 
             // act

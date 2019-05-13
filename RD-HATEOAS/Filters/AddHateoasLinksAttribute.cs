@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
-using RDHATEOAS.Models;
-using System.Collections;
-using RDHATEOAS.Rulesets;
-using System.Linq;
-using RDHATEOAS.Extensions;
 using RDHATEOAS.Builders;
-using System.Threading.Tasks;
+using RDHATEOAS.Extensions;
+using RDHATEOAS.Models;
+using RDHATEOAS.Rulesets;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RDHATEOAS.Filters
 {
@@ -33,6 +32,11 @@ namespace RDHATEOAS.Filters
 
         #region constructors
 
+        /// <summary>
+        /// AddHateoasLinksAttribute constructor.
+        /// </summary>
+        /// <param name="parameterNames">Any parameters in the result you wish to pass on to the ruleset.</param>
+        /// <param name="rulesetNames">Names of the rulesets you wish to apply to the object.</param>
         public AddHateoasLinksAttribute(string[] parameterNames, Type[] rulesetNames)
         {
             _parameterNames = parameterNames;
@@ -50,7 +54,7 @@ namespace RDHATEOAS.Filters
 
         /// <summary>
         /// This method is invoked whenever a result is sent from a controller method decorated with this attribute.
-        /// </summary> 
+        /// </summary>
         /// <param name="context">The result context from the result that caused this to be run.</param>
         public override void OnResultExecuting(ResultExecutingContext context)
         {
@@ -70,7 +74,6 @@ namespace RDHATEOAS.Filters
                 if (okObjectResult.Value.GetType().IsList())
                 {
                     var list = okObjectResult.Value as IList;
-
                     for (int i = 0; i < list.Count; i++)
                     {
                         foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
@@ -80,29 +83,31 @@ namespace RDHATEOAS.Filters
                             ruleset.Parameters = parameters;
                             ruleset.Parameters["Id"] = i;
                             ruleset.Parameters["Count"] = list.Count;
-
-                            var listitem = (IIsHateoasEnabled)list[i];
-                            // get links from ruleset
-                            foreach (HateoasLink link in ruleset.GetLinks(listitem))
+                            if (list[i] is IIsHateoasEnabled listitem)
                             {
-                                listitem.Links.Add(link);
+                                // apply links from ruleset
+                                foreach (HateoasLink link in ruleset.GetLinks(listitem))
+                                {
+                                    listitem.Links.Add(link);
+                                }
                             }
                         }
                     }
 
+                    // replace the list with a ListHateoasEnabled which contains it as well as a links property
+                    // TODO: simplify this?
                     var objectList = new ListHateoasEnabled();
                     foreach (object listitem in list)
                     {
                         objectList.List.Add(listitem);
                     }
-
                     foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
                     {
                         // set fields in ruleset
                         ruleset.SetHelpers(context);
                         ruleset.Parameters = parameters;
                         ruleset.Parameters["Count"] = list.Count;
-                        // get links from ruleset
+                        // apply links from ruleset
                         foreach (HateoasLink link in ruleset.GetLinks(objectList))
                         {
                             objectList.Links.Add(link);
@@ -112,16 +117,18 @@ namespace RDHATEOAS.Filters
                 }
                 else
                 {
-                    var item = (IIsHateoasEnabled)okObjectResult.Value;
-                    foreach (IHateoasRuleset ruleset in _rulesets)
+                    if (okObjectResult.Value is IIsHateoasEnabled item)
                     {
-                        // set fields in ruleset
-                        ruleset.SetHelpers(context);
-                        ruleset.Parameters = parameters;
-                        // get links from ruleset
-                        foreach (HateoasLink link in ruleset.GetLinks(item))
+                        foreach (IHateoasRuleset ruleset in _rulesets)
                         {
-                            item.Links.Add(link);
+                            // set fields in ruleset
+                            ruleset.SetHelpers(context);
+                            ruleset.Parameters = parameters;
+                            // apply links from ruleset
+                            foreach (HateoasLink link in ruleset.GetLinks(item))
+                            {
+                                item.Links.Add(link);
+                            }
                         }
                     }
                 }
