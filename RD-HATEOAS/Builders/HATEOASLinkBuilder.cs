@@ -40,9 +40,7 @@ namespace RDHATEOAS.Builders
                 throw new ArgumentNullException();
             }
 
-            var test = _urlHelper.RouteUrl("default", new { controller = "Person", action = "", id = "" });
-
-            var uri = (response.HttpContext.Request.Host.ToUriComponent() ?? "localhost")
+            var uri = (response.HttpContext.Request.Host.Value == null ? "Localhost" : response.HttpContext.Request.Host.ToUriComponent())
                 + _urlHelper.RouteUrl(routeUrl, new
                 {
                     controller = routeUrlController,

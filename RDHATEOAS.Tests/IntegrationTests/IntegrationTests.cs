@@ -53,7 +53,7 @@ namespace RDHATEOAS.Tests.IntegrationTests
 
             // act
             var postContent = new ObjectContent(typeof(Person), new Person(), new JsonMediaTypeFormatter());
-            var qq = await httpClient.PostAsync("api/person", postContent);
+            var qq = await httpClient.PostAsync("api/person", postContent); // TODO: Bad request
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
             var value = await httpResponseMessage.Content.ReadAsAsync<Person>();
 

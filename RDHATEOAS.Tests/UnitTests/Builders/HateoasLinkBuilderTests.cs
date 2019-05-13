@@ -26,7 +26,14 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
             _mockContext = new ActionContext();
             _mockContext.HttpContext = new DefaultHttpContext();
             _routeData = new RouteData();
+            //_routeData.Values.Add("")
             _mockContext.RouteData = _routeData;
+
+    //        var routes = new RouteCollection();
+    //        routes.MapRoute(
+    //name: "default",
+    //template: "api/{controller=Home}/{action=Index}/{id?}");
+
             _urlHelper = new UrlHelper(_mockContext);
             _linkBuilder = new HateoasLinkBuilder(_urlHelper);
         }
@@ -47,16 +54,18 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
 
         [Theory]
         [MemberData(nameof(ValidLinkData))]
-        public void BuildLink_ShouldBuildLink(string routeUrl, string linkController, string linkAction, string linkRef, HttpMethod linkMethod, int linkId)
+        public void BuildLink_ShouldBuildLink(string routeUrl, string routeUrlController, string routeUrlAction, string linkRef, HttpMethod linkMethod, int linkId)
         {
             // arrange
 
             // act
-            HateoasLink link = _fixture._linkBuilder.Build(_fixture._mockContext, routeUrl, linkController, linkAction, linkRef, linkMethod, linkId);
+            HateoasLink link = _fixture._linkBuilder.Build(_fixture._mockContext, routeUrl, routeUrlController, routeUrlAction, linkRef, linkMethod, linkId);
 
             // assert
             //Uri uriResult;
             //bool refIsLink = Uri.TryCreate(link.Href, UriKind.RelativeOrAbsolute, out uriResult) && uriResult.Scheme == Uri.UriSchemeHttp;
+
+            // TODO: Crash in UrlHelper.RouteUrl, presumably because routing is null??
 
             Assert.True(Uri.IsWellFormedUriString(link.Href, UriKind.RelativeOrAbsolute));
             Assert.Equal(link.Method, linkMethod.Method);
@@ -64,14 +73,14 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
 
         [Theory]
         [MemberData(nameof(NullLinkData))]
-        public void BuildLink_NullData_ShouldThrow(string routeUrl, string linkController, string linkAction, string linkRef, HttpMethod linkMethod, int linkId)
+        public void BuildLink_NullData_ShouldThrow(string routeUrl, string routeUrlController, string routeUrlAction, string linkRef, HttpMethod linkMethod, int linkId)
         {
             // arrange
 
             // act
 
             // assert
-            Assert.Throws<ArgumentNullException>(() => _fixture._linkBuilder.Build(_fixture._mockContext, routeUrl, linkController, linkAction, linkRef, linkMethod, linkId));
+            Assert.Throws<ArgumentNullException>(() => _fixture._linkBuilder.Build(_fixture._mockContext, routeUrl, routeUrlController, routeUrlAction, linkRef, linkMethod, linkId));
         }
 
         #region helpers
@@ -82,8 +91,8 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
             {
                 return new[]
                 {
-                    new Object[] { "default", "person", null, "list", HttpMethod.Get, 5 },
-                    new Object[] { "default", "person", null, "list", HttpMethod.Get, null },
+                    new Object[] { "default", "Person", "", "details", HttpMethod.Get, 5 },
+                    new Object[] { "default", "person", "", "list", HttpMethod.Get, null },
             };
             }
         }
@@ -94,10 +103,11 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
             {
                 return new[]
                 {
-                    new Object[] { null, "person", null, "list", HttpMethod.Get, 5 },
-                    new Object[] { "default", null, null, "list", HttpMethod.Get, 5 },
-                    new Object[] { "default", "person", null,  null, HttpMethod.Get, 5 },
-                    new Object[] { "default", "person", null, "list", null, 5 },
+                    new Object[] { null, "Person", "", "details", HttpMethod.Get, 5 },
+                    new Object[] { "default", null, "", "details", HttpMethod.Get, 5 },
+                    new Object[] { "default", "Person", null, "details", HttpMethod.Get, 5 },
+                    new Object[] { "default", "Person", "",  null, HttpMethod.Get, 5 },
+                    new Object[] { "default", "Person", null, "details", null, 5 },
             };
             }
         }
