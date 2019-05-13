@@ -138,6 +138,24 @@ namespace ExampleAPI.Controllers
             return Ok();
         }
 
+        //// GET api/test1
+        //// This is a demonstration of an object type that is not HATEOAS enabled
+        //[Route("api/test1")]
+        //[HttpGet]
+        //[AddHateoasLinks(null, new[] { typeof(DemoRulesetFullLinks) })]
+        //public async Task<ActionResult<List<Country>>> GetAllCountries()
+        //{
+        //    IEnumerable<Country> countries = await _context.Countrys.ToListAsync();
+        //    if (countries.Count() == 0)
+        //    {
+        //        return NotFound();
+        //    }
+        //    else
+        //    {
+        //        return Ok(countries);
+        //    }
+        //}
+
         #endregion
     }
 }
