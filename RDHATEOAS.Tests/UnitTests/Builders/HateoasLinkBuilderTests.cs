@@ -47,12 +47,12 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
 
         [Theory]
         [MemberData(nameof(ValidLinkData))]
-        public void BuildLink_ShouldBuildLink(string routeUrl, string linkController, string linkRef, HttpMethod linkMethod, int linkId)
+        public void BuildLink_ShouldBuildLink(string routeUrl, string linkController, string linkAction, string linkRef, HttpMethod linkMethod, int linkId)
         {
             // arrange
 
             // act
-            HateoasLink link = _fixture._linkBuilder.Build(_fixture._mockContext, routeUrl, linkController, linkRef, linkMethod, linkId);
+            HateoasLink link = _fixture._linkBuilder.Build(_fixture._mockContext, routeUrl, linkController, linkAction, linkRef, linkMethod, linkId);
 
             // assert
             //Uri uriResult;
@@ -64,14 +64,14 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
 
         [Theory]
         [MemberData(nameof(NullLinkData))]
-        public void BuildLink_NullData_ShouldThrow(string routeUrl, string linkController, string linkRef, HttpMethod linkMethod, int linkId)
+        public void BuildLink_NullData_ShouldThrow(string routeUrl, string linkController, string linkAction, string linkRef, HttpMethod linkMethod, int linkId)
         {
             // arrange
 
             // act
 
             // assert
-            Assert.Throws<ArgumentNullException>(() => _fixture._linkBuilder.Build(_fixture._mockContext, routeUrl, linkController, linkRef, linkMethod, linkId));
+            Assert.Throws<ArgumentNullException>(() => _fixture._linkBuilder.Build(_fixture._mockContext, routeUrl, linkController, linkAction, linkRef, linkMethod, linkId));
         }
 
         #region helpers
@@ -82,8 +82,8 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
             {
                 return new[]
                 {
-                    new Object[] { "default", "person", "list", HttpMethod.Get, 5 },
-                    new Object[] { "default", "person", "list", HttpMethod.Get, null },
+                    new Object[] { "default", "person", null, "list", HttpMethod.Get, 5 },
+                    new Object[] { "default", "person", null, "list", HttpMethod.Get, null },
             };
             }
         }
@@ -94,10 +94,10 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
             {
                 return new[]
                 {
-                    new Object[] { null, "person", "list", HttpMethod.Get, 5 },
-                    new Object[] { "default", null, "list", HttpMethod.Get, 5 },
-                    new Object[] { "default", "person", null, HttpMethod.Get, 5 },
-                    new Object[] { "default", "person", "list", null, 5 },
+                    new Object[] { null, "person", null, "list", HttpMethod.Get, 5 },
+                    new Object[] { "default", null, null, "list", HttpMethod.Get, 5 },
+                    new Object[] { "default", "person", null,  null, HttpMethod.Get, 5 },
+                    new Object[] { "default", "person", null, "list", null, 5 },
             };
             }
         }

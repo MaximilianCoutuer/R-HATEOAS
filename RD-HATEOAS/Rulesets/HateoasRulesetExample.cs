@@ -12,9 +12,9 @@ namespace RDHATEOAS.Rulesets
             var test = Parameters;
             return new List<HateoasLink> {
                 hateoasLinkBuilder.BuildSelfLink(context, "default", "person"),
-                hateoasLinkBuilder.Build(context, "default", "person", "list", HttpMethod.Get, Parameters.GetValueOrDefault("Id")),
-                hateoasLinkBuilder.Build(context, "default", "person", "edit", HttpMethod.Post).AddHreflang("be-nl").AddMedia("doctype/jpg").AddTitle("Photo of a duck").AddType("image"),
-                hateoasLinkBuilder.Build(context, "default", "person", "delete", HttpMethod.Delete),
+                hateoasLinkBuilder.Build(context, "default", "person", null, "list", HttpMethod.Get, Parameters.GetValueOrDefault("Id")),
+                hateoasLinkBuilder.Build(context, "default", "person", null, "edit", HttpMethod.Post).AddHreflang("be-nl").AddMedia("doctype/jpg").AddTitle("Photo of a duck").AddType("image"),
+                hateoasLinkBuilder.Build(context, "default", "person", null, "delete", HttpMethod.Delete),
             };
         }
 

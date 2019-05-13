@@ -27,21 +27,26 @@ namespace RDHATEOAS.Builders
         /// </summary>
         /// <param name="response"></param>
         /// <param name="routeUrl"></param>
-        /// <param name="linkController"></param>
+        /// <param name="routeUrlController"></param>
+        /// <param name="routeUrlAction"></param>
         /// <param name="linkRel"></param>
         /// <param name="linkMethod"></param>
         /// <param name="linkId"></param>
         /// <returns>A HATEOAS link object.</returns>
-        public HateoasLink Build(ActionContext response, string routeUrl, string linkController, string linkRel, HttpMethod linkMethod, Object linkId = null)
+        public HateoasLink Build(ActionContext response, string routeUrl, string routeUrlController, string routeUrlAction, string linkRel, HttpMethod linkMethod, Object linkId = null)
         {
-            if (routeUrl == null || linkController == null || linkRel == null || linkMethod == null)
+            if (routeUrl == null || routeUrlController == null || routeUrlAction == null || linkRel == null || linkMethod == null)
             {
                 throw new ArgumentNullException();
             }
-            var uri = response.HttpContext.Request.Host.ToUriComponent() ?? "localhost"
+
+            var test = _urlHelper.RouteUrl("default", new { controller = "Person", action = "", id = "" });
+
+            var uri = (response.HttpContext.Request.Host.ToUriComponent() ?? "localhost")
                 + _urlHelper.RouteUrl(routeUrl, new
                 {
-                    controller = linkController,
+                    controller = routeUrlController,
+                    action = routeUrlAction,
                     id = (int.TryParse((linkId ?? "").ToString(), out int id) ? id : default(int?))
                 });
             var hateoasLink = new HateoasLink(uri, linkRel, linkMethod);
