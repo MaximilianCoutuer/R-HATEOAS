@@ -1,7 +1,9 @@
 ﻿using ExampleAPI.Controllers;
 using ExampleAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using RDHATEOAS.Filters;
 using RDHATEOAS.Rulesets;
 using System;
@@ -20,7 +22,9 @@ namespace RDHATEOAS.Tests.UnitTests.Filters
             var actionContext = new ActionContext();
             var value = new Object();
             var actionResult = new OkObjectResult(value);
-            var ExampleDbContext = new ExampleDbContext(null);
+            var optionsBuilder = new DbContextOptionsBuilder<ExampleDbContext>();
+            var ExampleDbContext = new ExampleDbContext(optionsBuilder.Options);
+            actionContext.HttpContext = new DefaultHttpContext();
             var resultExecutingContext = new ResultExecutingContext(actionContext, null, actionResult, new PersonController(ExampleDbContext));
             var filter = new AddHateoasLinksAttribute(new string[] { }, typeof(HateoasRulesetBase));
 
