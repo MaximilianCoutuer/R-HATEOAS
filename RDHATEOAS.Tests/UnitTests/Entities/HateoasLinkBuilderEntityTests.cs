@@ -5,8 +5,6 @@ namespace RDHATEOAS.Tests.UnitTests.Entities
 {
     public class HateoasLinkBuilderEntityTests
     {
-        // TODO: test link builder construction
-
         [Fact]
         public void CreateLink_ShouldCreateValidLink()
         {

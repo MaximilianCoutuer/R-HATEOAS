@@ -21,10 +21,8 @@ namespace ExampleAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // otherwise UrlHelper crashes https://github.com/aspnet/AspNetCore/issues/4418
+            // TODO: otherwise UrlHelper crashes https://github.com/aspnet/AspNetCore/issues/4418
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            //services.AddDbContext<PersonContext>(options => options.UseInMemoryDatabase("Person"));
             services.AddDbContext<ExampleDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("exampleapi")));
         }
 
