@@ -39,7 +39,7 @@ namespace ExampleAPI.Controllers
 
         // GET api/person
         [HttpGet]
-        [AddHateoasLinks(null, new[] { typeof(DemoRulesetFullLinks) })]
+        [AddHateoasLinks(null, new[] { typeof(ExampleRulesetFullLinks) })]
         public async Task<ActionResult<List<Person>>> GetAllPersons()
         {
             IEnumerable<Person> persons = await _context.Persons.Include(p => p.Country).ToListAsync();
@@ -55,7 +55,7 @@ namespace ExampleAPI.Controllers
 
         // GET api/person (paginated)
         [HttpGet("{skip, take}")]
-        [AddHateoasLinks(new[] { "skip", "take" }, new[] { typeof(DemoRulesetFullLinks) })]
+        [AddHateoasLinks(new[] { "skip", "take" }, new[] { typeof(ExampleRulesetFullLinks) })]
         public async Task<ActionResult<Person>> GetPaginatedList(int skip, int take)
         {
             IEnumerable<Person> persons = await _context.Persons.Skip(skip * take).Take(take).Include(p => p.Country).ToListAsync();
@@ -71,7 +71,7 @@ namespace ExampleAPI.Controllers
 
         // GET api/person/5
         [HttpGet("{id}")]
-        [AddHateoasLinks(new[] { "Id" }, new[] { typeof(DemoRulesetFullLinks) })]
+        [AddHateoasLinks(new[] { "Id" }, new[] { typeof(ExampleRulesetFullLinks) })]
         public async Task<ActionResult<Person>> GetPerson(int Id)
         {
             var person = await _context.FindAsync<Person>(Id);
