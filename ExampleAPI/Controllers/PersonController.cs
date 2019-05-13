@@ -14,16 +14,29 @@ namespace ExampleAPI.Controllers
     /// This is an example controller that offers basic functionality.
     /// It supports basic CRUD operations.
     /// </summary>
+    /// <remarks>
+    /// The HATEOAS package supports any kind of controller method.
+    /// </remarks>
     [Route("api/[controller]")]
     [ApiController]
     public class PersonController : ControllerBase
     {
+        #region fields
+
         private readonly PeopleContext _context;
+
+        #endregion
+
+        #region constructors
 
         public PersonController(PeopleContext context)
         {
             _context = context;
         }
+
+        #endregion
+
+        #region methods
 
         // GET api/person
         [HttpGet]
@@ -125,5 +138,7 @@ namespace ExampleAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+
+        #endregion
     }
 }

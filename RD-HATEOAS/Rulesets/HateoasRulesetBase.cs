@@ -19,7 +19,6 @@ namespace RDHATEOAS.Rulesets
         protected HateoasLinkBuilder hateoasLinkBuilder { get; set; }
         public virtual bool AppliesToEachListItem { get; set; } = false;
 
-
         public void SetHelpers(ResultExecutingContext context)
         {
             this.context = context;
@@ -27,6 +26,11 @@ namespace RDHATEOAS.Rulesets
             hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
         }
 
+        /// <summary>
+        /// Returns a list of links to add to the item.
+        /// </summary>
+        /// <param name="item">The item to which we want to add links.</param>
+        /// <returns>The links.</returns>
         public virtual List<HateoasLink> GetLinks(IIsHateoasEnabled item)
         {
             // default null implementation yields no links

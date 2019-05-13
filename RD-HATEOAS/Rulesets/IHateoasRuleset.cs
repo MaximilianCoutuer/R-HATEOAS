@@ -11,6 +11,9 @@ namespace RDHATEOAS.Rulesets
     /// </summary>
     public interface IHateoasRuleset
     {
+        /// <summary>
+        /// Contains any parameters from the method attribute.
+        /// </summary>
         Dictionary<string, Object> Parameters { get; set; }
 
         /// <summary>

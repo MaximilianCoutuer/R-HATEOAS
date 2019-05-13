@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 
 namespace RDHATEOAS.Filters
 {
+    /// <summary>
+    /// This filter is applied to a controller method via an attribute.
+    /// It intercepts the response and adds links to it.
+    /// </summary>
     [System.AttributeUsage(System.AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class AddHateoasLinksAttribute : ResultFilterAttribute
     {
@@ -45,7 +49,7 @@ namespace RDHATEOAS.Filters
         #region methods
 
         /// <summary>
-        /// This method is invoked whenever a result is sent from a controller method with this attribute attached to it.
+        /// This method is invoked whenever a result is sent from a controller method decorated with this attribute.
         /// </summary> 
         /// <param name="context">The result context from the result that caused this to be run.</param>
         public override void OnResultExecuting(ResultExecutingContext context)
@@ -62,19 +66,23 @@ namespace RDHATEOAS.Filters
                         parameters[parameterName] = context.RouteData.Values[parameterName] ?? null;
                     }
                 }
+
                 if (okObjectResult.Value.GetType().IsList())
                 {
                     var list = okObjectResult.Value as IList;
+
                     for (int i = 0; i < list.Count; i++)
                     {
                         foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
                         {
+                            // set fields in ruleset
                             ruleset.SetHelpers(context);
                             ruleset.Parameters = parameters;
                             ruleset.Parameters["Id"] = i;
                             ruleset.Parameters["Count"] = list.Count;
 
                             var listitem = (IIsHateoasEnabled)list[i];
+                            // get links from ruleset
                             foreach (HateoasLink link in ruleset.GetLinks(listitem))
                             {
                                 listitem.Links.Add(link);
@@ -90,9 +98,11 @@ namespace RDHATEOAS.Filters
 
                     foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
                     {
+                        // set fields in ruleset
                         ruleset.SetHelpers(context);
                         ruleset.Parameters = parameters;
                         ruleset.Parameters["Count"] = list.Count;
+                        // get links from ruleset
                         foreach (HateoasLink link in ruleset.GetLinks(objectList))
                         {
                             objectList.Links.Add(link);
@@ -105,8 +115,10 @@ namespace RDHATEOAS.Filters
                     var item = (IIsHateoasEnabled)okObjectResult.Value;
                     foreach (IHateoasRuleset ruleset in _rulesets)
                     {
+                        // set fields in ruleset
                         ruleset.SetHelpers(context);
                         ruleset.Parameters = parameters;
+                        // get links from ruleset
                         foreach (HateoasLink link in ruleset.GetLinks(item))
                         {
                             item.Links.Add(link);

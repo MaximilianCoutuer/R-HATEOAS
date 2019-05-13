@@ -41,8 +41,8 @@ namespace RDHATEOAS.Models
         // optional properties
         public string Hreflang { get; private set; }
         public string Media { get; private set; }
-        public string Title { get; set; }
-        public string Type { get; set; }
+        public string Title { get; private set; }
+        public string Type { get; private set; }
 
         #endregion
 
