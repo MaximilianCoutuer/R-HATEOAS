@@ -1,5 +1,6 @@
 ﻿using ExampleAPI.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Newtonsoft.Json;
 using RDHATEOAS.Models;
 using RDHATEOAS.Tests.Factories;
 using RDHATEOAS.Tests.Mocks;
@@ -40,12 +41,21 @@ namespace RDHATEOAS.Tests.IntegrationTests
             // TODO: is added
             var postResponseMessage = await httpClient.PostAsync("api/person", postContent); // TODO: Bad request
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-            var value = await httpResponseMessage.Content.ReadAsAsync<List<Person>>();
+
+            var test = await httpResponseMessage.Content.ReadAsAsync<PersonListResult>();
+            var value = await httpResponseMessage.Content.ReadAsStringAsync();
+            var valueScrubbed = value.Replace(@"\", "aaaaaa").Trim(new char[1] { '"' });
+            var personList = JsonConvert.DeserializeObject<List<Person>>(valueScrubbed);
 
             // assert
             Assert.Equal(HttpStatusCode.Created, postResponseMessage.StatusCode);
             httpResponseMessage.EnsureSuccessStatusCode();
-            Assert.True(value is List<Person>);
+            Assert.True(personList is List<Person>);
+        }
+
+        class PersonListResult
+        {
+            public Person[] List { get; set; }
         }
 
         [Theory]

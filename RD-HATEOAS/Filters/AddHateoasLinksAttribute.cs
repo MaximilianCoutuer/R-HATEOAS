@@ -23,7 +23,7 @@ namespace RDHATEOAS.Filters
 
         private readonly string[] _parameterNames;
         private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
-        private Dictionary<string, Object> parameters = new Dictionary<string, Object>();
+        private Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         private UrlHelper urlHelper;
         private HateoasLinkBuilder hateoasLinkBuilder;

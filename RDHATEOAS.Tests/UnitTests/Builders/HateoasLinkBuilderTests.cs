@@ -85,29 +85,29 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
 
         #region helpers
 
-        public static IEnumerable<Object[]> ValidLinkData
+        public static IEnumerable<object[]> ValidLinkData
         {
             get
             {
                 return new[]
                 {
-                    new Object[] { "default", "Person", "", "details", HttpMethod.Get, 5 },
-                    new Object[] { "default", "person", "", "list", HttpMethod.Get, null },
+                    new object[] { "default", "Person", "", "details", HttpMethod.Get, 5 },
+                    new object[] { "default", "person", "", "list", HttpMethod.Get, null },
             };
             }
         }
 
-        public static IEnumerable<Object[]> NullLinkData
+        public static IEnumerable<object[]> NullLinkData
         {
             get
             {
                 return new[]
                 {
-                    new Object[] { null, "Person", "", "details", HttpMethod.Get, 5 },
-                    new Object[] { "default", null, "", "details", HttpMethod.Get, 5 },
-                    new Object[] { "default", "Person", null, "details", HttpMethod.Get, 5 },
-                    new Object[] { "default", "Person", "",  null, HttpMethod.Get, 5 },
-                    new Object[] { "default", "Person", null, "details", null, 5 },
+                    new object[] { null, "Person", "", "details", HttpMethod.Get, 5 },
+                    new object[] { "default", null, "", "details", HttpMethod.Get, 5 },
+                    new object[] { "default", "Person", null, "details", HttpMethod.Get, 5 },
+                    new object[] { "default", "Person", "",  null, HttpMethod.Get, 5 },
+                    new object[] { "default", "Person", null, "details", null, 5 },
             };
             }
         }
