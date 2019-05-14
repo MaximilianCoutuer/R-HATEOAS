@@ -26,21 +26,26 @@ namespace RDHATEOAS.Tests.IntegrationTests
 
         [Theory]
         [InlineData("/api/person")]
-        public async void GetAllPersons_ShouldReturnPersonsAsync(string url)
+        public async void GetAllPersons_ShouldReturnPersonListAsync(string url)
         {
             // arrange
             var httpClient = _factory.CreateClient();
-            var uri = new Uri("https://localhost:44356/api/person");
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
             var person = new Person();
+            person.FirstName = "Test";
+            person.LastName = "Test";
+            var postContent = new ObjectContent(typeof(Person), person, new JsonMediaTypeFormatter());
 
             // act
-            var httpResponseMessage = await httpClient.GetAsync(uri);
-            var value = await httpResponseMessage.Content.ReadAsAsync<Person>();
+            // TODO: is added
+            var postResponseMessage = await httpClient.PostAsync("api/person", postContent); // TODO: Bad request
+            var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+            var value = await httpResponseMessage.Content.ReadAsAsync<List<Person>>();
 
             // assert
+            Assert.Equal(HttpStatusCode.Created, postResponseMessage.StatusCode);
             httpResponseMessage.EnsureSuccessStatusCode();
-            Assert.True(value is Person);   // this won't work but it'll tell me what it actually is
+            Assert.True(value is List<Person>);
         }
 
         [Theory]
