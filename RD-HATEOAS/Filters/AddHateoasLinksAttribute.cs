@@ -76,72 +76,82 @@
 
                 if (okObjectResult.Value.GetType().IsList())
                 {
-                    var list = okObjectResult.Value as IList;
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
-                        {
-                            // set fields in ruleset
-                            ruleset.SetHelpers(context);
-                            ruleset.Parameters = _parameters;
-                            ruleset.Parameters["Id"] = i;
-                            ruleset.Parameters["Count"] = list.Count;
-                            if (list[i] is IIsHateoasEnabled listitem)
-                            {
-                                // apply links from ruleset
-                                foreach (HateoasLink link in ruleset.GetLinks(listitem))
-                                {
-                                    listitem.Links.Add(link);
-                                }
-                            }
-                        }
-                    }
-
-                    // replace the list with a ListHateoasEnabled which contains it as well as a links property
-                    // TODO: simplify this?
-                    var objectList = new ListHateoasEnabled();
-                    foreach (object listitem in list)
-                    {
-                        objectList.List.Add(listitem);
-                    }
-
-                    foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
-                    {
-                        // set fields in ruleset
-                        ruleset.SetHelpers(context);
-                        ruleset.Parameters = _parameters;
-                        ruleset.Parameters["Count"] = list.Count;
-
-                        // apply links from ruleset
-                        foreach (HateoasLink link in ruleset.GetLinks(objectList))
-                        {
-                            objectList.Links.Add(link);
-                        }
-                    }
-
-                    okObjectResult.Value = objectList;
+                    AddLinksToList(context, okObjectResult);
                 }
                 else
                 {
-                    if (okObjectResult.Value is IIsHateoasEnabled item)
-                    {
-                        foreach (IHateoasRuleset ruleset in _rulesets)
-                        {
-                            // set fields in ruleset
-                            ruleset.SetHelpers(context);
-                            ruleset.Parameters = _parameters;
+                    AddLinksToObject(context, okObjectResult);
+                }
+            }
 
-                            // apply links from ruleset
-                            foreach (HateoasLink link in ruleset.GetLinks(item))
-                            {
-                                item.Links.Add(link);
-                            }
+            base.OnResultExecuting(context);
+        }
+
+        private void AddLinksToObject(ResultExecutingContext context, OkObjectResult okObjectResult)
+        {
+            if (okObjectResult.Value is IIsHateoasEnabled item)
+            {
+                foreach (IHateoasRuleset ruleset in _rulesets)
+                {
+                    // set fields in ruleset
+                    ruleset.SetHelpers(context);
+                    ruleset.Parameters = _parameters;
+
+                    // apply links from ruleset
+                    foreach (HateoasLink link in ruleset.GetLinks(item))
+                    {
+                        item.Links.Add(link);
+                    }
+                }
+            }
+        }
+
+        private void AddLinksToList(ResultExecutingContext context, OkObjectResult okObjectResult)
+        {
+            var list = okObjectResult.Value as IList;
+            for (int i = 0; i < list.Count; i++)
+            {
+                foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
+                {
+                    // set fields in ruleset to help rulesets make the correct decisions
+                    ruleset.SetHelpers(context);
+                    ruleset.Parameters = _parameters;
+                    ruleset.Parameters["Id"] = i;
+                    ruleset.Parameters["Count"] = list.Count;
+                    if (list[i] is IIsHateoasEnabled listitem)
+                    {
+                        // apply links from ruleset
+                        foreach (HateoasLink link in ruleset.GetLinks(listitem))
+                        {
+                            listitem.Links.Add(link);
                         }
                     }
                 }
             }
 
-            base.OnResultExecuting(context);
+            // replace the list with a ListHateoasEnabled which contains it as well as a links property
+            // TODO: simplify this?
+            var objectList = new ListHateoasEnabled();
+            foreach (object listitem in list)
+            {
+                objectList.List.Add(listitem);
+            }
+
+            foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
+            {
+                // set fields in ruleset
+                ruleset.SetHelpers(context);
+                ruleset.Parameters = _parameters;
+                ruleset.Parameters["Count"] = list.Count;
+
+                // apply links from ruleset
+                foreach (HateoasLink link in ruleset.GetLinks(objectList))
+                {
+                    objectList.Links.Add(link);
+                }
+            }
+
+            okObjectResult.Value = objectList;
         }
 
         #endregion
