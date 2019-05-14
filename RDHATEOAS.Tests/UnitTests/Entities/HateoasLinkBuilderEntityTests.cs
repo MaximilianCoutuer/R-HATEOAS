@@ -1,8 +1,8 @@
-﻿using RDHATEOAS.Models;
-using Xunit;
-
-namespace RDHATEOAS.Tests.UnitTests.Entities
+﻿namespace RDHATEOAS.Tests.UnitTests.Entities
 {
+    using RDHATEOAS.Models;
+    using Xunit;
+
     public class HateoasLinkBuilderEntityTests
     {
         [Fact]
@@ -114,6 +114,5 @@ namespace RDHATEOAS.Tests.UnitTests.Entities
             // assert
             Assert.Equal(data, link.Type);
         }
-
     }
 }

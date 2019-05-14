@@ -1,12 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace ExampleAPI.Models
+﻿namespace ExampleAPI.Models
 {
+    using Microsoft.EntityFrameworkCore;
+
     public class ExampleDbContext : DbContext
     {
-        public ExampleDbContext(DbContextOptions<ExampleDbContext> options) : base(options) { }
+        public ExampleDbContext(DbContextOptions<ExampleDbContext> options)
+            : base(options)
+        {
+        }
 
         public DbSet<Person> Persons { get; set; }
+
         public DbSet<Country> Countrys { get; set; }
     }
 }

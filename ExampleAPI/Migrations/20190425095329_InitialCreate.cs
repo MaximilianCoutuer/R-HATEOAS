@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace ExampleAPI.Migrations
+﻿namespace ExampleAPI.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,7 +14,7 @@ namespace ExampleAPI.Migrations
                     Id = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Capital = table.Column<string>(nullable: true),
-                    Population = table.Column<int>(nullable: false)
+                    Population = table.Column<int>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -30,7 +30,7 @@ namespace ExampleAPI.Migrations
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     Age = table.Column<int>(nullable: false),
-                    CountryId = table.Column<string>(nullable: true)
+                    CountryId = table.Column<string>(nullable: true),
                 },
                 constraints: table =>
                 {

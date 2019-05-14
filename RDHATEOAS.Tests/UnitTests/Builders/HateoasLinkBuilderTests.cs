@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
-using RDHATEOAS.Builders;
-using RDHATEOAS.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Text;
-using Xunit;
-
-namespace RDHATEOAS.Tests.UnitTests.Builders
+﻿namespace RDHATEOAS.Tests.UnitTests.Builders
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Net.Http;
+    using System.Text;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Routing;
+    using Microsoft.AspNetCore.Routing;
+    using RDHATEOAS.Builders;
+    using RDHATEOAS.Models;
+    using Xunit;
+
     public class LinkBuilderFixture : IDisposable
     {
         public readonly HateoasLinkBuilder _linkBuilder;
@@ -26,14 +26,12 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
             _mockContext = new ActionContext();
             _mockContext.HttpContext = new DefaultHttpContext();
             _routeData = new RouteData();
-            //_routeData.Values.Add("")
             _mockContext.RouteData = _routeData;
 
-    //        var routes = new RouteCollection();
+    // var routes = new RouteCollection();
     //        routes.MapRoute(
-    //name: "default",
-    //template: "api/{controller=Home}/{action=Index}/{id?}");
-
+    // name: "default",
+    // template: "api/{controller=Home}/{action=Index}/{id?}");
             _urlHelper = new UrlHelper(_mockContext);
             _linkBuilder = new HateoasLinkBuilder(_urlHelper);
         }
@@ -62,11 +60,10 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
             HateoasLink link = _fixture._linkBuilder.Build(_fixture._mockContext, routeUrl, routeUrlController, routeUrlAction, linkRef, linkMethod, linkId);
 
             // assert
-            //Uri uriResult;
-            //bool refIsLink = Uri.TryCreate(link.Href, UriKind.RelativeOrAbsolute, out uriResult) && uriResult.Scheme == Uri.UriSchemeHttp;
+            // Uri uriResult;
+            // bool refIsLink = Uri.TryCreate(link.Href, UriKind.RelativeOrAbsolute, out uriResult) && uriResult.Scheme == Uri.UriSchemeHttp;
 
             // TODO: Crash in UrlHelper.RouteUrl, presumably because routing is null??
-
             Assert.True(Uri.IsWellFormedUriString(link.Href, UriKind.RelativeOrAbsolute));
             Assert.Equal(link.Method, linkMethod.Method);
         }
@@ -91,9 +88,9 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
             {
                 return new[]
                 {
-                    new object[] { "default", "Person", "", "details", HttpMethod.Get, 5 },
-                    new object[] { "default", "person", "", "list", HttpMethod.Get, null },
-            };
+                    new object[] { "default", "Person", string.Empty, "details", HttpMethod.Get, 5 },
+                    new object[] { "default", "person", string.Empty, "list", HttpMethod.Get, null },
+                };
             }
         }
 
@@ -103,12 +100,12 @@ namespace RDHATEOAS.Tests.UnitTests.Builders
             {
                 return new[]
                 {
-                    new object[] { null, "Person", "", "details", HttpMethod.Get, 5 },
-                    new object[] { "default", null, "", "details", HttpMethod.Get, 5 },
+                    new object[] { null, "Person", string.Empty, "details", HttpMethod.Get, 5 },
+                    new object[] { "default", null, string.Empty, "details", HttpMethod.Get, 5 },
                     new object[] { "default", "Person", null, "details", HttpMethod.Get, 5 },
-                    new object[] { "default", "Person", "",  null, HttpMethod.Get, 5 },
+                    new object[] { "default", "Person", string.Empty,  null, HttpMethod.Get, 5 },
                     new object[] { "default", "Person", null, "details", null, 5 },
-            };
+                };
             }
         }
 

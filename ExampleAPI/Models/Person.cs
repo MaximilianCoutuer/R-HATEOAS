@@ -1,19 +1,20 @@
-﻿using Newtonsoft.Json;
-using RDHATEOAS.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ExampleAPI.Models
+﻿namespace ExampleAPI.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Newtonsoft.Json;
+    using RDHATEOAS.Models;
+
     /// <summary>
     /// An example class.
     /// This class supports HATEOAS links because it implements IIsHateoasEnabled.
     /// </summary>
     public class Person : IIsHateoasEnabled
     {
-        private int age;
+        private int _age;
+
         public int Id { get; set; }
 
         [Required]
@@ -24,17 +25,20 @@ namespace ExampleAPI.Models
 
         [MinValue(0)]
         [MaxValue(150)]
-        public int Age {
+        public int Age
+        {
             get
             {
-                return this.age;
+                return this._age;
             }
-            set {
 
+            set
+            {
                 if (value >= 0 && value <= 150) // future proofing
                 {
-                    this.age = value;
-                } else
+                    this._age = value;
+                }
+                else
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -52,10 +56,12 @@ namespace ExampleAPI.Models
     public class MinValueAttribute : ValidationAttribute
     {
         private readonly int _minValue;
+
         public MinValueAttribute(int minValue)
         {
             _minValue = minValue;
         }
+
         public override bool IsValid(object value)
         {
             return (int)value >= _minValue;
@@ -65,13 +71,15 @@ namespace ExampleAPI.Models
     public class MaxValueAttribute : ValidationAttribute
     {
         private readonly int _maxValue;
+
         public MaxValueAttribute(int maxValue)
         {
             _maxValue = maxValue;
         }
+
         public override bool IsValid(object value)
         {
-            return (int)value <= _maxValue;
+            return (int)value <= this._maxValue;
         }
     }
 }

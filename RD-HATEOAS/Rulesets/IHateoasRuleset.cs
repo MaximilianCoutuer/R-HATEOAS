@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using RDHATEOAS.Models;
-using System;
-using System.Collections.Generic;
-
-namespace RDHATEOAS.Rulesets
+﻿namespace RDHATEOAS.Rulesets
 {
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.AspNetCore.Mvc.Filters;
+    using RDHATEOAS.Models;
+
     /// <summary>
     /// The interface that defines a ruleset.
     /// Individual rulesets should inherit from HateoasRulesetBase instead.
@@ -12,12 +12,12 @@ namespace RDHATEOAS.Rulesets
     public interface IHateoasRuleset
     {
         /// <summary>
-        /// Contains any parameters from the method attribute.
+        /// Gets or sets the parameters from the method attribute.
         /// </summary>
-        Dictionary<string, Object> Parameters { get; set; }
+        Dictionary<string, object> Parameters { get; set; }
 
         /// <summary>
-        /// Determines whether this ruleset will apply to each item in a list or to the list itself.
+        /// Gets or sets a value indicating whether this ruleset will apply to each item in a list or to the list itself.
         /// </summary>
         bool AppliesToEachListItem { get; set; }
 

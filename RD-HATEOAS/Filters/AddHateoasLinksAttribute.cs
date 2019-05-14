@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Routing;
-using RDHATEOAS.Builders;
-using RDHATEOAS.Extensions;
-using RDHATEOAS.Models;
-using RDHATEOAS.Rulesets;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace RDHATEOAS.Filters
+﻿namespace RDHATEOAS.Filters
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Filters;
+    using Microsoft.AspNetCore.Mvc.Routing;
+    using RDHATEOAS.Builders;
+    using RDHATEOAS.Extensions;
+    using RDHATEOAS.Models;
+    using RDHATEOAS.Rulesets;
+
     /// <summary>
     /// This filter is applied to a controller method via an attribute.
     /// It intercepts the response and adds links to it.
@@ -33,7 +33,7 @@ namespace RDHATEOAS.Filters
         #region constructors
 
         /// <summary>
-        /// AddHateoasLinksAttribute constructor.
+        /// Initializes a new instance of the <see cref="AddHateoasLinksAttribute"/> class.
         /// </summary>
         /// <param name="parameterNames">Any parameters in the result you wish to pass on to the ruleset.</param>
         /// <param name="rulesetNames">Names of the rulesets you wish to apply to the object.</param>
@@ -46,7 +46,10 @@ namespace RDHATEOAS.Filters
             }
         }
 
-        public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName) : this(parameterNames, new Type[] { rulesetName }) { }
+        public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName)
+            : this(parameterNames, new Type[] { rulesetName })
+        {
+        }
 
         #endregion
 
@@ -101,18 +104,21 @@ namespace RDHATEOAS.Filters
                     {
                         objectList.List.Add(listitem);
                     }
+
                     foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
                     {
                         // set fields in ruleset
                         ruleset.SetHelpers(context);
                         ruleset.Parameters = parameters;
                         ruleset.Parameters["Count"] = list.Count;
+
                         // apply links from ruleset
                         foreach (HateoasLink link in ruleset.GetLinks(objectList))
                         {
                             objectList.Links.Add(link);
                         }
                     }
+
                     okObjectResult.Value = objectList;
                 }
                 else
@@ -124,6 +130,7 @@ namespace RDHATEOAS.Filters
                             // set fields in ruleset
                             ruleset.SetHelpers(context);
                             ruleset.Parameters = parameters;
+
                             // apply links from ruleset
                             foreach (HateoasLink link in ruleset.GetLinks(item))
                             {
@@ -133,6 +140,7 @@ namespace RDHATEOAS.Filters
                     }
                 }
             }
+
             base.OnResultExecuting(context);
         }
 

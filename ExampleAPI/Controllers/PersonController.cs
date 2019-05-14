@@ -1,14 +1,14 @@
-﻿using ExampleAPI.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RDHATEOAS.Filters;
-using RDHATEOAS.Rulesets;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ExampleAPI.Controllers
+﻿namespace ExampleAPI.Controllers
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using ExampleAPI.Models;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using RDHATEOAS.Filters;
+    using RDHATEOAS.Rulesets;
+
     /// <summary>
     /// This is an example controller that offers basic functionality.
     /// It supports basic CRUD operations.
@@ -72,9 +72,9 @@ namespace ExampleAPI.Controllers
         // GET api/person/5
         [HttpGet("{id}")]
         [AddHateoasLinks(new[] { "Id" }, new[] { typeof(ExampleRulesetFullLinks) })]
-        public async Task<ActionResult<Person>> GetPerson(int Id)
+        public async Task<ActionResult<Person>> GetPerson(int id)
         {
-            var person = await _context.FindAsync<Person>(Id);
+            var person = await _context.FindAsync<Person>(id);
 
             if (person == null)
             {
@@ -102,7 +102,10 @@ namespace ExampleAPI.Controllers
         {
             // returns 404 Not Found if ID invalid
             // (may also return 400 Bad Request)
-            if (id != person.Id) return NotFound();
+            if (id != person.Id)
+            {
+                return NotFound();
+            }
 
             if (_context.Find<Person>(id) != null)
             {
@@ -133,28 +136,11 @@ namespace ExampleAPI.Controllers
             {
                 return NotFound();
             }
+
             _context.Persons.Remove(person);
             await _context.SaveChangesAsync();
             return Ok();
         }
-
-        //// GET api/test1
-        //// This is a demonstration of an object type that is not HATEOAS enabled
-        //[Route("api/test1")]
-        //[HttpGet]
-        //[AddHateoasLinks(null, new[] { typeof(DemoRulesetFullLinks) })]
-        //public async Task<ActionResult<List<Country>>> GetAllCountries()
-        //{
-        //    IEnumerable<Country> countries = await _context.Countrys.ToListAsync();
-        //    if (countries.Count() == 0)
-        //    {
-        //        return NotFound();
-        //    }
-        //    else
-        //    {
-        //        return Ok(countries);
-        //    }
-        //}
 
         #endregion
     }

@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace ExampleAPI.Migrations
+﻿namespace ExampleAPI.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class FixTypo : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

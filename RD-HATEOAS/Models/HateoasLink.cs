@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net.Http;
-
-namespace RDHATEOAS.Models
+﻿namespace RDHATEOAS.Models
 {
+    using System.ComponentModel.DataAnnotations;
+    using System.Net.Http;
+
     /// <summary>
     /// A HATEOAS link.
     /// The link contains all relevant HATEOAS fields and getters and setters for each.
@@ -23,64 +23,71 @@ namespace RDHATEOAS.Models
         public string Href
         {
             get { return _href; }
-            set { _href = (value != null ? value.Replace("%2F", "/") : null); }
+            set { _href = value != null ? value.Replace("%2F", "/") : null; }
         }
 
         // HTTP method
         [Required]
-        public HttpMethod HttpMethod {
+        public HttpMethod HttpMethod
+        {
             set { _method = value; }
         }
+
         public string Method
         {
             get { return _method.Method; }
         }
-        
 
         // optional properties
         public string Hreflang { get; private set; }
+
         public string Media { get; private set; }
+
         public string Title { get; private set; }
+
         public string Type { get; private set; }
 
         #endregion
 
         #region constructors
 
-        public HateoasLink(string Href, string Rel, HttpMethod HttpMethod)
+        public HateoasLink(string href, string rel, HttpMethod httpMethod)
         {
-            this.Href = Href;
-            this.Rel = Rel;
-            this.HttpMethod = HttpMethod;
+            this.Href = href;
+            this.Rel = rel;
+            this.HttpMethod = httpMethod;
         }
 
-        public HateoasLink() : this("", "self", HttpMethod.Get) { }
+        public HateoasLink()
+            : this(string.Empty, "self", HttpMethod.Get)
+        {
+        }
 
         #endregion
 
         #region methods
 
-        public HateoasLink AddHreflang(string Hreflang)
+        public HateoasLink AddHreflang(string hreflang)
         {
-            this.Hreflang = Hreflang;
+            this.Hreflang = hreflang;
             return this;
         }
 
-        public HateoasLink AddMedia(string Media)
+        public HateoasLink AddMedia(string media)
         {
-            this.Media = Media;
+            this.Media = media;
             return this;
         }
 
-        public HateoasLink AddTitle(string Title)
+        public HateoasLink AddTitle(string title)
         {
-            this.Title = Title;
+            this.Title = title;
             return this;
         }
 
-        public HateoasLink AddType(string Type)
+        public HateoasLink AddType(string type)
         {
-            this.Type = Type;
+            this.Type = type;
             return this;
         }
 

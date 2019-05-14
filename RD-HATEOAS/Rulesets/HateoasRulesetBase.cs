@@ -1,29 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Routing;
-using RDHATEOAS.Builders;
-using RDHATEOAS.Models;
-using System;
-using System.Collections.Generic;
-
-namespace RDHATEOAS.Rulesets
+﻿namespace RDHATEOAS.Rulesets
 {
+    using System.Collections.Generic;
+    using Microsoft.AspNetCore.Mvc.Filters;
+    using Microsoft.AspNetCore.Mvc.Routing;
+    using RDHATEOAS.Builders;
+    using RDHATEOAS.Models;
+
     /// <summary>
     /// The base class for a HATEOAS ruleset.
     /// Rulesets determine which links should be added to a HATEOAS enabled object.
     /// </summary>
     public abstract class HateoasRulesetBase : IHateoasRuleset
     {
-        public Dictionary<string, Object> Parameters { get; set; }
-        protected UrlHelper urlHelper { get; set; }
-        protected ResultExecutingContext context { get; set; }
-        protected HateoasLinkBuilder hateoasLinkBuilder { get; set; }
+        public Dictionary<string, object> Parameters { get; set; }
+
+        protected UrlHelper UrlHelper { get; set; }
+
+        protected ResultExecutingContext Context { get; set; }
+
+        protected HateoasLinkBuilder HateoasLinkBuilder { get; set; }
+
         public virtual bool AppliesToEachListItem { get; set; } = false;
 
         public void SetHelpers(ResultExecutingContext context)
         {
-            this.context = context;
-            urlHelper = new UrlHelper(context);
-            hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
+            Context = context;
+            UrlHelper = new UrlHelper(context);
+            HateoasLinkBuilder = new HateoasLinkBuilder(UrlHelper);
         }
 
         /// <summary>

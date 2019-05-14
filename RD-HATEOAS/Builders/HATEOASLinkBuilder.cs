@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using RDHATEOAS.Models;
-using System;
-using System.Net.Http;
-
-namespace RDHATEOAS.Builders
+﻿namespace RDHATEOAS.Builders
 {
+    using System;
+    using System.Net.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using RDHATEOAS.Models;
+
     /// <summary>
     /// This class is used to build a HATEOAS link.
     /// </summary>
@@ -14,7 +14,8 @@ namespace RDHATEOAS.Builders
 
         private IUrlHelper _urlHelper;
 
-        public HateoasLinkBuilder(IUrlHelper urlHelper) {
+        public HateoasLinkBuilder(IUrlHelper urlHelper)
+        {
             _urlHelper = urlHelper;
         }
 
@@ -33,7 +34,7 @@ namespace RDHATEOAS.Builders
         /// <param name="linkMethod">The link HTTP method.</param>
         /// <param name="linkId">If the link has an ID number, use this.</param>
         /// <returns>A HATEOAS link object.</returns>
-        public HateoasLink Build(ActionContext response, string routeUrl, string routeUrlController, string routeUrlAction, string linkRel, HttpMethod linkMethod, Object linkId = null)
+        public HateoasLink Build(ActionContext response, string routeUrl, string routeUrlController, string routeUrlAction, string linkRel, HttpMethod linkMethod, object linkId = null)
         {
             if (routeUrl == null || routeUrlController == null || routeUrlAction == null || linkRel == null || linkMethod == null)
             {
@@ -45,7 +46,7 @@ namespace RDHATEOAS.Builders
                 {
                     controller = routeUrlController,
                     action = routeUrlAction,
-                    id = (int.TryParse((linkId ?? "").ToString(), out int id) ? id : default(int?))
+                    id = int.TryParse((linkId ?? string.Empty).ToString(), out int id) ? id : default(int?),
                 });
             var hateoasLink = new HateoasLink(uri, linkRel, linkMethod);
             return hateoasLink;
@@ -63,7 +64,7 @@ namespace RDHATEOAS.Builders
         public HateoasLink BuildSelfLink(ActionContext response)
         {
             var request = response.HttpContext.Request;
-            var uri = (new UriBuilder(request.Scheme, request.Host.Host, request.Host.Port.GetValueOrDefault(80), request.Path.ToString(), request.QueryString.ToString())).Uri.ToString();
+            var uri = new UriBuilder(request.Scheme, request.Host.Host, request.Host.Port.GetValueOrDefault(80), request.Path.ToString(), request.QueryString.ToString()).Uri.ToString();
             var hateoasLink = new HateoasLink(uri, "self", HttpMethod.Get);
             return hateoasLink;
         }

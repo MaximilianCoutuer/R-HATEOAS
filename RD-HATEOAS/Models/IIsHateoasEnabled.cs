@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace RDHATEOAS.Models
+﻿namespace RDHATEOAS.Models
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Newtonsoft.Json;
+
     /// <summary>
     /// Implement this on a model class to indicate that it is HATEOAS enabled and comes with a list of links.
     /// </summary>

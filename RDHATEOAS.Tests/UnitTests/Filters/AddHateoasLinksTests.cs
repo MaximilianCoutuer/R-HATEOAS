@@ -1,18 +1,18 @@
-﻿using ExampleAPI.Controllers;
-using ExampleAPI.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore;
-using RDHATEOAS.Filters;
-using RDHATEOAS.Rulesets;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-
-namespace RDHATEOAS.Tests.UnitTests.Filters
+﻿namespace RDHATEOAS.Tests.UnitTests.Filters
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using ExampleAPI.Controllers;
+    using ExampleAPI.Models;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Filters;
+    using Microsoft.EntityFrameworkCore;
+    using RDHATEOAS.Filters;
+    using RDHATEOAS.Rulesets;
+    using Xunit;
+
     public class AddHateoasLinksTests
     {
         [Fact]
@@ -22,21 +22,19 @@ namespace RDHATEOAS.Tests.UnitTests.Filters
 
             // arrange
             var actionContext = new ActionContext();
-            var value = new Object();
+            var value = new object();
             var actionResult = new OkObjectResult(value);
             var optionsBuilder = new DbContextOptionsBuilder<ExampleDbContext>();
-            var ExampleDbContext = new ExampleDbContext(optionsBuilder.Options);
+            var exampleDbContext = new ExampleDbContext(optionsBuilder.Options);
             actionContext.HttpContext = new DefaultHttpContext();
-            var resultExecutingContext = new ResultExecutingContext(actionContext, null, actionResult, new PersonController(ExampleDbContext));
+            var resultExecutingContext = new ResultExecutingContext(actionContext, null, actionResult, new PersonController(exampleDbContext));
             var filter = new AddHateoasLinksAttribute(new string[] { }, typeof(HateoasRulesetBase));
 
             // act
             filter.OnResultExecuting(resultExecutingContext);
 
             // assert
-
             Assert.True(false);
-
         }
 
         // negative tests

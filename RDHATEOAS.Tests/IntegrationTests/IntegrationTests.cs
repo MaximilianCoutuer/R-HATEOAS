@@ -1,21 +1,21 @@
-﻿using ExampleAPI.Models;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Newtonsoft.Json;
-using RDHATEOAS.Models;
-using RDHATEOAS.Tests.Factories;
-using RDHATEOAS.Tests.Mocks;
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace RDHATEOAS.Tests.IntegrationTests
+﻿namespace RDHATEOAS.Tests.IntegrationTests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Dynamic;
+    using System.Net;
+    using System.Net.Http;
+    using System.Net.Http.Formatting;
+    using System.Text;
+    using System.Threading.Tasks;
+    using ExampleAPI.Models;
+    using Microsoft.AspNetCore.Mvc.Testing;
+    using Newtonsoft.Json;
+    using RDHATEOAS.Models;
+    using RDHATEOAS.Tests.Factories;
+    using RDHATEOAS.Tests.Mocks;
+    using Xunit;
+
     public class IntegrationTests : IClassFixture<CustomAPIFactory>
     {
         private readonly CustomAPIFactory _factory;
@@ -53,7 +53,7 @@ namespace RDHATEOAS.Tests.IntegrationTests
             Assert.True(personList is List<Person>);
         }
 
-        class PersonListResult
+        private class PersonListResult
         {
             public Person[] List { get; set; }
         }
@@ -85,7 +85,6 @@ namespace RDHATEOAS.Tests.IntegrationTests
         public bool ContainsHateoasLink(string value, HateoasLink link)
         {
             // TODO: parse
-
             return false;
         }
     }
