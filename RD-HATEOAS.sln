@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleAPI", "ExampleAPI\Ex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleAPI.Tests", "ExampleAPI.Tests\ExampleAPI.Tests.csproj", "{951AC3EA-9B3C-4B8F-9107-326C051BFE2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDHATEOAS.Tests", "RDHATEOAS.Tests\RDHATEOAS.Tests.csproj", "{B2BCD01D-43F4-4B0B-8722-9452E90A040C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDHATEOAS.Tests", "RDHATEOAS.Tests\RDHATEOAS.Tests.csproj", "{B2BCD01D-43F4-4B0B-8722-9452E90A040C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

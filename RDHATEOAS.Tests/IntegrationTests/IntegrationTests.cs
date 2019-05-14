@@ -32,9 +32,11 @@
             // arrange
             var httpClient = _factory.CreateClient();
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
-            var person = new Person();
-            person.FirstName = "Test";
-            person.LastName = "Test";
+            var person = new Person
+            {
+                FirstName = "Test",
+                LastName = "Test"
+            };
             var postContent = new ObjectContent(typeof(Person), person, new JsonMediaTypeFormatter());
 
             // act
@@ -65,9 +67,11 @@
             // arrange
             var httpClient = _factory.CreateClient();
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
-            var person = new Person();
-            person.FirstName = "Test";
-            person.LastName = "Test";
+            var person = new Person
+            {
+                FirstName = "Test",
+                LastName = "Test"
+            };
             var postContent = new ObjectContent(typeof(Person), person, new JsonMediaTypeFormatter());
 
             // act

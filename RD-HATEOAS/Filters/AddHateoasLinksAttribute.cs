@@ -23,7 +23,7 @@
 
         private readonly string[] _parameterNames;
         private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
-        private Dictionary<string, object> parameters = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
 
         private UrlHelper urlHelper;
         private HateoasLinkBuilder hateoasLinkBuilder;
@@ -70,7 +70,7 @@
                 {
                     foreach (string parameterName in _parameterNames)
                     {
-                        parameters[parameterName] = context.RouteData.Values[parameterName] ?? null;
+                        _parameters[parameterName] = context.RouteData.Values[parameterName] ?? null;
                     }
                 }
 
@@ -83,7 +83,7 @@
                         {
                             // set fields in ruleset
                             ruleset.SetHelpers(context);
-                            ruleset.Parameters = parameters;
+                            ruleset.Parameters = _parameters;
                             ruleset.Parameters["Id"] = i;
                             ruleset.Parameters["Count"] = list.Count;
                             if (list[i] is IIsHateoasEnabled listitem)
@@ -109,7 +109,7 @@
                     {
                         // set fields in ruleset
                         ruleset.SetHelpers(context);
-                        ruleset.Parameters = parameters;
+                        ruleset.Parameters = _parameters;
                         ruleset.Parameters["Count"] = list.Count;
 
                         // apply links from ruleset
@@ -129,7 +129,7 @@
                         {
                             // set fields in ruleset
                             ruleset.SetHelpers(context);
-                            ruleset.Parameters = parameters;
+                            ruleset.Parameters = _parameters;
 
                             // apply links from ruleset
                             foreach (HateoasLink link in ruleset.GetLinks(item))

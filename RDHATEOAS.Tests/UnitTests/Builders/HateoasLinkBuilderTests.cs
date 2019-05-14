@@ -23,8 +23,10 @@
         public LinkBuilderFixture()
         {
             // "We all know how painful it is to mock a HttpContext"
-            _mockContext = new ActionContext();
-            _mockContext.HttpContext = new DefaultHttpContext();
+            _mockContext = new ActionContext
+            {
+                HttpContext = new DefaultHttpContext()
+            };
             _routeData = new RouteData();
             _mockContext.RouteData = _routeData;
 

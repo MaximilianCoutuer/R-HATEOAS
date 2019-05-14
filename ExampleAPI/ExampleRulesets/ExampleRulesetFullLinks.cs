@@ -21,7 +21,7 @@
                     .AddHreflang("be-nl")
                     .AddTitle("List of persons")
                     .AddType("json"),
-                HateoasLinkBuilder.Build(Context, "default", "Person", "Edit", "edit", HttpMethod.Post, Parameters.GetValueOrDefault("Id") ?? ((Person)item).Id)
+                HateoasLinkBuilder.Build(Context, "default", "Person", "Edit", "edit", HttpMethod.Post, ((Person)item).Id)
                     .AddHreflang("be-nl")
                     .AddTitle("Edit this person")
                     .AddType("json"),

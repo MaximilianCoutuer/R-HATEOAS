@@ -93,7 +93,7 @@
             // returns 201 Created with location header containing GET link to newly created object in DB
             _context.Add<Person>(person);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetPerson), new { Id = person.Id }, person);
+            return CreatedAtAction(nameof(GetPerson), new { person.Id }, person);
         }
 
         // PUT api/values/5
@@ -120,7 +120,7 @@
                 // returns 201 Created
                 _context.Add<Person>(person);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetPerson), new { Id = person.Id }, person);
+                return CreatedAtAction(nameof(GetPerson), new { person.Id }, person);
             }
         }
 

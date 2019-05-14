@@ -26,10 +26,12 @@
         public void SetLinkHref_ShouldSet(string data)
         {
             // arrange
-            var link = new HateoasLink();
+            var link = new HateoasLink
+            {
 
-            // act
-            link.Href = data;
+                // act
+                Href = data
+            };
 
             // assert
             Assert.Equal(data, link.Href);
@@ -42,10 +44,12 @@
         public void SetLinkRel_ShouldSet(string data)
         {
             // arrange
-            var link = new HateoasLink();
+            var link = new HateoasLink
+            {
 
-            // act
-            link.Rel = data;
+                // act
+                Rel = data
+            };
 
             // assert
             Assert.Equal(data, link.Rel);

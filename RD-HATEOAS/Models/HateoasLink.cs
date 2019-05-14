@@ -23,7 +23,7 @@
         public string Href
         {
             get { return _href; }
-            set { _href = value != null ? value.Replace("%2F", "/") : null; }
+            set { _href = value?.Replace("%2F", "/"); }
         }
 
         // HTTP method
