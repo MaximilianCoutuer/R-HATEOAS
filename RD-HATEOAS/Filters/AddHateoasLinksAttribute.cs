@@ -46,6 +46,11 @@
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddHateoasLinksAttribute"/> class.
+        /// </summary>
+        /// <param name="parameterNames"></param>
+        /// <param name="rulesetName"></param>
         public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName)
             : this(parameterNames, new Type[] { rulesetName })
         {

@@ -25,11 +25,13 @@
                     .AddHreflang("be-nl")
                     .AddTitle("Edit this person")
                     .AddType("json"),
-                HateoasLinkBuilder.Build(Context, "default", "Person", "Delete", "delete", HttpMethod.Delete, Parameters.GetValueOrDefault("Id") ?? ((Person)item).Id)
+                HateoasLinkBuilder.Build(Context, "default", "Person", "Delete", "delete", HttpMethod.Delete)
                     .AddHreflang("be-nl")
                     .AddTitle("Delete this person")
-                    .AddType("json"),
+                    .AddType("json")
+                    .ExtendQueryString("key", "value"),
             };
+            // Parameters.GetValueOrDefault("Id")
         }
     }
 }

@@ -1,7 +1,10 @@
 ﻿namespace RDHATEOAS.Models
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Net.Http;
+    using System.Text;
 
     /// <summary>
     /// A HATEOAS link.
@@ -13,6 +16,7 @@
 
         private string _href;
         private HttpMethod _method;
+        private IDictionary<string, string> _queryString = new Dictionary<string, string>();
 
         // rel (usually a standard name based on convention)
         [Required]
@@ -22,8 +26,21 @@
         [Required]
         public string Href
         {
-            get { return _href; }
-            set { _href = value?.Replace("%2F", "/"); }
+            get {
+                var url = new StringBuilder();
+                url.Append(_href);
+                url.Append("?");
+                foreach (var queryStringEntry in _queryString)
+                {
+                    url.Append(queryStringEntry.Key + "=" + queryStringEntry.Value + "&");
+                }
+                url.Remove(url.Length-1, 1);
+                return url.ToString();
+            }
+
+            set {
+                _href = value?.Replace("%2F", "/");
+            }
         }
 
         // HTTP method
@@ -88,6 +105,12 @@
         public HateoasLink AddType(string type)
         {
             this.Type = type;
+            return this;
+        }
+
+        public HateoasLink ExtendQueryString(string key, string value)
+        {
+            this._queryString.Add(key, value);
             return this;
         }
 
