@@ -108,6 +108,12 @@
             return this;
         }
 
+        /// <summary>
+        /// Appends a key/value pair to the query string of this HATEOAS link.
+        /// </summary>
+        /// <param name="key">The key to append.</param>
+        /// <param name="value">The value to append.</param>
+        /// <returns></returns>
         public HateoasLink ExtendQueryString(string key, string value)
         {
             this._queryString.Add(key, value);
