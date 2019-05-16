@@ -47,7 +47,7 @@
 
         public Country Country { get; set; }
 
-        // implements IIsHateoasEnabled
+        // implements IIsHateoasEnabled 
         [NotMapped]
         [JsonProperty(PropertyName = "_links")]
         List<HateoasLink> IIsHateoasEnabled.Links { get; set; } = new List<HateoasLink>();
