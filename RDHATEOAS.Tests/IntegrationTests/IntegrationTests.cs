@@ -40,22 +40,32 @@
             var postContent = new ObjectContent(typeof(Person), person, new JsonMediaTypeFormatter());
 
             // act
-            // TODO: is added
             var postResponseMessage = await httpClient.PostAsync("api/person", postContent); // TODO: Bad request
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
-            var test = await httpResponseMessage.Content.ReadAsAsync<PersonListResult>();
-            var value = await httpResponseMessage.Content.ReadAsStringAsync();
-            var valueScrubbed = value.Replace(@"\", "aaaaaa").Trim(new char[1] { '"' });
-            var personList = JsonConvert.DeserializeObject<List<Person>>(valueScrubbed);
+            var value = await httpResponseMessage.Content.ReadAsAsync<PersonListResult>();
 
             // assert
+            // test if POST and GET are successful
             Assert.Equal(HttpStatusCode.Created, postResponseMessage.StatusCode);
             httpResponseMessage.EnsureSuccessStatusCode();
-            Assert.True(personList is List<Person>);
+
+            // test if value is the correct person
+            Assert.NotNull(value);
+            var personName = value.List[0].LastName;
+            Assert.Equal("Test", personName);
+
+            // test if value contains the correct links
+            var personLinks = (value.List[0] as IIsHateoasEnabled).Links;
+            Assert.NotNull(personLinks);
+            Assert.Equal(4, personLinks.Count);
+
+            // test if the list itself contains the correct links
+            var listLinks = (value as ListHateoasEnabled).Links;
+            Assert.NotNull(listLinks);
         }
 
-        private class PersonListResult
+        private class PersonListResult : ListHateoasEnabled
         {
             public Person[] List { get; set; }
         }
@@ -75,15 +85,24 @@
             var postContent = new ObjectContent(typeof(Person), person, new JsonMediaTypeFormatter());
 
             // act
-            // TODO: is added
             var postResponseMessage = await httpClient.PostAsync("api/person", postContent); // TODO: Bad request
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
             var value = await httpResponseMessage.Content.ReadAsAsync<Person>();
 
             // assert
+            // test if POST and GET are successful
             Assert.Equal(HttpStatusCode.Created, postResponseMessage.StatusCode);
             httpResponseMessage.EnsureSuccessStatusCode();
-            Assert.True(value is Person);
+
+            // test if value is the correct person
+            Assert.NotNull(value);
+            var personName = value.LastName;
+            Assert.Equal("Test", personName);
+
+            // test if value contains the correct links
+            var personLinks = (value as IIsHateoasEnabled).Links;
+            Assert.NotNull(personLinks);
+            Assert.Equal(4, personLinks.Count);
         }
 
         public bool ContainsHateoasLink(string value, HateoasLink link)
