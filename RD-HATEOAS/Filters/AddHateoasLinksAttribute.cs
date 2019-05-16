@@ -121,8 +121,8 @@
                     // set fields in ruleset to help rulesets make the correct decisions
                     ruleset.SetHelpers(context);
                     ruleset.Parameters = _parameters;
-                    ruleset.Parameters["Id"] = i;
-                    ruleset.Parameters["Count"] = list.Count;
+                    ruleset.Parameters["RD-ListId"] = i;
+                    ruleset.Parameters["RD-ListCount"] = list.Count;
                     if (list[i] is IIsHateoasEnabled listitem)
                     {
                         // apply links from ruleset

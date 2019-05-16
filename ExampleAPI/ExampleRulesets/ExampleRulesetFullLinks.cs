@@ -31,7 +31,7 @@
                     .AddType("json")
                     .ExtendQueryString("id", ((Person)item).Id.ToString()),
             };
-            // Parameters.GetValueOrDefault("Id")
+            // Parameters.GetValueOrDefault("RD-ListId")
         }
     }
 }
