@@ -1,4 +1,4 @@
-# Realdolmen-HATEOAS
+# RD-HATEOAS
 
 ## About the project
 
