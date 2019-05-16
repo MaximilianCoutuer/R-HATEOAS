@@ -51,10 +51,12 @@ Any request parameters you specify will be passed on to the ruleset (see above).
 
 Implement IIsHateoasEnabled in your model classes, and add the following property:
 
-`// implements IIsHateoasEnabled
+```
+// implements IIsHateoasEnabled
 [NotMapped]
 [JsonProperty(PropertyName = "_links")]
-List<HateoasLink> IIsHateoasEnabled.Links { get; set; } = new List<HateoasLink>();`
+List<HateoasLink> IIsHateoasEnabled.Links { get; set; } = new List<HateoasLink>();
+```
 
 ### Remarks
 
