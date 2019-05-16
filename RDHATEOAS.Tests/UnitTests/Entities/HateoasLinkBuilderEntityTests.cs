@@ -22,7 +22,6 @@
         [Theory]
         [InlineData("http://www.realdolmen.com")]
         [InlineData("")]
-        [InlineData(null)]
         public void SetLinkHref_ShouldSet(string data)
         {
             // arrange
@@ -35,6 +34,22 @@
 
             // assert
             Assert.Equal(data, link.Href);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        public void SetLinkHref_Null_ShouldSetEmpty(string data)
+        {
+            // arrange
+            var link = new HateoasLink
+            {
+
+                // act
+                Href = data
+            };
+
+            // assert
+            Assert.Equal("", link.Href);
         }
 
         [Theory]
