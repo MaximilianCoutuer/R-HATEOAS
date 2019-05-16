@@ -29,7 +29,7 @@
                     .AddHreflang("be-nl")
                     .AddTitle("Delete this person")
                     .AddType("json")
-                    .ExtendQueryString("key", "value"),
+                    .ExtendQueryString("id", ((Person)item).Id.ToString()),
             };
             // Parameters.GetValueOrDefault("Id")
         }
