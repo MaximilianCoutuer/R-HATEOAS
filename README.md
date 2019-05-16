@@ -1,8 +1,8 @@
-# Realdolmen-HATEOAS
+# RD-HATEOAS
 
 ## About the project
 
-A flexible and customisable package to add HATEOAS support to your API.
+A flexible and customisable package to add HATEOAS support to your .NET Core API.
 
 HATEOAS (Hypermedia As The Engine Of Application State) is a component of the REST guidelines. Its goal is to allow a client to discover the functionality of an API by means of context sensitive hyperlinks sent by the API alongside the requested data. For instance, an API method that returns the personal information of an employee would also send a link to an index of all employees, as well as a link to confidential personal data and POST and DELETE links if the client is authorised.
 
@@ -14,7 +14,7 @@ The package modifies the content that is returned by your API methods, adding re
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+* .NET Core 2.2 or higher.
 
 ### Installing
 
@@ -51,10 +51,12 @@ Any request parameters you specify will be passed on to the ruleset (see above).
 
 Implement IIsHateoasEnabled in your model classes, and add the following property:
 
-`// implements IIsHateoasEnabled
+```
+// implements IIsHateoasEnabled
 [NotMapped]
 [JsonProperty(PropertyName = "_links")]
-List<HateoasLink> IIsHateoasEnabled.Links { get; set; } = new List<HateoasLink>();`
+List<HateoasLink> IIsHateoasEnabled.Links { get; set; } = new List<HateoasLink>();
+```
 
 ### Remarks
 
