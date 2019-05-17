@@ -13,7 +13,7 @@
     /// </remarks>
     public class ListHateoasEnabled : IIsHateoasEnabled
     {
-        public List<object> List { get; set; } = new List<object>();
+        public IList<object> List { get; set; } = new List<object>();
 
         [NotMapped]
         [JsonProperty(PropertyName = "_links")]
