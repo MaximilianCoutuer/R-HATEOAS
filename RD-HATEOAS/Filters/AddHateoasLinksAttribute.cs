@@ -147,7 +147,7 @@
                 // set fields in ruleset
                 ruleset.SetHelpers(context);
                 ruleset.Parameters = _parameters;
-                ruleset.Parameters["Count"] = list.Count;
+                ruleset.Parameters["RD-ListCount"] = list.Count;
 
                 // apply links from ruleset
                 foreach (HateoasLink link in ruleset.GetLinks(objectList))
