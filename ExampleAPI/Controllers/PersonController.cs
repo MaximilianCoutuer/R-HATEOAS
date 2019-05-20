@@ -42,7 +42,7 @@
         [AddHateoasLinks(
             null,
             new[] { typeof(ExampleRulesetFullLinks) },
-            null)]
+            new[] { "country" } )]
         public async Task<ActionResult<List<Person>>> GetAllPersons()
         {
             IEnumerable<Person> persons = await _context.Persons.Include(p => p.Country).ToListAsync();

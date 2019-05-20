@@ -86,7 +86,14 @@
 
                 if (item.GetType().IsList())
                 {
-                    AddLinksToList(context, item as ListHateoasEnabled);
+                    // TODO: simplify this?
+                    var objectList = new ListHateoasEnabled();
+                    var list = item as IList;
+                    foreach (object listitem in list)
+                    {
+                        objectList.List.Add(listitem);
+                    }
+                    AddLinksToList(context, objectList);
                 }
                 else
                 {
@@ -99,18 +106,27 @@
 
         private object GetObjectFromPath(OkObjectResult okObjectResult)
         {
-            var objectType = okObjectResult.Value.GetType();
-            var objectContent = okObjectResult.Value;
+            var currentObjectType = okObjectResult.Value.GetType();
+            var currentObjectValue = okObjectResult.Value;
 
+            // drill into object tree
             foreach (string key in _path ?? new string[] { })
             {
-                var value = objectType.GetType().GetProperty(key).GetValue(objectType, null);
-                var valueType = value.GetType();
-                objectType = valueType;
-                objectContent = value;
+                if (currentObjectType.IsList())
+                {
+                    foreach (object objectListItemValue in currentObjectValue as IList)
+                    {
+                        currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
+                        currentObjectType = currentObjectValue.GetType();
+                    }
+                } else
+                {
+                    currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
+                    currentObjectType = currentObjectValue.GetType();
+                }
             }
 
-            return objectContent;
+            return currentObjectValue;
         }
 
         private void AddLinksToObject(ResultExecutingContext context, IIsHateoasEnabled item)
@@ -131,7 +147,7 @@
 
         private void AddLinksToList(ResultExecutingContext context, ListHateoasEnabled unformattedList)
         {
-            var list = unformattedList as IList;
+            var list = unformattedList.List as IList;
             for (int i = 0; i < list.Count; i++)
             {
                 foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
