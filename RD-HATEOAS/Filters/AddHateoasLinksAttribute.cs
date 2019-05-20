@@ -37,7 +37,7 @@
         /// </summary>
         /// <param name="parameterNames">Any parameters in the result you wish to pass on to the ruleset.</param>
         /// <param name="rulesetNames">Names of the rulesets you wish to apply to the object.</param>
-        public AddHateoasLinksAttribute(string[] parameterNames, Type[] rulesetNames)
+        public AddHateoasLinksAttribute(string[] parameterNames, Type[] rulesetNames, string[] path)
         {
             _parameterNames = parameterNames;
             foreach (var type in rulesetNames)
@@ -51,8 +51,8 @@
         /// </summary>
         /// <param name="parameterNames"></param>
         /// <param name="rulesetName"></param>
-        public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName)
-            : this(parameterNames, new Type[] { rulesetName })
+        public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName, string[] path)
+            : this(parameterNames, new Type[] { rulesetName }, path)
         {
         }
 
