@@ -1,6 +1,11 @@
-﻿namespace ExampleAPI.Models
+﻿using Newtonsoft.Json;
+using RDHATEOAS.Models;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ExampleAPI.Models
 {
-    public class Country
+    public class Country : IIsHateoasEnabled
     {
         public string Id { get; set; }
 
@@ -20,5 +25,10 @@
             Capital = capital;
             Population = population;
         }
+
+        // implements IIsHateoasEnabled 
+        [NotMapped]
+        [JsonProperty(PropertyName = "_links")]
+        List<HateoasLink> IIsHateoasEnabled.Links { get; set; } = new List<HateoasLink>();
     }
 }

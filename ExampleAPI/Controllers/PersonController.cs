@@ -41,8 +41,8 @@
         [HttpGet]
         [AddHateoasLinks(
             null,
-            new[] { typeof(ExampleRulesetFullLinks) },
-            new[] { "country" } )]
+            new[] { typeof(ExampleRulesetFullLinksCountry) },
+            new[] { "Country" } )]
         public async Task<ActionResult<List<Person>>> GetAllPersons()
         {
             IEnumerable<Person> persons = await _context.Persons.Include(p => p.Country).ToListAsync();

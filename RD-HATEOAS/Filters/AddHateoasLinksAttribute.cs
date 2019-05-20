@@ -71,7 +71,7 @@
         {
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                var item = GetObjectFromPath(okObjectResult);
+                var item = RecursiveGetObjectFromPath(okObjectResult.Value, 0);
 
                 urlHelper = new UrlHelper(context);
                 hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
@@ -104,30 +104,52 @@
             base.OnResultExecuting(context);
         }
 
-        private object GetObjectFromPath(OkObjectResult okObjectResult)
+        private object RecursiveGetObjectFromPath(object currentObjectValue, int pathId)
         {
-            var currentObjectType = okObjectResult.Value.GetType();
-            var currentObjectValue = okObjectResult.Value;
-
-            // drill into object tree
-            foreach (string key in _path ?? new string[] { })
+            if (pathId < _path.Length)
             {
+                var currentObjectType = currentObjectValue.GetType();
                 if (currentObjectType.IsList())
                 {
-                    foreach (object objectListItemValue in currentObjectValue as IList)
+                    foreach (object listitem in currentObjectValue as IList)
                     {
-                        currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
-                        currentObjectType = currentObjectValue.GetType();
+                        currentObjectType = listitem.GetType(); // TODO error handling
+                        var key = _path[pathId];
+                        var property = currentObjectType.GetProperty(key);
+                        var nestedObjectValue = property.GetValue(listitem);
+                        return RecursiveGetObjectFromPath(nestedObjectValue, pathId + 1);
                     }
-                } else
+                }
+                else
                 {
-                    currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
-                    currentObjectType = currentObjectValue.GetType();
+                    var nestedObjectValue = currentObjectType.GetProperty(_path[pathId]).GetValue(currentObjectValue);
+                    return RecursiveGetObjectFromPath(nestedObjectValue, pathId + 1);
                 }
             }
-
             return currentObjectValue;
         }
+
+            //var currentObjectType = okObjectResult.Value.GetType();
+            //var currentObjectValue = okObjectResult.Value;
+
+            //// drill into object tree
+            //foreach (string key in _path ?? new string[] { })
+            //{
+            //    if (currentObjectType.IsList())
+            //    {
+            //        foreach (object objectListItemValue in currentObjectValue as IList)
+            //        {
+            //            currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
+            //            currentObjectType = currentObjectValue.GetType();
+            //        }
+            //    } else
+            //    {
+            //        currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
+            //        currentObjectType = currentObjectValue.GetType();
+            //    }
+            //}
+
+            //return currentObjectValue;
 
         private void AddLinksToObject(ResultExecutingContext context, IIsHateoasEnabled item)
         {
