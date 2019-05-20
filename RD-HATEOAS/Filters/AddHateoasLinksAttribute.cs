@@ -71,40 +71,43 @@
         {
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                var item = RecursiveGetObjectFromPath(okObjectResult.Value, 0);
-
-                urlHelper = new UrlHelper(context);
-                hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
-
-                if (_parameterNames != null)
-                {
-                    foreach (string parameterName in _parameterNames)
-                    {
-                        _parameters[parameterName] = context.RouteData.Values[parameterName] ?? null;
-                    }
-                }
-
-                if (item.GetType().IsList())
-                {
-                    // TODO: simplify this?
-                    var objectList = new ListHateoasEnabled();
-                    var list = item as IList;
-                    foreach (object listitem in list)
-                    {
-                        objectList.List.Add(listitem);
-                    }
-                    AddLinksToList(context, objectList);
-                }
-                else
-                {
-                    AddLinksToObject(context, item as IIsHateoasEnabled);
-                }
+                RecursiveGetObjectFromPath(okObjectResult.Value, context, 0);
             }
 
             base.OnResultExecuting(context);
         }
 
-        private object RecursiveGetObjectFromPath(object currentObjectValue, int pathId)
+        private void AddLinksToItem(ResultExecutingContext context, object item)
+        {
+            urlHelper = new UrlHelper(context);
+            hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
+
+            if (_parameterNames != null)
+            {
+                foreach (string parameterName in _parameterNames)
+                {
+                    _parameters[parameterName] = context.RouteData.Values[parameterName] ?? null;
+                }
+            }
+
+            if (item.GetType().IsList())
+            {
+                // TODO: simplify this?
+                var objectList = new ListHateoasEnabled();
+                var list = item as IList;
+                foreach (object listitem in list)
+                {
+                    objectList.List.Add(listitem);
+                }
+                AddLinksToList(context, objectList);
+            }
+            else
+            {
+                AddLinksToObject(context, item as IIsHateoasEnabled);
+            }
+        }
+
+        private void RecursiveGetObjectFromPath(object currentObjectValue, ResultExecutingContext context, int pathId)
         {
             if (pathId < _path.Length)
             {
@@ -114,19 +117,20 @@
                     foreach (object listitem in currentObjectValue as IList)
                     {
                         currentObjectType = listitem.GetType(); // TODO error handling
-                        var key = _path[pathId];
-                        var property = currentObjectType.GetProperty(key);
-                        var nestedObjectValue = property.GetValue(listitem);
-                        return RecursiveGetObjectFromPath(nestedObjectValue, pathId + 1);
+                        var nestedObjectValue = currentObjectType.GetProperty(_path[pathId]).GetValue(listitem);
+                        RecursiveGetObjectFromPath(nestedObjectValue, context, pathId + 1);
                     }
                 }
                 else
                 {
                     var nestedObjectValue = currentObjectType.GetProperty(_path[pathId]).GetValue(currentObjectValue);
-                    return RecursiveGetObjectFromPath(nestedObjectValue, pathId + 1);
+                    RecursiveGetObjectFromPath(nestedObjectValue, context, pathId + 1);
                 }
             }
-            return currentObjectValue;
+            else
+            {
+                AddLinksToItem(context, currentObjectValue);
+            }
         }
 
             //var currentObjectType = okObjectResult.Value.GetType();
