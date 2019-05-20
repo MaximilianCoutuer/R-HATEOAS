@@ -22,6 +22,7 @@
         #region fields
 
         private readonly string[] _parameterNames;
+        private readonly string[] _path;
         private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
         private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
 
@@ -37,9 +38,11 @@
         /// </summary>
         /// <param name="parameterNames">Any parameters in the result you wish to pass on to the ruleset.</param>
         /// <param name="rulesetNames">Names of the rulesets you wish to apply to the object.</param>
+        /// <param name="path">Path to the object to add links for, as a sequence of keys.</param>
         public AddHateoasLinksAttribute(string[] parameterNames, Type[] rulesetNames, string[] path)
         {
             _parameterNames = parameterNames;
+            _path = path;
             foreach (var type in rulesetNames)
             {
                 _rulesets.Add((IHateoasRuleset)Activator.CreateInstance(type));
@@ -68,6 +71,8 @@
         {
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
+                var item = GetObjectFromPath(okObjectResult);
+
                 urlHelper = new UrlHelper(context);
                 hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
 
@@ -85,28 +90,41 @@
                 }
                 else
                 {
-                    AddLinksToObject(context, okObjectResult);
+                    AddLinksToObject(context, item as IIsHateoasEnabled);
                 }
             }
 
             base.OnResultExecuting(context);
         }
 
-        private void AddLinksToObject(ResultExecutingContext context, OkObjectResult okObjectResult)
+        private object GetObjectFromPath(OkObjectResult okObjectResult)
         {
-            if (okObjectResult.Value is IIsHateoasEnabled item)
-            {
-                foreach (IHateoasRuleset ruleset in _rulesets)
-                {
-                    // set fields in ruleset
-                    ruleset.SetHelpers(context);
-                    ruleset.Parameters = _parameters;
+            var objectType = okObjectResult.Value.GetType();
+            var objectContent = okObjectResult.Value;
 
-                    // apply links from ruleset
-                    foreach (HateoasLink link in ruleset.GetLinks(item))
-                    {
-                        item.Links.Add(link);
-                    }
+            foreach (string key in _path)
+            {
+                var value = objectType.GetType().GetProperty(key).GetValue(objectType, null);
+                var valueType = value.GetType();
+                objectType = valueType;
+                objectContent = value;
+            }
+
+            return objectContent;
+        }
+
+        private void AddLinksToObject(ResultExecutingContext context, IIsHateoasEnabled item)
+        {
+            foreach (IHateoasRuleset ruleset in _rulesets)
+            {
+                // set fields in ruleset
+                ruleset.SetHelpers(context);
+                ruleset.Parameters = _parameters;
+
+                // apply links from ruleset
+                foreach (HateoasLink link in ruleset.GetLinks(item))
+                {
+                    item.Links.Add(link);
                 }
             }
         }
