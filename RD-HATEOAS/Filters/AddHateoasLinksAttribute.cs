@@ -84,9 +84,9 @@
                     }
                 }
 
-                if (okObjectResult.Value.GetType().IsList())
+                if (item.GetType().IsList())
                 {
-                    AddLinksToList(context, okObjectResult);
+                    AddLinksToList(context, item as ListHateoasEnabled);
                 }
                 else
                 {
@@ -102,7 +102,7 @@
             var objectType = okObjectResult.Value.GetType();
             var objectContent = okObjectResult.Value;
 
-            foreach (string key in _path)
+            foreach (string key in _path ?? new string[] { })
             {
                 var value = objectType.GetType().GetProperty(key).GetValue(objectType, null);
                 var valueType = value.GetType();
@@ -129,9 +129,9 @@
             }
         }
 
-        private void AddLinksToList(ResultExecutingContext context, OkObjectResult okObjectResult)
+        private void AddLinksToList(ResultExecutingContext context, ListHateoasEnabled unformattedList)
         {
-            var list = okObjectResult.Value as IList;
+            var list = unformattedList as IList;
             for (int i = 0; i < list.Count; i++)
             {
                 foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
@@ -152,14 +152,6 @@
                 }
             }
 
-            // replace the list with a ListHateoasEnabled which contains it as well as a links property
-            // TODO: simplify this?
-            var objectList = new ListHateoasEnabled();
-            foreach (object listitem in list)
-            {
-                objectList.List.Add(listitem);
-            }
-
             foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
             {
                 // set fields in ruleset
@@ -168,13 +160,12 @@
                 ruleset.Parameters["RD-ListCount"] = list.Count;
 
                 // apply links from ruleset
-                foreach (HateoasLink link in ruleset.GetLinks(objectList))
+                foreach (HateoasLink link in ruleset.GetLinks(unformattedList))
                 {
-                    objectList.Links.Add(link);
+                    unformattedList.Links.Add(link);
                 }
             }
 
-            okObjectResult.Value = objectList;
         }
 
         #endregion
