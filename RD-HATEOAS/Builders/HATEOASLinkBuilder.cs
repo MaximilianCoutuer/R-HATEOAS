@@ -12,7 +12,7 @@
     {
         #region fields
 
-        private IUrlHelper _urlHelper;
+        private readonly IUrlHelper _urlHelper;
 
         public HateoasLinkBuilder(IUrlHelper urlHelper)
         {
@@ -48,8 +48,7 @@
                     action = routeUrlAction,
                     id = int.TryParse((linkId ?? string.Empty).ToString(), out int id) ? id : default(int?),
                 });
-            var hateoasLink = new HateoasLink(uri, linkRel, linkMethod);
-            return hateoasLink;
+            return new HateoasLink(uri, linkRel, linkMethod);
         }
 
         /// <summary>
@@ -65,8 +64,7 @@
         {
             var request = response.HttpContext.Request;
             var uri = new UriBuilder(request.Scheme, request.Host.Host, request.Host.Port.GetValueOrDefault(80), request.Path.ToString(), request.QueryString.ToString()).Uri.ToString();
-            var hateoasLink = new HateoasLink(uri, "self", HttpMethod.Get);
-            return hateoasLink;
+            return new HateoasLink(uri, "self", HttpMethod.Get);
         }
 
         #endregion

@@ -1,15 +1,14 @@
-﻿namespace RDHATEOAS.Rulesets
-{
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.AspNetCore.Mvc.Filters;
-    using RDHATEOAS.Models;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using RDHATEOAS.Models;
+using System.Collections.Generic;
 
+namespace RDHATEOAS.Rulesets
+{
     /// <summary>
     /// The interface that defines a ruleset.
     /// Individual rulesets should inherit from HateoasRulesetBase instead.
     /// </summary>
-    public interface IHateoasRuleset
+    public interface IHateoasRuleset<T> where T : IIsHateoasEnabled
     {
         /// <summary>
         /// Gets or sets the parameters from the method attribute.
@@ -23,6 +22,6 @@
 
         void SetHelpers(ResultExecutingContext context);
 
-        List<HateoasLink> GetLinks(IIsHateoasEnabled item);
+        List<HateoasLink> GetLinks(T item);
     }
 }

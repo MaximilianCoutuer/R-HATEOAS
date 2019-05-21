@@ -5,11 +5,11 @@
     using ExampleAPI.Models;
     using RDHATEOAS.Models;
 
-    public class ExampleRulesetFullLinksCountry : HateoasRulesetBase
+    public class ExampleRulesetFullLinksCountry : HateoasRulesetBase<Country>
     {
         public override bool AppliesToEachListItem { get; set; } = true;
 
-        public override List<HateoasLink> GetLinks(IIsHateoasEnabled item)
+        public override List<HateoasLink> GetLinks(Country country)
         {
             return new List<HateoasLink>
             {
@@ -21,7 +21,7 @@
                     .AddHreflang("be-nl")
                     .AddTitle("List of persons")
                     .AddType("json"),
-                HateoasLinkBuilder.Build(Context, "default", "Country", "Edit", "edit", HttpMethod.Post, ((Country)item).Id)
+                HateoasLinkBuilder.Build(Context, "default", "Country", "Edit", "edit", HttpMethod.Post, country.Id)
                     .AddHreflang("be-nl")
                     .AddTitle("Edit this person")
                     .AddType("json"),
@@ -29,7 +29,7 @@
                     .AddHreflang("be-nl")
                     .AddTitle("Delete this person")
                     .AddType("json")
-                    .ExtendQueryString("id", ((Country)item).Id.ToString()),
+                    .ExtendQueryString("id", country.Id.ToString()),
             };
             // Parameters.GetValueOrDefault("RD-ListId")
         }

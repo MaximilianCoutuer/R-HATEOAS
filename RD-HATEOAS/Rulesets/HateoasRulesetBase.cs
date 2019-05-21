@@ -10,7 +10,7 @@
     /// The base class for a HATEOAS ruleset.
     /// Rulesets determine which links should be added to a HATEOAS enabled object.
     /// </summary>
-    public abstract class HateoasRulesetBase : IHateoasRuleset
+    public abstract class HateoasRulesetBase<T> : IHateoasRuleset<T> where T : IIsHateoasEnabled
     {
         public Dictionary<string, object> Parameters { get; set; }
 
@@ -34,7 +34,7 @@
         /// </summary>
         /// <param name="item">The item to which we want to add links.</param>
         /// <returns>The links.</returns>
-        public virtual List<HateoasLink> GetLinks(IIsHateoasEnabled item)
+        public virtual List<HateoasLink> GetLinks(T item)
         {
             // default null implementation yields no links
             return null;

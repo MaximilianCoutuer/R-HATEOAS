@@ -23,11 +23,10 @@
 
         private readonly string[] _parameterNames;
         private readonly string[] _path;
-        private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
+        private readonly List<IHateoasRuleset<IIsHateoasEnabled>> _rulesets = new List<IHateoasRuleset<IIsHateoasEnabled>>();
         private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
 
-        private UrlHelper urlHelper;
-        private HateoasLinkBuilder hateoasLinkBuilder;
+        private UrlHelper _urlHelper;
 
         #endregion
 
@@ -45,7 +44,7 @@
             _path = path;
             foreach (var type in rulesetNames)
             {
-                _rulesets.Add((IHateoasRuleset)Activator.CreateInstance(type));
+                _rulesets.Add((IHateoasRuleset<IIsHateoasEnabled>)Activator.CreateInstance(type));
             }
         }
 
@@ -79,8 +78,7 @@
 
         private void AddLinksToItem(ResultExecutingContext context, object item)
         {
-            urlHelper = new UrlHelper(context);
-            hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
+            _urlHelper = new UrlHelper(context);
 
             if (_parameterNames != null)
             {
@@ -133,31 +131,31 @@
             }
         }
 
-            //var currentObjectType = okObjectResult.Value.GetType();
-            //var currentObjectValue = okObjectResult.Value;
+        //var currentObjectType = okObjectResult.Value.GetType();
+        //var currentObjectValue = okObjectResult.Value;
 
-            //// drill into object tree
-            //foreach (string key in _path ?? new string[] { })
-            //{
-            //    if (currentObjectType.IsList())
-            //    {
-            //        foreach (object objectListItemValue in currentObjectValue as IList)
-            //        {
-            //            currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
-            //            currentObjectType = currentObjectValue.GetType();
-            //        }
-            //    } else
-            //    {
-            //        currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
-            //        currentObjectType = currentObjectValue.GetType();
-            //    }
-            //}
+        //// drill into object tree
+        //foreach (string key in _path ?? new string[] { })
+        //{
+        //    if (currentObjectType.IsList())
+        //    {
+        //        foreach (object objectListItemValue in currentObjectValue as IList)
+        //        {
+        //            currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
+        //            currentObjectType = currentObjectValue.GetType();
+        //        }
+        //    } else
+        //    {
+        //        currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
+        //        currentObjectType = currentObjectValue.GetType();
+        //    }
+        //}
 
-            //return currentObjectValue;
+        //return currentObjectValue;
 
         private void AddLinksToObject(ResultExecutingContext context, IIsHateoasEnabled item)
         {
-            foreach (IHateoasRuleset ruleset in _rulesets)
+            foreach (IHateoasRuleset<IIsHateoasEnabled> ruleset in _rulesets)
             {
                 // set fields in ruleset
                 ruleset.SetHelpers(context);
@@ -176,7 +174,7 @@
             var list = unformattedList.List as IList;
             for (int i = 0; i < list.Count; i++)
             {
-                foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
+                foreach (IHateoasRuleset<IIsHateoasEnabled> ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
                 {
                     // set fields in ruleset to help rulesets make the correct decisions
                     ruleset.SetHelpers(context);
@@ -194,7 +192,7 @@
                 }
             }
 
-            foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
+            foreach (IHateoasRuleset<IIsHateoasEnabled> ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
             {
                 // set fields in ruleset
                 ruleset.SetHelpers(context);
