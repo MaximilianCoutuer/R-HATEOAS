@@ -41,8 +41,9 @@
         [HttpGet]
         [AddHateoasLinks(
             null,
-            new[] { typeof(ExampleRulesetFullLinksCountry) },
-            new[] { "Country" } )]
+            new[] { typeof(ExampleRulesetFullLinksPerson), typeof(ExampleRulesetFullLinksCountry) },
+            new[] { null , "Country" }
+            )]
         public async Task<ActionResult<List<Person>>> GetAllPersons()
         {
             IEnumerable<Person> persons = await _context.Persons.Include(p => p.Country).ToListAsync();
@@ -60,8 +61,9 @@
         [HttpGet("{skip, take}")]
         [AddHateoasLinks(
             new[] { "skip", "take" },
-            new[] { typeof(ExampleRulesetFullLinks) },
-            null)]
+            new[] { typeof(ExampleRulesetFullLinksPerson), typeof(ExampleRulesetFullLinksCountry) },
+            new[] { null, "Country" }
+            )]
         public async Task<ActionResult<Person>> GetPaginatedList(int skip, int take)
         {
             IEnumerable<Person> persons = await _context.Persons.Skip(skip * take).Take(take).Include(p => p.Country).ToListAsync();
@@ -79,8 +81,8 @@
         [HttpGet("{id}")]
         [AddHateoasLinks(
             new[] { "Id" },
-            new[] { typeof(ExampleRulesetFullLinks) },
-            null)]
+            new[] { typeof(ExampleRulesetFullLinksPerson) },
+            null )]
         public async Task<ActionResult<Person>> GetPerson(int id)
         {
             var person = await _context.FindAsync<Person>(id);

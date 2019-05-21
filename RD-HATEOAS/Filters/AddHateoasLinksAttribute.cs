@@ -21,9 +21,9 @@
     {
         #region fields
 
-        private readonly string[] _parameterNames;
-        private readonly string[] _path;
-        private readonly List<IHateoasRuleset<IIsHateoasEnabled>> _rulesets = new List<IHateoasRuleset<IIsHateoasEnabled>>();
+        private readonly List<string> _parameterNames;
+        private readonly List<string[]> _path;
+        private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
         private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
 
         private UrlHelper _urlHelper;
@@ -35,17 +35,32 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="AddHateoasLinksAttribute"/> class.
         /// </summary>
-        /// <param name="parameterNames">Any parameters in the result you wish to pass on to the ruleset.</param>
-        /// <param name="rulesetNames">Names of the rulesets you wish to apply to the object.</param>
-        /// <param name="path">Path to the object to add links for, as a sequence of keys.</param>
+        /// <param name="parameterNames"></param>
+        /// <param name="rulesetNames"></param>
+        /// <param name="path"></param>
         public AddHateoasLinksAttribute(string[] parameterNames, Type[] rulesetNames, string[] path)
         {
-            _parameterNames = parameterNames;
-            _path = path;
+            _parameterNames = new List<string>(parameterNames ?? new string[] { });
+
+            // split strings in path parameter and add them as arrays to the path
+            _path = new List<string[]>();
+            var pathUnsplit = new List<string>(path ?? new string[] { null });
+            foreach (string pathCode in pathUnsplit)
+            {
+                if (pathCode != null)
+                {
+                    _path.Add(pathCode.Split("|"));
+                } else
+                {
+                    _path.Add(null);
+                }
+            }
+
             foreach (var type in rulesetNames)
             {
                 _rulesets.Add((IHateoasRuleset<IIsHateoasEnabled>)Activator.CreateInstance(type));
             }
+
         }
 
         /// <summary>
@@ -53,8 +68,8 @@
         /// </summary>
         /// <param name="parameterNames"></param>
         /// <param name="rulesetName"></param>
-        public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName, string[] path)
-            : this(parameterNames, new Type[] { rulesetName }, path)
+        public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName, string path)
+            : this(parameterNames, new Type[] { rulesetName }, new string[] { path })
         {
         }
 
@@ -64,19 +79,60 @@
 
         /// <summary>
         /// This method is invoked whenever a result is sent from a controller method decorated with this attribute.
+        /// It processes the result if it is a 200.
         /// </summary>
         /// <param name="context">The result context from the result that caused this to be run.</param>
         public override void OnResultExecuting(ResultExecutingContext context)
         {
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                RecursiveGetObjectFromPath(okObjectResult.Value, context, 0);
+                for (int i = 0; i < _rulesets.Count; i++)
+                {
+                    RecursiveFindObjectAndAddLinks(okObjectResult.Value, context, 0, i);
+                }
             }
 
             base.OnResultExecuting(context);
         }
 
-        private void AddLinksToItem(ResultExecutingContext context, object item)
+        /// <summary>
+        /// Drills down into the path tree of the result object until it reaches the destination object or list.
+        /// </summary>
+        /// <param name="currentObjectValue"></param>
+        /// <param name="context"></param>
+        /// <param name="pathId"></param>
+        /// <param name="arrayId"></param>
+        private void RecursiveFindObjectAndAddLinks(object currentObjectValue, ResultExecutingContext context, int pathId, int arrayId)
+        {
+            if (pathId < (_path[arrayId] ?? new string[] { }).Length) // TODO: test if not always 1
+            {
+                var currentObjectType = currentObjectValue.GetType();
+                if (currentObjectType.IsList())
+                {
+                    foreach (object currentObjectListitem in currentObjectValue as IList)
+                    {
+                        currentObjectType = currentObjectListitem.GetType(); // TODO: error handling
+                        var key = currentObjectType.GetProperty(_path[arrayId][pathId]);
+                        var nestedObjectValue = key.GetValue(currentObjectListitem);
+                        RecursiveFindObjectAndAddLinks(nestedObjectValue, context, pathId + 1, arrayId);
+                    }
+                }
+                else
+                {
+                    var key = currentObjectType.GetProperty(_path[arrayId][pathId]);
+                    var nestedObjectValue = key.GetValue(currentObjectValue);
+                    RecursiveFindObjectAndAddLinks(nestedObjectValue, context, pathId + 1, arrayId);
+                }
+
+            }
+            else
+            {
+                AddLinks(context, currentObjectValue, arrayId);
+            }
+
+        }
+
+        private void AddLinks(ResultExecutingContext context, object item, int arrayId)
         {
             _urlHelper = new UrlHelper(context);
 
@@ -97,67 +153,20 @@
                 {
                     objectList.List.Add(listitem);
                 }
-                AddLinksToList(context, objectList);
+                AddLinksToList(context, objectList, arrayId);
             }
             else
             {
-                AddLinksToObject(context, item as IIsHateoasEnabled);
+                AddLinksToObject(context, item as IIsHateoasEnabled, arrayId);
             }
         }
 
-        private void RecursiveGetObjectFromPath(object currentObjectValue, ResultExecutingContext context, int pathId)
+        private void AddLinksToObject(ResultExecutingContext context, IIsHateoasEnabled item, int arrayId)
         {
-            if (pathId < _path.Length)
+            var ruleset = _rulesets[arrayId];
+            if (ruleset.AppliesToEachListItem == true)
             {
-                var currentObjectType = currentObjectValue.GetType();
-                if (currentObjectType.IsList())
-                {
-                    foreach (object listitem in currentObjectValue as IList)
-                    {
-                        currentObjectType = listitem.GetType(); // TODO error handling
-                        var nestedObjectValue = currentObjectType.GetProperty(_path[pathId]).GetValue(listitem);
-                        RecursiveGetObjectFromPath(nestedObjectValue, context, pathId + 1);
-                    }
-                }
-                else
-                {
-                    var nestedObjectValue = currentObjectType.GetProperty(_path[pathId]).GetValue(currentObjectValue);
-                    RecursiveGetObjectFromPath(nestedObjectValue, context, pathId + 1);
-                }
-            }
-            else
-            {
-                AddLinksToItem(context, currentObjectValue);
-            }
-        }
-
-        //var currentObjectType = okObjectResult.Value.GetType();
-        //var currentObjectValue = okObjectResult.Value;
-
-        //// drill into object tree
-        //foreach (string key in _path ?? new string[] { })
-        //{
-        //    if (currentObjectType.IsList())
-        //    {
-        //        foreach (object objectListItemValue in currentObjectValue as IList)
-        //        {
-        //            currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
-        //            currentObjectType = currentObjectValue.GetType();
-        //        }
-        //    } else
-        //    {
-        //        currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
-        //        currentObjectType = currentObjectValue.GetType();
-        //    }
-        //}
-
-        //return currentObjectValue;
-
-        private void AddLinksToObject(ResultExecutingContext context, IIsHateoasEnabled item)
-        {
-            foreach (IHateoasRuleset<IIsHateoasEnabled> ruleset in _rulesets)
-            {
-                // set fields in ruleset
+                // set fields in ruleset to help rulesets make the correct decisions
                 ruleset.SetHelpers(context);
                 ruleset.Parameters = _parameters;
 
@@ -169,7 +178,7 @@
             }
         }
 
-        private void AddLinksToList(ResultExecutingContext context, ListHateoasEnabled unformattedList)
+        private void AddLinksToList(ResultExecutingContext context, ListHateoasEnabled unformattedList, int arrayId)
         {
             var list = unformattedList.List as IList;
             for (int i = 0; i < list.Count; i++)
@@ -194,7 +203,7 @@
 
             foreach (IHateoasRuleset<IIsHateoasEnabled> ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
             {
-                // set fields in ruleset
+                // set fields in ruleset to help rulesets make the correct decisions
                 ruleset.SetHelpers(context);
                 ruleset.Parameters = _parameters;
                 ruleset.Parameters["RD-ListCount"] = list.Count;
