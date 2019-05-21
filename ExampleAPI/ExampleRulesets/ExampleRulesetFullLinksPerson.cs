@@ -5,7 +5,7 @@
     using ExampleAPI.Models;
     using RDHATEOAS.Models;
 
-    public class ExampleRulesetFullLinks : HateoasRulesetBase
+    public class ExampleRulesetFullLinksPerson : HateoasRulesetBase
     {
         public override bool AppliesToEachListItem { get; set; } = true;
 

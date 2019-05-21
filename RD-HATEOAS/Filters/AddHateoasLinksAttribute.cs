@@ -36,9 +36,9 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="AddHateoasLinksAttribute"/> class.
         /// </summary>
-        /// <param name="parameterNames">Any parameters in the result you wish to pass on to the ruleset.</param>
-        /// <param name="rulesetNames">Names of the rulesets you wish to apply to the object.</param>
-        /// <param name="path">Path to the object to add links for, as a sequence of keys.</param>
+        /// <param name="parameterNames"></param>
+        /// <param name="rulesetNames"></param>
+        /// <param name="path"></param>
         public AddHateoasLinksAttribute(string[] parameterNames, Type[] rulesetNames, string[] path)
         {
             _parameterNames = new List<string>(parameterNames);
@@ -160,7 +160,7 @@
         {
             foreach (IHateoasRuleset ruleset in _rulesets)
             {
-                // set fields in ruleset
+                // set fields in ruleset to help rulesets make the correct decisions
                 ruleset.SetHelpers(context);
                 ruleset.Parameters = _parameters;
 
@@ -175,10 +175,10 @@
         private void AddLinksToList(ResultExecutingContext context, ListHateoasEnabled unformattedList, int arrayId)
         {
             var list = unformattedList.List as IList;
-            var rulesets = _rulesets[arrayId];
-            for (int i = 0; i < list.Count; i++)
+            var ruleset = _rulesets[arrayId];
+            if (ruleset.AppliesToEachListItem == true)
             {
-                foreach (IHateoasRuleset ruleset in rulesets.Where(r => r.AppliesToEachListItem == true))
+                for (int i = 0; i < list.Count; i++)
                 {
                     // set fields in ruleset to help rulesets make the correct decisions
                     ruleset.SetHelpers(context);
@@ -196,9 +196,9 @@
                 }
             }
 
-            foreach (IHateoasRuleset ruleset in rulesets.Where(r => r.AppliesToEachListItem == false))
+            if (ruleset.AppliesToEachListItem == false)
             {
-                // set fields in ruleset
+                // set fields in ruleset to help rulesets make the correct decisions
                 ruleset.SetHelpers(context);
                 ruleset.Parameters = _parameters;
                 ruleset.Parameters["RD-ListCount"] = list.Count;
