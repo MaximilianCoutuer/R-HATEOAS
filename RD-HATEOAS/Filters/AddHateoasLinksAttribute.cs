@@ -24,6 +24,7 @@
         private readonly List<string> _parameterNames;
         private readonly List<string[]> _path;
         private readonly List<IHateoasRuleset<IIsHateoasEnabled>> _rulesets = new List<IHateoasRuleset<IIsHateoasEnabled>>();
+        private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
         private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
 
         private UrlHelper _urlHelper;
