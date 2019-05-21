@@ -54,8 +54,8 @@
         /// </summary>
         /// <param name="parameterNames"></param>
         /// <param name="rulesetName"></param>
-        public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName, string[] path)
-            : this(parameterNames, new Type[] { rulesetName }, path)
+        public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName, string path)
+            : this(parameterNames, new Type[] { rulesetName }, new string[] { path })
         {
         }
 
@@ -71,13 +71,45 @@
         {
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                RecursiveGetObjectFromPath(okObjectResult.Value, context, 0);
+                for (int i = 0; i < _rulesets.Count; i++)
+                {
+                    RecursiveFindObjectAndAddLinks(okObjectResult.Value, context, 0, i);
+                }
             }
 
             base.OnResultExecuting(context);
         }
 
-        private void AddLinksToItem(ResultExecutingContext context, object item)
+
+        private void RecursiveFindObjectAndAddLinks(object currentObjectValue, ResultExecutingContext context, int pathId, int arrayId)
+        {
+            if (pathId < _path[arrayId].Length)
+            {
+                var currentObjectType = currentObjectValue.GetType();
+                if (currentObjectType.IsList())
+                {
+                    foreach (object listitem in currentObjectValue as IList)
+                    {
+                        currentObjectType = listitem.GetType(); // TODO error handling
+                        var nestedObjectValue = currentObjectType.GetProperty(_path[pathId]).GetValue(listitem);
+                        RecursiveFindObjectAndAddLinks(nestedObjectValue, context, pathId + 1, arrayId);
+                    }
+                }
+                else
+                {
+                    var nestedObjectValue = currentObjectType.GetProperty(_path[pathId]).GetValue(currentObjectValue);
+                    RecursiveFindObjectAndAddLinks(nestedObjectValue, context, pathId + 1, arrayId);
+                }
+
+            }
+            else
+            {
+                AddLinks(context, currentObjectValue, arrayId);
+            }
+
+        }
+
+        private void AddLinks(ResultExecutingContext context, object item, int arrayId)
         {
             urlHelper = new UrlHelper(context);
             hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
@@ -99,63 +131,15 @@
                 {
                     objectList.List.Add(listitem);
                 }
-                AddLinksToList(context, objectList);
+                AddLinksToList(context, objectList, arrayId);
             }
             else
             {
-                AddLinksToObject(context, item as IIsHateoasEnabled);
+                AddLinksToObject(context, item as IIsHateoasEnabled, arrayId);
             }
         }
 
-        private void RecursiveGetObjectFromPath(object currentObjectValue, ResultExecutingContext context, int pathId)
-        {
-            if (pathId < _path.Length)
-            {
-                var currentObjectType = currentObjectValue.GetType();
-                if (currentObjectType.IsList())
-                {
-                    foreach (object listitem in currentObjectValue as IList)
-                    {
-                        currentObjectType = listitem.GetType(); // TODO error handling
-                        var nestedObjectValue = currentObjectType.GetProperty(_path[pathId]).GetValue(listitem);
-                        RecursiveGetObjectFromPath(nestedObjectValue, context, pathId + 1);
-                    }
-                }
-                else
-                {
-                    var nestedObjectValue = currentObjectType.GetProperty(_path[pathId]).GetValue(currentObjectValue);
-                    RecursiveGetObjectFromPath(nestedObjectValue, context, pathId + 1);
-                }
-            }
-            else
-            {
-                AddLinksToItem(context, currentObjectValue);
-            }
-        }
-
-            //var currentObjectType = okObjectResult.Value.GetType();
-            //var currentObjectValue = okObjectResult.Value;
-
-            //// drill into object tree
-            //foreach (string key in _path ?? new string[] { })
-            //{
-            //    if (currentObjectType.IsList())
-            //    {
-            //        foreach (object objectListItemValue in currentObjectValue as IList)
-            //        {
-            //            currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
-            //            currentObjectType = currentObjectValue.GetType();
-            //        }
-            //    } else
-            //    {
-            //        currentObjectValue = currentObjectType.GetProperty(key).GetValue(currentObjectType, null);
-            //        currentObjectType = currentObjectValue.GetType();
-            //    }
-            //}
-
-            //return currentObjectValue;
-
-        private void AddLinksToObject(ResultExecutingContext context, IIsHateoasEnabled item)
+        private void AddLinksToObject(ResultExecutingContext context, IIsHateoasEnabled item, int arrayId)
         {
             foreach (IHateoasRuleset ruleset in _rulesets)
             {
@@ -171,12 +155,13 @@
             }
         }
 
-        private void AddLinksToList(ResultExecutingContext context, ListHateoasEnabled unformattedList)
+        private void AddLinksToList(ResultExecutingContext context, ListHateoasEnabled unformattedList, int arrayId)
         {
             var list = unformattedList.List as IList;
+            var rulesets = _rulesets[arrayId];
             for (int i = 0; i < list.Count; i++)
             {
-                foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == true))
+                foreach (IHateoasRuleset ruleset in rulesets.Where(r => r.AppliesToEachListItem == true))
                 {
                     // set fields in ruleset to help rulesets make the correct decisions
                     ruleset.SetHelpers(context);
@@ -194,7 +179,7 @@
                 }
             }
 
-            foreach (IHateoasRuleset ruleset in _rulesets.Where(r => r.AppliesToEachListItem == false))
+            foreach (IHateoasRuleset ruleset in rulesets.Where(r => r.AppliesToEachListItem == false))
             {
                 // set fields in ruleset
                 ruleset.SetHelpers(context);
