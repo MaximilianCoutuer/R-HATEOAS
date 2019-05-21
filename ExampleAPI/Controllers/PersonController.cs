@@ -61,8 +61,9 @@
         [HttpGet("{skip, take}")]
         [AddHateoasLinks(
             new[] { "skip", "take" },
-            new[] { typeof(ExampleRulesetFullLinksPerson) },
-            null )]
+            new[] { typeof(ExampleRulesetFullLinksPerson), typeof(ExampleRulesetFullLinksCountry) },
+            new[] { null, "Country" }
+            )]
         public async Task<ActionResult<Person>> GetPaginatedList(int skip, int take)
         {
             IEnumerable<Person> persons = await _context.Persons.Skip(skip * take).Take(take).Include(p => p.Country).ToListAsync();
