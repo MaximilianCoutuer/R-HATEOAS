@@ -62,7 +62,7 @@
         [AddHateoasLinks(
             new[] { "skip", "take" },
             new[] { typeof(ExampleRulesetFullLinksPerson) },
-            null)]
+            null )]
         public async Task<ActionResult<Person>> GetPaginatedList(int skip, int take)
         {
             IEnumerable<Person> persons = await _context.Persons.Skip(skip * take).Take(take).Include(p => p.Country).ToListAsync();
@@ -81,7 +81,7 @@
         [AddHateoasLinks(
             new[] { "Id" },
             new[] { typeof(ExampleRulesetFullLinksPerson) },
-            null)]
+            null )]
         public async Task<ActionResult<Person>> GetPerson(int id)
         {
             var person = await _context.FindAsync<Person>(id);

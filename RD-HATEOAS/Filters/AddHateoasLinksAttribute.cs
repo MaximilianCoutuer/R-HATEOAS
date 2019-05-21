@@ -45,7 +45,7 @@
 
             // split strings in path parameter and add them as arrays to the path
             _path = new List<string[]>();
-            var pathUnsplit = new List<string>(path ?? new string[] { });
+            var pathUnsplit = new List<string>(path ?? new string[] { null });
             foreach (string pathCode in pathUnsplit)
             {
                 if (pathCode != null)
@@ -87,7 +87,7 @@
         {
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                for (int i = 0; i < _path.Count; i++)
+                for (int i = 0; i < _rulesets.Count; i++)
                 {
                     RecursiveFindObjectAndAddLinks(okObjectResult.Value, context, 0, i);
                 }
