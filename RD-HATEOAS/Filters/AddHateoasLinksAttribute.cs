@@ -22,7 +22,7 @@
         #region fields
 
         private readonly List<string> _parameterNames;
-        private readonly List<string> _path;
+        private readonly List<string[]> _path;
         private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
         private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
 
@@ -42,7 +42,14 @@
         public AddHateoasLinksAttribute(string[] parameterNames, Type[] rulesetNames, string[] path)
         {
             _parameterNames = new List<string>(parameterNames);
-            _path = new List<string>(path);
+
+            // split strings in path parameter and add them as arrays to the path
+            var pathUnsplit = new List<string>(path);
+            foreach (string pathCode in pathUnsplit)
+            {
+                _path.Add(pathCode.Split("|"));
+            }
+
             foreach (var type in rulesetNames)
             {
                 _rulesets.Add((IHateoasRuleset)Activator.CreateInstance(type));
@@ -82,23 +89,32 @@
             base.OnResultExecuting(context);
         }
 
+        /// <summary>
+        /// Drills down into the path tree of the result object until it reaches the destination object or list.
+        /// </summary>
+        /// <param name="currentObjectValue"></param>
+        /// <param name="context"></param>
+        /// <param name="pathId"></param>
+        /// <param name="arrayId"></param>
         private void RecursiveFindObjectAndAddLinks(object currentObjectValue, ResultExecutingContext context, int pathId, int arrayId)
         {
-            if (pathId < _path[arrayId].Length)
+            if (pathId < _path[arrayId].Length) // TODO: test if not always 1
             {
                 var currentObjectType = currentObjectValue.GetType();
                 if (currentObjectType.IsList())
                 {
-                    foreach (object listitem in currentObjectValue as IList)
+                    foreach (object currentObjectListitem in currentObjectValue as IList)
                     {
-                        currentObjectType = listitem.GetType(); // TODO error handling
-                        var nestedObjectValue = currentObjectType.GetProperty(_path[pathId]).GetValue(listitem);
+                        currentObjectType = currentObjectListitem.GetType(); // TODO: error handling
+                        var key = currentObjectType.GetProperty(_path[arrayId][pathId]);
+                        var nestedObjectValue = key.GetValue(currentObjectListitem);
                         RecursiveFindObjectAndAddLinks(nestedObjectValue, context, pathId + 1, arrayId);
                     }
                 }
                 else
                 {
-                    var nestedObjectValue = currentObjectType.GetProperty(_path[pathId]).GetValue(currentObjectValue);
+                    var key = currentObjectType.GetProperty(_path[arrayId][pathId]);
+                    var nestedObjectValue = key.GetValue(currentObjectValue);
                     RecursiveFindObjectAndAddLinks(nestedObjectValue, context, pathId + 1, arrayId);
                 }
 
