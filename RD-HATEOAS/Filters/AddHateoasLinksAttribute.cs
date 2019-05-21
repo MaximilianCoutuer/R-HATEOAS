@@ -41,13 +41,20 @@
         /// <param name="path"></param>
         public AddHateoasLinksAttribute(string[] parameterNames, Type[] rulesetNames, string[] path)
         {
-            _parameterNames = new List<string>(parameterNames);
+            _parameterNames = new List<string>(parameterNames ?? new string[] { });
 
             // split strings in path parameter and add them as arrays to the path
-            var pathUnsplit = new List<string>(path);
+            _path = new List<string[]>();
+            var pathUnsplit = new List<string>(path ?? new string[] { });
             foreach (string pathCode in pathUnsplit)
             {
-                _path.Add(pathCode.Split("|"));
+                if (pathCode != null)
+                {
+                    _path.Add(pathCode.Split("|"));
+                } else
+                {
+                    _path.Add(null);
+                }
             }
 
             foreach (var type in rulesetNames)
@@ -98,7 +105,7 @@
         /// <param name="arrayId"></param>
         private void RecursiveFindObjectAndAddLinks(object currentObjectValue, ResultExecutingContext context, int pathId, int arrayId)
         {
-            if (pathId < _path[arrayId].Length) // TODO: test if not always 1
+            if (pathId < (_path[arrayId] ?? new string[] { }).Length) // TODO: test if not always 1
             {
                 var currentObjectType = currentObjectValue.GetType();
                 if (currentObjectType.IsList())
@@ -158,7 +165,8 @@
 
         private void AddLinksToObject(ResultExecutingContext context, IIsHateoasEnabled item, int arrayId)
         {
-            foreach (IHateoasRuleset ruleset in _rulesets)
+            var ruleset = _rulesets[arrayId];
+            if (ruleset.AppliesToEachListItem == true)
             {
                 // set fields in ruleset to help rulesets make the correct decisions
                 ruleset.SetHelpers(context);

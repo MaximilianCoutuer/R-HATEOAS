@@ -42,7 +42,7 @@
         [AddHateoasLinks(
             null,
             new[] { typeof(ExampleRulesetFullLinksPerson), typeof(ExampleRulesetFullLinksCountry) },
-            new[] { "", "Country" }
+            new[] { null , "Country" }
             )]
         public async Task<ActionResult<List<Person>>> GetAllPersons()
         {
