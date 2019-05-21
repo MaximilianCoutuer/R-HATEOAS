@@ -21,8 +21,8 @@
     {
         #region fields
 
-        private readonly string[] _parameterNames;
-        private readonly string[] _path;
+        private readonly List<string> _parameterNames;
+        private readonly List<string> _path;
         private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
         private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
 
@@ -41,12 +41,13 @@
         /// <param name="path">Path to the object to add links for, as a sequence of keys.</param>
         public AddHateoasLinksAttribute(string[] parameterNames, Type[] rulesetNames, string[] path)
         {
-            _parameterNames = parameterNames;
-            _path = path;
+            _parameterNames = new List<string>(parameterNames);
+            _path = new List<string>(path);
             foreach (var type in rulesetNames)
             {
                 _rulesets.Add((IHateoasRuleset)Activator.CreateInstance(type));
             }
+
         }
 
         /// <summary>
@@ -65,13 +66,14 @@
 
         /// <summary>
         /// This method is invoked whenever a result is sent from a controller method decorated with this attribute.
+        /// It processes the result if it is a 200.
         /// </summary>
         /// <param name="context">The result context from the result that caused this to be run.</param>
         public override void OnResultExecuting(ResultExecutingContext context)
         {
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                for (int i = 0; i < _rulesets.Count; i++)
+                for (int i = 0; i < _path.Count; i++)
                 {
                     RecursiveFindObjectAndAddLinks(okObjectResult.Value, context, 0, i);
                 }
@@ -79,7 +81,6 @@
 
             base.OnResultExecuting(context);
         }
-
 
         private void RecursiveFindObjectAndAddLinks(object currentObjectValue, ResultExecutingContext context, int pathId, int arrayId)
         {
