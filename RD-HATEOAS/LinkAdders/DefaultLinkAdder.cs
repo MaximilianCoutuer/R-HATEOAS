@@ -40,19 +40,25 @@ namespace RDHATEOAS.LinkAdders
             urlHelper = new UrlHelper(context);
             hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
 
-            //var val = (context.Result as OkObjectResult).Value;
-            //var jo = JToken.FromObject(val);
-            ////var grrrrrrr = new JObject(new JProperty("lol", "rofl"));
-            ////grrrrrrr.Add("argh", jo);
-            //////jo.Add("lol", "rofl");
 
-            //var settings = new JsonSerializerSettings
-            //{
-            //    ContractResolver = new DefaultContractResolver()
-            //};
-            //var help = JsonConvert.SerializeObject(jo, settings);
 
-            RecursiveSearchAndProcessObject(currentObjectValue, context, pathId, arrayId);
+            var val = (context.Result as OkObjectResult).Value;
+            var jo = JToken.FromObject(val);
+            //var grrrrrrr = new JObject(new JProperty("lol", "rofl"));
+            //grrrrrrr.Add("argh", jo);
+            ////jo.Add("lol", "rofl");
+
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver()
+            };
+            var help = JsonConvert.SerializeObject(jo, settings);
+
+            dynamic help2 = JToken.Parse(help);
+
+
+
+            RecursiveSearchAndProcessObject(help2, context, pathId, arrayId);
 
             //(context.Result as OkObjectResult).Value = help;
 
