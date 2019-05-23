@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using RDHATEOAS.Builders;
 using RDHATEOAS.Extensions;
 using RDHATEOAS.Models;
@@ -21,6 +25,8 @@ namespace RDHATEOAS.LinkAdders
         private UrlHelper urlHelper;
         private HateoasLinkBuilder hateoasLinkBuilder;
 
+        private dynamic lol = null;
+
         public DefaultLinkAdder(List<string> parameterNames, List<string[]> path, List<IHateoasRuleset> rulesets, Dictionary<string, object> parameters)
         {
             _parameterNames = parameterNames;
@@ -34,6 +40,26 @@ namespace RDHATEOAS.LinkAdders
             urlHelper = new UrlHelper(context);
             hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
 
+            //var val = (context.Result as OkObjectResult).Value;
+            //var jo = JToken.FromObject(val);
+            ////var grrrrrrr = new JObject(new JProperty("lol", "rofl"));
+            ////grrrrrrr.Add("argh", jo);
+            //////jo.Add("lol", "rofl");
+
+            //var settings = new JsonSerializerSettings
+            //{
+            //    ContractResolver = new DefaultContractResolver()
+            //};
+            //var help = JsonConvert.SerializeObject(jo, settings);
+
+            RecursiveSearchAndProcessObject(currentObjectValue, context, pathId, arrayId);
+
+            //(context.Result as OkObjectResult).Value = help;
+
+        }
+
+        private void RecursiveSearchAndProcessObject(object currentObjectValue, ResultExecutingContext context, int pathId, int arrayId)
+        {
             if (pathId < (_path[arrayId] ?? new string[] { }).Length) // TODO: test if not always 1
             {
                 // run through path to find relevant object
@@ -45,14 +71,14 @@ namespace RDHATEOAS.LinkAdders
                         currentObjectType = currentObjectListitem.GetType(); // TODO: error handling
                         var key = currentObjectType.GetProperty(_path[arrayId][pathId]);
                         var nestedObjectValue = key.GetValue(currentObjectListitem);
-                        AddLinks(nestedObjectValue, context, pathId + 1, arrayId);
+                        RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
                     }
                 }
                 else
                 {
                     var key = currentObjectType.GetProperty(_path[arrayId][pathId]);
                     var nestedObjectValue = key.GetValue(currentObjectValue);
-                    AddLinks(nestedObjectValue, context, pathId + 1, arrayId);
+                    RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
                 }
             }
             else
