@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc.Filters;
+    using Newtonsoft.Json.Linq;
     using RDHATEOAS.Models;
 
     /// <summary>
@@ -23,6 +24,6 @@
 
         void SetHelpers(ResultExecutingContext context);
 
-        List<HateoasLink> GetLinks(IIsHateoasEnabled item);
+        List<HateoasLink> GetLinks(JToken item);
     }
 }

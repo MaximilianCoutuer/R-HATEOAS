@@ -11,6 +11,7 @@ using RDHATEOAS.Rulesets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Text;
 
 namespace RDHATEOAS.LinkAdders
@@ -54,7 +55,7 @@ namespace RDHATEOAS.LinkAdders
             };
             var help = JsonConvert.SerializeObject(jo, settings);
 
-            dynamic help2 = JToken.Parse(help);
+            dynamic help2 = JsonConvert.DeserializeObject(help);
 
 
 
@@ -64,26 +65,25 @@ namespace RDHATEOAS.LinkAdders
 
         }
 
-        private void RecursiveSearchAndProcessObject(object currentObjectValue, ResultExecutingContext context, int pathId, int arrayId)
+        private void RecursiveSearchAndProcessObject(JToken currentObjectValue, ResultExecutingContext context, int pathId, int arrayId)
         {
             if (pathId < (_path[arrayId] ?? new string[] { }).Length) // TODO: test if not always 1
             {
                 // run through path to find relevant object
                 var currentObjectType = currentObjectValue.GetType();
-                if (currentObjectType.IsList())
+                if (currentObjectValue.GetType() == typeof(JArray))
                 {
                     foreach (object currentObjectListitem in currentObjectValue as IList)
                     {
-                        currentObjectType = currentObjectListitem.GetType(); // TODO: error handling
-                        var key = currentObjectType.GetProperty(_path[arrayId][pathId]);
-                        var nestedObjectValue = key.GetValue(currentObjectListitem);
+                        var key = _path[arrayId][pathId];
+                        var nestedObjectValue = JToken.Parse(currentObjectListitem.ToString())[key];
                         RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
                     }
                 }
                 else
                 {
-                    var key = currentObjectType.GetProperty(_path[arrayId][pathId]);
-                    var nestedObjectValue = key.GetValue(currentObjectValue);
+                    var key = _path[arrayId][pathId];
+                    var nestedObjectValue = JToken.Parse(currentObjectValue.ToString())[key];
                     RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
                 }
             }
@@ -98,25 +98,20 @@ namespace RDHATEOAS.LinkAdders
                     }
                 }
 
-                if (currentObjectValue.GetType().IsList())
+                if (currentObjectValue.GetType() == typeof(JArray))
                 {
                     // TODO: simplify this?
-                    var objectList = new ListHateoasEnabled();
-                    var list = currentObjectValue as IList;
-                    foreach (object listitem in list)
-                    {
-                        objectList.List.Add(listitem);
-                    }
-                    AddLinksToList(context, objectList, arrayId);
+                    AddLinksToList(context, currentObjectValue, arrayId);
                 }
                 else
                 {
-                    AddLinksToObject(context, currentObjectValue as IIsHateoasEnabled, arrayId);
+                    var grrrrrrrrrrrrrrr = currentObjectValue.GetType();
+                    AddLinksToObject(context, currentObjectValue as JObject, arrayId);
                 }
             }
         }
 
-        private void AddLinksToObject(ResultExecutingContext context, IIsHateoasEnabled item, int arrayId)
+        private void AddLinksToObject(ResultExecutingContext context, JObject item, int arrayId)
         {
             var ruleset = _rulesets[arrayId];
             if (ruleset.AppliesToEachListItem == true)
@@ -128,14 +123,14 @@ namespace RDHATEOAS.LinkAdders
                 // apply links from ruleset
                 foreach (HateoasLink link in ruleset.GetLinks(item))
                 {
-                    item.Links.Add(link);
+                    item.SetPropertyContent("_links",link);
                 }
             }
         }
 
-        private void AddLinksToList(ResultExecutingContext context, ListHateoasEnabled unformattedList, int arrayId)
+        private void AddLinksToList(ResultExecutingContext context, JToken unformattedList, int arrayId)
         {
-            var list = unformattedList.List as IList;
+            var list = unformattedList as JArray;
             var ruleset = _rulesets[arrayId];
             if (ruleset.AppliesToEachListItem == true)
             {
@@ -146,12 +141,12 @@ namespace RDHATEOAS.LinkAdders
                     ruleset.Parameters = _parameters;
                     ruleset.Parameters["RD-ListId"] = i;
                     ruleset.Parameters["RD-ListCount"] = list.Count;
-                    if (list[i] is IIsHateoasEnabled listitem)
+                    if (list[i] is JObject listitem)
                     {
                         // apply links from ruleset
                         foreach (HateoasLink link in ruleset.GetLinks(listitem))
                         {
-                            listitem.Links.Add(link);
+                            listitem.SetPropertyContent("_links", link);
                         }
                     }
                 }
@@ -167,11 +162,35 @@ namespace RDHATEOAS.LinkAdders
                 // apply links from ruleset
                 foreach (HateoasLink link in ruleset.GetLinks(unformattedList))
                 {
-                    unformattedList.Links.Add(link);
+                    JArray temp = (JArray)unformattedList;
+                    unformattedList = new JObject();
+                    ((JObject)unformattedList).SetPropertyContent("value", temp);
+                    ((JObject)unformattedList).SetPropertyContent("_links", link);
                 }
             }
 
         }
 
+    }
+
+    public static partial class ExtensionMethods
+    {
+        public static JObject SetPropertyContent(this JObject source, string name, object content)
+        {
+            var prop = source.Property(name);
+
+            if (prop == null)
+            {
+                prop = new JProperty(name, content);
+
+                source.Add(prop);
+            }
+            else
+            {
+                prop.Value = JContainer.FromObject(content);
+            }
+
+            return source;
+        }
     }
 }

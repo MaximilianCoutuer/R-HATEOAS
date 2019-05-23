@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.AspNetCore.Mvc.Routing;
+    using Newtonsoft.Json.Linq;
     using RDHATEOAS.Builders;
     using RDHATEOAS.Models;
 
@@ -34,7 +35,7 @@
         /// </summary>
         /// <param name="item">The item to which we want to add links.</param>
         /// <returns>The links.</returns>
-        public virtual List<HateoasLink> GetLinks(IIsHateoasEnabled item)
+        public virtual List<HateoasLink> GetLinks(JToken item)
         {
             // default null implementation yields no links
             return null;
