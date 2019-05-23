@@ -82,22 +82,22 @@
 
 
 
-            var val = (context.Result as OkObjectResult).Value;
-            var jo = JArray.FromObject(val);
-            var grrrrrrr = new JObject(new JProperty("lol", "rofl"));
-            grrrrrrr.Add("argh", jo);
-            //jo.Add("lol", "rofl");
+            //var val = (context.Result as OkObjectResult).Value;
+            //var jo = JArray.FromObject(val);
+            //var grrrrrrr = new JObject(new JProperty("lol", "rofl"));
+            //grrrrrrr.Add("argh", jo);
+            ////jo.Add("lol", "rofl");
 
-            var settings = new JsonSerializerSettings
-            {
-                ContractResolver = new DefaultContractResolver()
-            };
-            var help = JsonConvert.SerializeObject(grrrrrrr, settings);
+            //var settings = new JsonSerializerSettings
+            //{
+            //    ContractResolver = new DefaultContractResolver()
+            //};
+            //var help = JsonConvert.SerializeObject(grrrrrrr, settings);
 
-            var expConverter = new ExpandoObjectConverter();
-            dynamic rev = JsonConvert.DeserializeObject<ExpandoObject>(help, expConverter);
+            //var expConverter = new ExpandoObjectConverter();
+            //dynamic rev = JsonConvert.DeserializeObject<ExpandoObject>(help, expConverter);
 
-            (context.Result as OkObjectResult).Value = rev;
+            //(context.Result as OkObjectResult).Value = rev;
 
 
 
