@@ -1,7 +1,6 @@
 ﻿namespace RDHATEOAS.Filters
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Dynamic;
     using Microsoft.AspNetCore.Mvc;
@@ -12,9 +11,7 @@
     using Newtonsoft.Json.Linq;
     using Newtonsoft.Json.Serialization;
     using RDHATEOAS.Builders;
-    using RDHATEOAS.Extensions;
     using RDHATEOAS.LinkAdders;
-    using RDHATEOAS.Models;
     using RDHATEOAS.Rulesets;
 
     /// <summary>
@@ -31,9 +28,6 @@
         private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
         private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
         private readonly ILinkAdder _linkAdder;
-
-        private UrlHelper urlHelper;
-        private HateoasLinkBuilder hateoasLinkBuilder;
 
         #endregion
 
@@ -65,11 +59,6 @@
 
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AddHateoasLinksAttribute"/> class.
-        /// </summary>
-        /// <param name="parameterNames"></param>
-        /// <param name="rulesetName"></param>
         public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName, string path)
             : this(parameterNames, new Type[] { rulesetName }, new string[] { path })
         {
@@ -79,11 +68,6 @@
 
         #region methods
 
-        /// <summary>
-        /// This method is invoked whenever a result is sent from a controller method decorated with this attribute.
-        /// It processes the result if it is a 200.
-        /// </summary>
-        /// <param name="context">The result context from the result that caused this to be run.</param>
         public override void OnResultExecuting(ResultExecutingContext context)
         {
 
@@ -94,6 +78,8 @@
                     _linkAdder.AddLinks(okObjectResult.Value, context, 0, i);
                 }
             }
+
+
 
 
             var val = (context.Result as OkObjectResult).Value;
@@ -112,6 +98,9 @@
             dynamic rev = JsonConvert.DeserializeObject<ExpandoObject>(help, expConverter);
 
             (context.Result as OkObjectResult).Value = rev;
+
+
+
 
             base.OnResultExecuting(context);
         }

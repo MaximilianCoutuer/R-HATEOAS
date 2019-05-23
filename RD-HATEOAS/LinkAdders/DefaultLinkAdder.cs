@@ -27,19 +27,16 @@ namespace RDHATEOAS.LinkAdders
             _path = path;
             _rulesets = rulesets;
             _parameters = parameters;
-        }
+       }
 
-        /// <summary>
-        /// Drills down into the path tree of the result object until it reaches the destination object or list.
-        /// </summary>
-        /// <param name="currentObjectValue"></param>
-        /// <param name="context"></param>
-        /// <param name="pathId"></param>
-        /// <param name="arrayId"></param>
         public void AddLinks(object currentObjectValue, ResultExecutingContext context, int pathId, int arrayId)
         {
+            urlHelper = new UrlHelper(context);
+            hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
+
             if (pathId < (_path[arrayId] ?? new string[] { }).Length) // TODO: test if not always 1
             {
+                // run through path to find relevant object
                 var currentObjectType = currentObjectValue.GetType();
                 if (currentObjectType.IsList())
                 {
@@ -57,46 +54,35 @@ namespace RDHATEOAS.LinkAdders
                     var nestedObjectValue = key.GetValue(currentObjectValue);
                     AddLinks(nestedObjectValue, context, pathId + 1, arrayId);
                 }
-
             }
             else
             {
-                AddLinkToFoundObject(context, currentObjectValue, arrayId);
-            }
-
-        }
-
-        private void AddLinkToFoundObject(ResultExecutingContext context, object item, int arrayId)
-        {
-            urlHelper = new UrlHelper(context);
-            hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
-
-            if (_parameterNames != null)
-            {
-                foreach (string parameterName in _parameterNames)
+                // add links depending on whether the item is an object or list
+                if (_parameterNames != null)
                 {
-                    _parameters[parameterName] = context.RouteData.Values[parameterName] ?? null;
+                    foreach (string parameterName in _parameterNames)
+                    {
+                        _parameters[parameterName] = context.RouteData.Values[parameterName] ?? null;
+                    }
+                }
+
+                if (currentObjectValue.GetType().IsList())
+                {
+                    // TODO: simplify this?
+                    var objectList = new ListHateoasEnabled();
+                    var list = currentObjectValue as IList;
+                    foreach (object listitem in list)
+                    {
+                        objectList.List.Add(listitem);
+                    }
+                    AddLinksToList(context, objectList, arrayId);
+                }
+                else
+                {
+                    AddLinksToObject(context, currentObjectValue as IIsHateoasEnabled, arrayId);
                 }
             }
-
-            if (item.GetType().IsList())
-            {
-                // TODO: simplify this?
-                var objectList = new ListHateoasEnabled();
-                var list = item as IList;
-                foreach (object listitem in list)
-                {
-                    objectList.List.Add(listitem);
-                }
-                AddLinksToList(context, objectList, arrayId);
-            }
-            else
-            {
-                AddLinksToObject(context, item as IIsHateoasEnabled, arrayId);
-            }
         }
-
-
 
         private void AddLinksToObject(ResultExecutingContext context, IIsHateoasEnabled item, int arrayId)
         {
@@ -112,13 +98,6 @@ namespace RDHATEOAS.LinkAdders
                 {
                     item.Links.Add(link);
                 }
-
-                //var ntest = new ExpandoObject();
-                //item = ntest;
-
-                //JObject jo = JObject.FromObject(item);
-                //jo.Add("lol", "rofl");
-                //item = null;
             }
         }
 
