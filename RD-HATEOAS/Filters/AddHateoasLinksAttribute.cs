@@ -3,10 +3,14 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
+    using System.Dynamic;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.AspNetCore.Mvc.Routing;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
+    using Newtonsoft.Json.Linq;
+    using Newtonsoft.Json.Serialization;
     using RDHATEOAS.Builders;
     using RDHATEOAS.Extensions;
     using RDHATEOAS.Models;
@@ -93,6 +97,24 @@
                 }
             }
 
+
+            var val = (context.Result as OkObjectResult).Value;
+            var jo = JArray.FromObject(val);
+            var grrrrrrr = new JObject(new JProperty("lol", "rofl"));
+            grrrrrrr.Add("argh", jo);
+            //jo.Add("lol", "rofl");
+
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver()
+            };
+            var help = JsonConvert.SerializeObject(grrrrrrr, settings);
+
+            var expConverter = new ExpandoObjectConverter();
+            dynamic rev = JsonConvert.DeserializeObject<ExpandoObject>(help, expConverter);
+
+            (context.Result as OkObjectResult).Value = rev;
+
             base.OnResultExecuting(context);
         }
 
@@ -177,6 +199,13 @@
                 {
                     item.Links.Add(link);
                 }
+
+                //var ntest = new ExpandoObject();
+                //item = ntest;
+
+                //JObject jo = JObject.FromObject(item);
+                //jo.Add("lol", "rofl");
+                //item = null;
             }
         }
 
