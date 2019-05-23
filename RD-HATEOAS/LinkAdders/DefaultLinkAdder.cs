@@ -177,6 +177,7 @@ namespace RDHATEOAS.LinkAdders
     {
         public static JObject SetPropertyContent(this JObject source, string name, object content)
         {
+            Console.WriteLine("Adding " + name + " to " + source);
             var prop = source.Property(name);
 
             if (prop == null)
