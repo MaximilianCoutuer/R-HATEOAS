@@ -12,6 +12,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Text;
 
 namespace RDHATEOAS.LinkAdders
@@ -75,17 +76,30 @@ namespace RDHATEOAS.LinkAdders
                 var currentObjectType = currentObjectValue.GetType();
                 if (currentObjectValue.GetType() == typeof(JArray))
                 {
-                    foreach (object currentObjectListitem in currentObjectValue as IList)
+                    foreach (JToken currentObjectListitem in currentObjectValue as IList)
                     {
                         var key = _path[arrayId][pathId];
-                        var nestedObjectValue = JToken.Parse(currentObjectListitem.ToString())[key]; // ?
+                        //var nestedObjectValue = JToken.Parse(currentObjectListitem.ToString())[key]; // THIS IS BAD. BAD CODE.
+
+
+
+                        var itemProperties = currentObjectListitem.Children<JProperty>();
+                        var myElement = itemProperties.FirstOrDefault(x => x.Name == key);
+                        var nestedObjectValue = myElement.Value; ////This is a JValue type
+
                         RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
                     }
                 }
                 else
                 {
                     var key = _path[arrayId][pathId];
-                    var nestedObjectValue = JToken.Parse(currentObjectValue.ToString())[key];
+                    //var nestedObjectValue = JToken.Parse(currentObjectValue.ToString())[key];
+
+                    var itemProperties = currentObjectValue.Children<JProperty>();
+                    var myElement = itemProperties.FirstOrDefault(x => x.Name == key);
+                    var nestedObjectValue = myElement.Value; ////This is a JValue type
+
+
                     RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
                 }
             }
