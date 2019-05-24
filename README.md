@@ -85,5 +85,6 @@ See also the list of [contributors](https://github.com/your/project/contributors
 
 ## Acknowledgments
 
-* N.Zawada and K.Dockx for technical and moral support
-* Realdolmen for the internship and the awesome opportunity
+* N.Zawada and K.Dockx, for technical and moral support
+* Realdolmen, for the internship and the awesome opportunity
+* Hogeschool VIVES Kortrijk, my alma mater.
