@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExampleAPI.Models
 {
-    public class Country : IIsHateoasEnabled
+    public class Country
     {
         public string Id { get; set; }
 
@@ -25,10 +25,5 @@ namespace ExampleAPI.Models
             Capital = capital;
             Population = population;
         }
-
-        // implements IIsHateoasEnabled 
-        [NotMapped]
-        [JsonProperty(PropertyName = "_links")]
-        List<HateoasLink> IIsHateoasEnabled.Links { get; set; } = new List<HateoasLink>();
     }
 }

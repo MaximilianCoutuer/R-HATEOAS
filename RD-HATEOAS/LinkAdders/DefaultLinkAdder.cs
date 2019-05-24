@@ -198,7 +198,7 @@ namespace RDHATEOAS.LinkAdders
 
             if (prop == null)
             {
-                prop = new JProperty(name, content);
+                prop = new JProperty(name, JContainer.FromObject(content));
 
                 source.Add(prop);
             }

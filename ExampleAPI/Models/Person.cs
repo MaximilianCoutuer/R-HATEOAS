@@ -9,9 +9,8 @@
 
     /// <summary>
     /// An example class.
-    /// This class supports HATEOAS links because it implements IIsHateoasEnabled.
     /// </summary>
-    public class Person : IIsHateoasEnabled
+    public class Person
     {
         private int _age;
 
@@ -46,11 +45,6 @@
         }
 
         public Country Country { get; set; }
-
-        // implements IIsHateoasEnabled 
-        [NotMapped]
-        [JsonProperty(PropertyName = "_links")]
-        List<HateoasLink> IIsHateoasEnabled.Links { get; set; } = new List<HateoasLink>();
     }
 
     public class MinValueAttribute : ValidationAttribute
