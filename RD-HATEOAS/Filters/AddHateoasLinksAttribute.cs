@@ -2,15 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Dynamic;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
-    using Microsoft.AspNetCore.Mvc.Routing;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using Newtonsoft.Json.Linq;
-    using Newtonsoft.Json.Serialization;
-    using RDHATEOAS.Builders;
     using RDHATEOAS.LinkAdders;
     using RDHATEOAS.Rulesets;
 

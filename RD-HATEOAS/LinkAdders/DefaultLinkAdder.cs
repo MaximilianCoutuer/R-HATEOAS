@@ -61,6 +61,8 @@ namespace RDHATEOAS.LinkAdders
 
             RecursiveSearchAndProcessObject(help2, context, pathId, arrayId);
 
+            (context.Result as OkObjectResult).Value = help2;
+
             //(context.Result as OkObjectResult).Value = help;
 
         }
@@ -76,7 +78,7 @@ namespace RDHATEOAS.LinkAdders
                     foreach (object currentObjectListitem in currentObjectValue as IList)
                     {
                         var key = _path[arrayId][pathId];
-                        var nestedObjectValue = JToken.Parse(currentObjectListitem.ToString())[key];
+                        var nestedObjectValue = JToken.Parse(currentObjectListitem.ToString())[key]; // ?
                         RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
                     }
                 }
@@ -188,7 +190,16 @@ namespace RDHATEOAS.LinkAdders
             }
             else
             {
-                prop.Value = JContainer.FromObject(content);
+                if (prop.Value is JObject item)
+                {
+                    var array = new JArray();
+                    array.Add(item);
+                    array.Add(JContainer.FromObject(content));
+                    prop.Value = array;
+                } else if (prop.Value is JArray array)
+                {
+                    array.Add(JContainer.FromObject(content));
+                }
             }
 
             return source;
