@@ -10,19 +10,19 @@ This package aims to implement this feature in a way that is both powerful and s
 
 ## Getting Started
 
-The package modifies the content that is returned by your API methods, adding relevant HATEOAS links. "Rulesets" are used to define which links should be added to the output of which methods in a reusable fashion.
+The package enriches the content that is returned by your API methods, adding relevant HATEOAS links. "Rulesets" are used to define which links should be added to the output of your in a reusable fashion.
 
 ### Prerequisites
 
 * .NET Core 2.2 or higher.
 
-### Installing
+### Installation
 
 Fork the project via:
 
-`git clone https:://github.com/MAximilianCoutuer/Realdolmen-HATEOAS.git`
+`git clone https:://github.com/MaximilianCoutuer/Realdolmen-HATEOAS.git`
 
-The project will become available through NuGet shortly.
+The project will become available through NuGet at version 1.0.
 
 ## Usage
 
@@ -30,37 +30,48 @@ The project will become available through NuGet shortly.
 
 Create one or more rulesets to define which links should be added and what they should look like.
 
-A ruleset is a class that extends the abstract class `HateoasRulesetBase`. It contains logic to indicate which links should be added to the output. It typically overrides the following fields and methods:
+A *ruleset* is a class that extends the abstract class `HateoasRulesetBase`. It contains the necessary logic to generate one or more links. For instance, it could define a self link, a details link, and an optional edit link contingent on the user being an administrator.
 
-* `(bool)AppliesToEachListItem`: Indicates whether the ruleset should apply to each item in a list or to the list as a whole. Defaults to false if not overridden.
-* `GetLinks(IIsHateoasEnabled item)`: Returns a List<HateoasLink>. To create a link, use the `HateoasLinkBuilder.Build()` method to generate a basic link based on the parameters passed in, and the methods AddTitle, AddType, AddHreflang, AddMedia and ExtendQueryString to add further data.
+A ruleset typically overrides the following fields and methods:
 
-For an example, see the `ExampleRulesetFullLinks` class in ExampleAPI.
+* `(bool)AppliesToEachListItem`: Indicates whether the ruleset should apply to each item in a list or to the list as a whole. Defaults to true if not overridden.
+* `GetLinks(IIsHateoasEnabled item)`: Returns a `List<HateoasLink>`. To create an instance of a link, use the `HateoasLinkBuilder.Build()` method to generate a basic link based on the parameters passed in, and the methods `AddTitle, AddType, AddHreflang, AddMedia` and `ExtendQueryString` to add further data.
 
-Any request parameters passed to the ruleset (see below) will be available via the `Parameters` field and can be used in business logic. Additionally, if the ruleset is applied to a list of objects, the `Parameters` field will automatically contain the "RD-ListId" and "RD-ListCount" keys.
+For an example, see the `ExampleRuleset...` classes in ExampleAPI.
+
+To help implement business logic in a ruleset, any request parameters passed to the ruleset (see below) will be available via the `Parameters` field. Additionally, if the ruleset is applied to a list or array, the `Parameters` field will automatically contain the `RD-ListId` and `RD-ListCount` keys for your convenience.
 
 ### Controller
 
 Decorate your controller method with the following attribute:
 
-`[AddHateoasLinks(new[] { "interesting", "request", "parameters" }, new[] { typeof(NameOfRuleset), typeof(NameOfOtherRuleset) })]`
-
-Any request parameters you specify will be passed on to the ruleset (see above). If multiple rulesets are specified, links from each ruleset will be added in order.
-
-### Model classes
-
-Implement IIsHateoasEnabled in your model classes, and add the following property:
-
 ```
-// implements IIsHateoasEnabled
-[NotMapped]
-[JsonProperty(PropertyName = "_links")]
-List<HateoasLink> IIsHateoasEnabled.Links { get; set; } = new List<HateoasLink>();
+[AddHateoasLinks(
+    new[] { "any", "request", "parameters", "to", "pass", "on" },
+    new[] { typeof(NameOfYourRuleset), ... },
+    new[] { "Path|To|Object|In|Output|Object|Hierarchy", ... }
+)]
 ```
+Any request parameters you specify will be passed on to all ruleset(s) (see above). If none, use `null` as the first parameter.
+
+Multiple rulesets can be applied to the same method. The second and third parameters are arrays that are mapped 1:1 onto each other; the second parameter contains one or more rulesets, the third contains one or more paths to the object you wish to apply the corresponding ruleset to.
+
+A *path* is a pipe separated list of property names that help the application drill down to your desired object. For instance, if your API generates a `List<Person>`, each with a `Country` property with a `Capital` property that is an object of class `City`, and you wish to add links to all capitals, your path should be `Country|Capital`. If you want to add links to the root object, use a path of `null`.
 
 ### Remarks
 
-The output of your API does not need to be formatted in JSON for this package to work.
+Applying links to a list or array will move it into a key/value pair, with the key being `values`. This is a necessary evil because adding properties directly to a list or array is not possible.
+
+Because the package needs to add properties to the object hierarchy and C# is strongly typed, it will convert each object into a JToken. Filters that run after this package will therefore lose access to the original object type.
+
+## To do
+
+This is a prerelease version. The following features are planned:
+
+* Bulletproof/idiot proof/thoroughly test the package. The package is newborn and there is no full test coverage or error handling yet, making it fairly easy to crash. This is the main priority for 1.0.
+* Verify correct functionality with XML output or other output formats.
+* Add more example rulesets.
+* Simplify the controller decoration syntax.
 
 ## License
 
@@ -68,11 +79,12 @@ This project is licensed under the MIT License.
 
 ## Authors
 
-* **Maximilian Coutuer** - [Github](https://github.com/MaximilianCoutuer) | [LinkedIn](https://be.linkedin.com/in/maximilian-coutuer-0ba4a517)
+* **Maximilian Coutuer** - [Github](https://github.com/MaximilianCoutuer) | [LinkedIn](https://be.linkedin.com/in/maximilian-coutuer-0ba4a517) | [Patreon](https://patreon.com/enaisiaion)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## Acknowledgments
 
-* N. Zawada
-* Realdolmen
+* N.Zawada and K.Dockx, for technical and moral support
+* Realdolmen, for the internship and the awesome opportunity
+* Hogeschool VIVES Kortrijk, my alma mater.
