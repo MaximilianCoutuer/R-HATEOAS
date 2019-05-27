@@ -1,10 +1,10 @@
-﻿namespace RDHATEOAS.Builders
-{
-    using System;
-    using System.Net.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using RDHATEOAS.Models;
+﻿using System;
+using System.Net.Http;
+using Microsoft.AspNetCore.Mvc;
+using RDHATEOAS.Models;
 
+namespace RDHATEOAS.Builders
+{
     /// <summary>
     /// This class is used to build a HATEOAS link.
     /// </summary>

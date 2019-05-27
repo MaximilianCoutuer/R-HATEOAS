@@ -1,5 +1,6 @@
 ﻿namespace ExampleAPI.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -42,7 +43,7 @@
         [AddHateoasLinks(
             null,
             new[] { typeof(ExampleRulesetFullLinksPerson), typeof(ExampleRulesetFullLinksCountry) },
-            new[] { null , "Country" }
+            new[] { null, "Country" }
             )]
         public async Task<ActionResult<List<Person>>> GetAllPersons()
         {
