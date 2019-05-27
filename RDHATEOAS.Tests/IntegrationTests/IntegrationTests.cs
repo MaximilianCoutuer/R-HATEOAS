@@ -1,21 +1,13 @@
-﻿namespace RDHATEOAS.Tests.IntegrationTests
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Net;
-    using System.Net.Http;
-    using System.Net.Http.Formatting;
-    using System.Text;
-    using System.Threading.Tasks;
-    using ExampleAPI.Models;
-    using Microsoft.AspNetCore.Mvc.Testing;
-    using Newtonsoft.Json;
-    using RDHATEOAS.Models;
-    using RDHATEOAS.Tests.Factories;
-    using RDHATEOAS.Tests.Mocks;
-    using Xunit;
+﻿using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using ExampleAPI.Models;
+using RDHATEOAS.Models;
+using RDHATEOAS.Tests.Factories;
+using Xunit;
 
+namespace RDHATEOAS.Tests.IntegrationTests
+{
     public class IntegrationTests : IClassFixture<CustomAPIFactory>
     {
         private readonly CustomAPIFactory _factory;

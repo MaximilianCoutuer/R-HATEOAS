@@ -1,9 +1,4 @@
-﻿using Newtonsoft.Json;
-using RDHATEOAS.Models;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ExampleAPI.Models
+﻿namespace ExampleAPI.Models
 {
     public class Country
     {

@@ -1,11 +1,8 @@
 ﻿namespace ExampleAPI.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
     using Newtonsoft.Json;
-    using RDHATEOAS.Models;
 
     /// <summary>
     /// An example class.

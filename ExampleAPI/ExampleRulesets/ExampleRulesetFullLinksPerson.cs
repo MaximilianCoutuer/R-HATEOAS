@@ -1,11 +1,10 @@
-﻿namespace RDHATEOAS.Rulesets
-{
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using ExampleAPI.Models;
-    using Newtonsoft.Json.Linq;
-    using RDHATEOAS.Models;
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
+using RDHATEOAS.Models;
 
+namespace RDHATEOAS.Rulesets
+{
     public class ExampleRulesetFullLinksPerson : HateoasRulesetBase
     {
         public override bool AppliesToEachListItem { get; set; } = true;

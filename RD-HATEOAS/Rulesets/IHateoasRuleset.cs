@@ -1,11 +1,10 @@
-﻿namespace RDHATEOAS.Rulesets
-{
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.AspNetCore.Mvc.Filters;
-    using Newtonsoft.Json.Linq;
-    using RDHATEOAS.Models;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Newtonsoft.Json.Linq;
+using RDHATEOAS.Models;
 
+namespace RDHATEOAS.Rulesets
+{
     /// <summary>
     /// The interface that defines a ruleset.
     /// Individual rulesets should inherit from HateoasRulesetBase instead.

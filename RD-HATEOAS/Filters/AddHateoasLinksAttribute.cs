@@ -1,11 +1,13 @@
-﻿namespace RDHATEOAS.Filters
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using RDHATEOAS.LinkAdders;
+using RDHATEOAS.Rulesets;
+
+namespace RDHATEOAS.Filters
 {
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Filters;
-    using RDHATEOAS.LinkAdders;
-    using RDHATEOAS.Rulesets;
 
     /// <summary>
     /// This filter is applied to a controller method via an attribute.
@@ -28,6 +30,16 @@
 
         public AddHateoasLinksAttribute(string[] parameterNames, Type[] rulesetNames, string[] path)
         {
+            if (rulesetNames == null)
+            {
+                throw new ArgumentException("Ruleset array can't be null.");
+            }
+
+            if (path != null && rulesetNames.Length < path.Length)
+            {
+                throw new ArgumentException("Number of rulesets must be equal to or greater than the number of paths.");
+            }
+
             _parameterNames = new List<string>(parameterNames ?? new string[] { });
             _path = new List<string[]>();
             var pathUnsplit = new List<string>(path ?? new string[] { null });
@@ -36,7 +48,8 @@
                 if (pathCode != null)
                 {
                     _path.Add(pathCode.Split("|"));
-                } else
+                }
+                else
                 {
                     _path.Add(null);
                 }
@@ -44,12 +57,16 @@
 
             foreach (var type in rulesetNames)
             {
-                _rulesets.Add((IHateoasRuleset)Activator.CreateInstance(type));
+                if (typeof(IHateoasRuleset).IsAssignableFrom(type))
+                {
+                    _rulesets.Add((IHateoasRuleset)Activator.CreateInstance(type));
+                } else
+                {
+                    throw new ArgumentException("Type " + type + " is not a valid HATEOAS ruleset (it does not implement IHateoasRuleset).");
+                }
             }
 
             _linkAdder = new DefaultLinkAdder(_parameterNames, _path, _rulesets, _parameters);
-
-
         }
 
         public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName, string path)
@@ -63,7 +80,6 @@
 
         public override void OnResultExecuting(ResultExecutingContext context)
         {
-
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
                 for (int i = 0; i < _rulesets.Count; i++)
@@ -71,29 +87,6 @@
                     _linkAdder.AddLinks(okObjectResult.Value, context, 0, i);
                 }
             }
-
-
-
-
-            //var val = (context.Result as OkObjectResult).Value;
-            //var jo = JArray.FromObject(val);
-            //var grrrrrrr = new JObject(new JProperty("lol", "rofl"));
-            //grrrrrrr.Add("argh", jo);
-            ////jo.Add("lol", "rofl");
-
-            //var settings = new JsonSerializerSettings
-            //{
-            //    ContractResolver = new DefaultContractResolver()
-            //};
-            //var help = JsonConvert.SerializeObject(grrrrrrr, settings);
-
-            //var expConverter = new ExpandoObjectConverter();
-            //dynamic rev = JsonConvert.DeserializeObject<ExpandoObject>(help, expConverter);
-
-            //(context.Result as OkObjectResult).Value = rev;
-
-
-
 
             base.OnResultExecuting(context);
         }

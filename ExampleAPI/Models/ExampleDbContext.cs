@@ -1,7 +1,7 @@
-﻿namespace ExampleAPI.Models
-{
-    using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace ExampleAPI.Models
+{
     public class ExampleDbContext : DbContext
     {
         public ExampleDbContext(DbContextOptions<ExampleDbContext> options)

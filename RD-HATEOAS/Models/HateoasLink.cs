@@ -1,11 +1,10 @@
-﻿namespace RDHATEOAS.Models
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Net.Http;
-    using System.Text;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Net.Http;
+using System.Text;
 
+namespace RDHATEOAS.Models
+{
     /// <summary>
     /// A HATEOAS link.
     /// The link contains all relevant HATEOAS fields and getters and setters for each.
@@ -26,7 +25,8 @@
         [Required]
         public string Href
         {
-            get {
+            get
+            {
                 var url = new StringBuilder();
                 url.Append(_href);
                 url.Append("?");
@@ -34,11 +34,13 @@
                 {
                     url.Append(queryStringEntry.Key + "=" + queryStringEntry.Value + "&");
                 }
-                url.Remove(url.Length-1, 1);
+
+                url.Remove(url.Length - 1, 1);
                 return url.ToString();
             }
 
-            set {
+            set
+            {
                 _href = value?.Replace("%2F", "/");
             }
         }
@@ -113,7 +115,9 @@
         /// </summary>
         /// <param name="key">The key to append.</param>
         /// <param name="value">The value to append.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// The created link.
+        /// </returns>
         public HateoasLink ExtendQueryString(string key, string value)
         {
             this._queryString.Add(key, value);

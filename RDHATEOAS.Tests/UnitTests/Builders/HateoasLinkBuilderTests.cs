@@ -1,18 +1,16 @@
-﻿namespace RDHATEOAS.Tests.UnitTests.Builders
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Net.Http;
-    using System.Text;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Routing;
-    using Microsoft.AspNetCore.Routing;
-    using RDHATEOAS.Builders;
-    using RDHATEOAS.Models;
-    using Xunit;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
+using RDHATEOAS.Builders;
+using RDHATEOAS.Models;
+using Xunit;
 
+namespace RDHATEOAS.Tests.UnitTests.Builders
+{
     public class LinkBuilderFixture : IDisposable
     {
         public readonly HateoasLinkBuilder _linkBuilder;

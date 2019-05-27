@@ -1,19 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using RDHATEOAS.Builders;
-using RDHATEOAS.Extensions;
 using RDHATEOAS.Models;
 using RDHATEOAS.Rulesets;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Text;
 
 namespace RDHATEOAS.LinkAdders
 {
@@ -26,8 +22,6 @@ namespace RDHATEOAS.LinkAdders
 
         private UrlHelper urlHelper;
         private HateoasLinkBuilder hateoasLinkBuilder;
-
-        private dynamic lol = null;
 
         public DefaultLinkAdder(List<string> parameterNames, List<string[]> path, List<IHateoasRuleset> rulesets, Dictionary<string, object> parameters)
         {
@@ -42,35 +36,22 @@ namespace RDHATEOAS.LinkAdders
             urlHelper = new UrlHelper(context);
             hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
 
-
-
             var val = (context.Result as OkObjectResult).Value;
-            var jo = JToken.FromObject(val);
-            //var grrrrrrr = new JObject(new JProperty("lol", "rofl"));
-            //grrrrrrr.Add("argh", jo);
-            ////jo.Add("lol", "rofl");
-
             var settings = new JsonSerializerSettings
             {
-                ContractResolver = new DefaultContractResolver()
+                ContractResolver = new DefaultContractResolver(),
             };
-            var help = JsonConvert.SerializeObject(jo, settings);
+            var valSerialized = JsonConvert.SerializeObject(JToken.FromObject(val), settings);
+            dynamic valToProcess = JsonConvert.DeserializeObject(valSerialized);
 
-            dynamic help2 = JsonConvert.DeserializeObject(help);
+            RecursiveSearchAndProcessObject(valToProcess, context, pathId, arrayId);
 
-
-
-            RecursiveSearchAndProcessObject(help2, context, pathId, arrayId);
-
-            (context.Result as OkObjectResult).Value = help2;
-
-            //(context.Result as OkObjectResult).Value = help;
-
+            (context.Result as OkObjectResult).Value = valToProcess;
         }
 
         private void RecursiveSearchAndProcessObject(JToken currentObjectValue, ResultExecutingContext context, int pathId, int arrayId)
         {
-            if (pathId < (_path[arrayId] ?? new string[] { }).Length) // TODO: test if not always 1
+            if (pathId < (_path[arrayId] ?? new string[] { }).Length)
             {
                 // run through path to find relevant object
                 var currentObjectType = currentObjectValue.GetType();
@@ -79,28 +60,25 @@ namespace RDHATEOAS.LinkAdders
                     foreach (JToken currentObjectListitem in currentObjectValue as IList)
                     {
                         var key = _path[arrayId][pathId];
-                        //var nestedObjectValue = JToken.Parse(currentObjectListitem.ToString())[key]; // THIS IS BAD. BAD CODE.
-
-
-
                         var itemProperties = currentObjectListitem.Children<JProperty>();
-                        var myElement = itemProperties.FirstOrDefault(x => x.Name == key);
-                        var nestedObjectValue = myElement.Value; ////This is a JValue type
-
-                        RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
+                        var nestedElement = itemProperties.FirstOrDefault(x => x.Name == key);
+                        if (nestedElement != null)
+                        {
+                            var nestedObjectValue = nestedElement.Value;
+                            RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
+                        }
                     }
                 }
                 else
                 {
                     var key = _path[arrayId][pathId];
-                    //var nestedObjectValue = JToken.Parse(currentObjectValue.ToString())[key];
-
                     var itemProperties = currentObjectValue.Children<JProperty>();
-                    var myElement = itemProperties.FirstOrDefault(x => x.Name == key);
-                    var nestedObjectValue = myElement.Value; ////This is a JValue type
-
-
-                    RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
+                    var nestedElement = itemProperties.FirstOrDefault(x => x.Name == key);
+                    if (nestedElement != null)
+                    {
+                        var nestedObjectValue = nestedElement.Value;
+                        RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
+                    }
                 }
             }
             else
@@ -116,12 +94,10 @@ namespace RDHATEOAS.LinkAdders
 
                 if (currentObjectValue.GetType() == typeof(JArray))
                 {
-                    // TODO: simplify this?
                     AddLinksToList(context, currentObjectValue, arrayId);
                 }
                 else
                 {
-                    var grrrrrrrrrrrrrrr = currentObjectValue.GetType();
                     AddLinksToObject(context, currentObjectValue as JObject, arrayId);
                 }
             }
@@ -139,12 +115,12 @@ namespace RDHATEOAS.LinkAdders
                 // apply links from ruleset
                 foreach (HateoasLink link in ruleset.GetLinks(item))
                 {
-                    item.SetPropertyContent("_links",link);
+                    item.SetPropertyContent("_links", link);
                 }
             }
         }
 
-        private void AddLinksToList(ResultExecutingContext context, JToken unformattedList, int arrayId)
+        private void AddLinksToList(ResultExecutingContext context, JToken unformattedList, int arrayId) // Must be a JToken even though it's a JArray because we're replacing it with a JObject later
         {
             var list = unformattedList as JArray;
             var ruleset = _rulesets[arrayId];
@@ -184,16 +160,13 @@ namespace RDHATEOAS.LinkAdders
                     ((JObject)unformattedList).SetPropertyContent("_links", link);
                 }
             }
-
         }
-
     }
 
     public static partial class ExtensionMethods
     {
         public static JObject SetPropertyContent(this JObject source, string name, object content)
         {
-            Console.WriteLine("Adding " + name + " to " + source);
             var prop = source.Property(name);
 
             if (prop == null)
@@ -206,13 +179,16 @@ namespace RDHATEOAS.LinkAdders
             {
                 if (prop.Value is JObject item)
                 {
-                    var array = new JArray();
-                    array.Add(item);
-                    array.Add(JContainer.FromObject(content));
+                    var array = new JArray
+                    {
+                        item,
+                        JToken.FromObject(content),
+                    };
                     prop.Value = array;
-                } else if (prop.Value is JArray array)
+                }
+                else if (prop.Value is JArray array)
                 {
-                    array.Add(JContainer.FromObject(content));
+                    array.Add(JToken.FromObject(content));
                 }
             }
 

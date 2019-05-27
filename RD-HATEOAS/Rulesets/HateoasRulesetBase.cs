@@ -1,12 +1,12 @@
-﻿namespace RDHATEOAS.Rulesets
-{
-    using System.Collections.Generic;
-    using Microsoft.AspNetCore.Mvc.Filters;
-    using Microsoft.AspNetCore.Mvc.Routing;
-    using Newtonsoft.Json.Linq;
-    using RDHATEOAS.Builders;
-    using RDHATEOAS.Models;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Newtonsoft.Json.Linq;
+using RDHATEOAS.Builders;
+using RDHATEOAS.Models;
 
+namespace RDHATEOAS.Rulesets
+{
     /// <summary>
     /// The base class for a HATEOAS ruleset.
     /// Rulesets determine which links should be added to a HATEOAS enabled object.
@@ -15,13 +15,13 @@
     {
         public Dictionary<string, object> Parameters { get; set; }
 
+        public virtual bool AppliesToEachListItem { get; set; } = true;
+
         protected UrlHelper UrlHelper { get; set; }
 
         protected ResultExecutingContext Context { get; set; }
 
         protected HateoasLinkBuilder HateoasLinkBuilder { get; set; }
-
-        public virtual bool AppliesToEachListItem { get; set; } = false;
 
         public void SetHelpers(ResultExecutingContext context)
         {

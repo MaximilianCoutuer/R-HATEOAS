@@ -1,8 +1,8 @@
-﻿namespace RDHATEOAS.Tests.UnitTests.Entities
-{
-    using RDHATEOAS.Models;
-    using Xunit;
+﻿using RDHATEOAS.Models;
+using Xunit;
 
+namespace RDHATEOAS.Tests.UnitTests.Entities
+{
     public class HateoasLinkBuilderEntityTests
     {
         [Fact]
