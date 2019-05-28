@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ExampleAPI.PropertySets
 {
-    public class ExampleHateoasPropertySet : IHateoasPropertySet
+    public class ExampleHateoasPropertySetCountry : IHateoasPropertySet
     {
         public Type Ruleset { get; set; } = typeof(ExampleRulesetFullLinksCountry);
         public List<string> Path { get; set; } = new List<string>() { "Country" };
