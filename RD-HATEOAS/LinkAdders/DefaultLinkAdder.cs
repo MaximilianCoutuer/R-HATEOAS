@@ -16,68 +16,67 @@ namespace RDHATEOAS.LinkAdders
     public class DefaultLinkAdder : ILinkAdder
     {
         private readonly List<string> _parameterNames;
-        private readonly List<string[]> _path;
-        private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
+        private readonly List<string> _path;
+        private readonly IHateoasRuleset _ruleset;
         private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
 
-        private UrlHelper urlHelper;
-        private HateoasLinkBuilder hateoasLinkBuilder;
+        private UrlHelper _urlHelper;
+        private HateoasLinkBuilder _hateoasLinkBuilder;
 
-        public DefaultLinkAdder(List<string> parameterNames, List<string[]> path, List<IHateoasRuleset> rulesets, Dictionary<string, object> parameters)
+        public DefaultLinkAdder(List<string> parameterNames, List<string> path, IHateoasRuleset rulesets, Dictionary<string, object> parameters)
         {
             _parameterNames = parameterNames;
             _path = path;
-            _rulesets = rulesets;
+            _ruleset = rulesets;
             _parameters = parameters;
        }
 
-        public void AddLinks(object currentObjectValue, ResultExecutingContext context, int pathId, int arrayId)
+        public void AddLinks(object currentObjectValue, ResultExecutingContext context)
         {
-            urlHelper = new UrlHelper(context);
-            hateoasLinkBuilder = new HateoasLinkBuilder(urlHelper);
+            _urlHelper = new UrlHelper(context);
+            _hateoasLinkBuilder = new HateoasLinkBuilder(_urlHelper);
 
-            var val = (context.Result as OkObjectResult).Value;
+            var value = (context.Result as OkObjectResult).Value;
             var settings = new JsonSerializerSettings
             {
                 ContractResolver = new DefaultContractResolver(),
             };
-            var valSerialized = JsonConvert.SerializeObject(JToken.FromObject(val), settings);
-            dynamic valToProcess = JsonConvert.DeserializeObject(valSerialized);
+            var valueSerialized = JsonConvert.SerializeObject(JToken.FromObject(value), settings);
+            dynamic valueToProcess = JsonConvert.DeserializeObject(valueSerialized);
 
-            RecursiveSearchAndProcessObject(valToProcess, context, pathId, arrayId);
+            this.RecursiveSearchAndProcessObject(valueToProcess, context, 0);
 
-            (context.Result as OkObjectResult).Value = valToProcess;
+            (context.Result as OkObjectResult).Value = valueToProcess;
         }
 
-        private void RecursiveSearchAndProcessObject(JToken currentObjectValue, ResultExecutingContext context, int pathId, int arrayId)
+        private void RecursiveSearchAndProcessObject(JToken currentObjectValue, ResultExecutingContext context, int pathId)
         {
-            if (pathId < (_path[arrayId] ?? new string[] { }).Length)
+            if (pathId < _path.Count)
             {
-                // run through path to find relevant object
                 var currentObjectType = currentObjectValue.GetType();
                 if (currentObjectValue.GetType() == typeof(JArray))
                 {
                     foreach (JToken currentObjectListitem in currentObjectValue as IList)
                     {
-                        var key = _path[arrayId][pathId];
+                        var key = _path[pathId];
                         var itemProperties = currentObjectListitem.Children<JProperty>();
                         var nestedElement = itemProperties.FirstOrDefault(x => x.Name == key);
                         if (nestedElement != null)
                         {
                             var nestedObjectValue = nestedElement.Value;
-                            RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
+                            this.RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1);
                         }
                     }
                 }
                 else
                 {
-                    var key = _path[arrayId][pathId];
+                    var key = _path[pathId];
                     var itemProperties = currentObjectValue.Children<JProperty>();
                     var nestedElement = itemProperties.FirstOrDefault(x => x.Name == key);
                     if (nestedElement != null)
                     {
                         var nestedObjectValue = nestedElement.Value;
-                        RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1, arrayId);
+                        this.RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1);
                     }
                 }
             }
@@ -94,49 +93,47 @@ namespace RDHATEOAS.LinkAdders
 
                 if (currentObjectValue.GetType() == typeof(JArray))
                 {
-                    AddLinksToList(context, currentObjectValue, arrayId);
+                    AddLinksToList(context, currentObjectValue);
                 }
                 else
                 {
-                    AddLinksToObject(context, currentObjectValue as JObject, arrayId);
+                    AddLinksToObject(context, currentObjectValue as JObject);
                 }
             }
         }
 
-        private void AddLinksToObject(ResultExecutingContext context, JObject item, int arrayId)
+        private void AddLinksToObject(ResultExecutingContext context, JObject item)
         {
-            var ruleset = _rulesets[arrayId];
-            if (ruleset.AppliesToEachListItem == true)
+            if (_ruleset.AppliesToEachListItem == true)
             {
                 // set fields in ruleset to help rulesets make the correct decisions
-                ruleset.SetHelpers(context);
-                ruleset.Parameters = _parameters;
+                _ruleset.SetHelpers(context);
+                _ruleset.Parameters = _parameters;
 
                 // apply links from ruleset
-                foreach (HateoasLink link in ruleset.GetLinks(item))
+                foreach (HateoasLink link in _ruleset.GetLinks(item))
                 {
                     item.SetPropertyContent("_links", link);
                 }
             }
         }
 
-        private void AddLinksToList(ResultExecutingContext context, JToken unformattedList, int arrayId) // Must be a JToken even though it's a JArray because we're replacing it with a JObject later
+        private void AddLinksToList(ResultExecutingContext context, JToken unformattedList) // Must be a JToken even though it's a JArray because we're replacing it with a JObject later
         {
             var list = unformattedList as JArray;
-            var ruleset = _rulesets[arrayId];
-            if (ruleset.AppliesToEachListItem == true)
+            if (_ruleset.AppliesToEachListItem == true)
             {
                 for (int i = 0; i < list.Count; i++)
                 {
                     // set fields in ruleset to help rulesets make the correct decisions
-                    ruleset.SetHelpers(context);
-                    ruleset.Parameters = _parameters;
-                    ruleset.Parameters["RD-ListId"] = i;
-                    ruleset.Parameters["RD-ListCount"] = list.Count;
+                    _ruleset.SetHelpers(context);
+                    _ruleset.Parameters = _parameters;
+                    _ruleset.Parameters["RD-ListId"] = i;
+                    _ruleset.Parameters["RD-ListCount"] = list.Count;
                     if (list[i] is JObject listitem)
                     {
                         // apply links from ruleset
-                        foreach (HateoasLink link in ruleset.GetLinks(listitem))
+                        foreach (HateoasLink link in _ruleset.GetLinks(listitem))
                         {
                             listitem.SetPropertyContent("_links", link);
                         }
@@ -144,15 +141,15 @@ namespace RDHATEOAS.LinkAdders
                 }
             }
 
-            if (ruleset.AppliesToEachListItem == false)
+            if (_ruleset.AppliesToEachListItem == false)
             {
                 // set fields in ruleset to help rulesets make the correct decisions
-                ruleset.SetHelpers(context);
-                ruleset.Parameters = _parameters;
-                ruleset.Parameters["RD-ListCount"] = list.Count;
+                _ruleset.SetHelpers(context);
+                _ruleset.Parameters = _parameters;
+                _ruleset.Parameters["RD-ListCount"] = list.Count;
 
                 // apply links from ruleset
-                foreach (HateoasLink link in ruleset.GetLinks(unformattedList))
+                foreach (HateoasLink link in _ruleset.GetLinks(unformattedList))
                 {
                     JArray temp = (JArray)unformattedList;
                     unformattedList = new JObject();

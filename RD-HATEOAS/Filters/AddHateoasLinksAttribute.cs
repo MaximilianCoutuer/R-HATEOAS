@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using RDHATEOAS.LinkAdders;
+using RDHATEOAS.PropertySets;
 using RDHATEOAS.Rulesets;
 
 namespace RDHATEOAS.Filters
@@ -18,9 +18,7 @@ namespace RDHATEOAS.Filters
     {
         #region fields
 
-        private readonly List<string> _parameterNames;
-        private readonly List<string[]> _path;
-        private readonly List<IHateoasRuleset> _rulesets = new List<IHateoasRuleset>();
+        private readonly List<IHateoasPropertySet> _propertySets = new List<IHateoasPropertySet>();
         private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
         private readonly ILinkAdder _linkAdder;
 
@@ -28,49 +26,27 @@ namespace RDHATEOAS.Filters
 
         #region constructors
 
-        public AddHateoasLinksAttribute(string[] parameterNames, Type[] rulesetNames, string[] path)
+        public AddHateoasLinksAttribute(string[] propertySetNames)
         {
-            if (rulesetNames == null)
+            foreach (string propertySetName in propertySetNames)
             {
-                throw new ArgumentException("Ruleset array can't be null.");
-            }
-
-            if (path != null && rulesetNames.Length < path.Length)
-            {
-                throw new ArgumentException("Number of rulesets must be equal to or greater than the number of paths.");
-            }
-
-            _parameterNames = new List<string>(parameterNames ?? new string[] { });
-            _path = new List<string[]>();
-            var pathUnsplit = new List<string>(path ?? new string[] { null });
-            foreach (string pathCode in pathUnsplit)
-            {
-                if (pathCode != null)
+                var propertySet = (IHateoasPropertySet)Activator.CreateInstance(Type.GetType(propertySetName));
+                if (propertySet.Ruleset == null)
                 {
-                    _path.Add(pathCode.Split("|"));
+                    throw new ArgumentException("Ruleset can't be null.");
                 }
-                else
-                {
-                    _path.Add(null);
-                }
-            }
 
-            foreach (var type in rulesetNames)
-            {
-                if (typeof(IHateoasRuleset).IsAssignableFrom(type))
+                if (typeof(IHateoasRuleset).IsAssignableFrom(propertySet.Ruleset) == false)
                 {
-                    _rulesets.Add((IHateoasRuleset)Activator.CreateInstance(type));
-                } else
-                {
-                    throw new ArgumentException("Type " + type + " is not a valid HATEOAS ruleset (it does not implement IHateoasRuleset).");
+                    throw new ArgumentException("Type " + propertySet.Ruleset + " is not a valid HATEOAS ruleset (it does not implement IHateoasRuleset).");
                 }
-            }
 
-            _linkAdder = new DefaultLinkAdder(_parameterNames, _path, _rulesets, _parameters);
+                _propertySets.Add(propertySet);
+            }
         }
 
-        public AddHateoasLinksAttribute(string[] parameterNames, Type rulesetName, string path)
-            : this(parameterNames, new Type[] { rulesetName }, new string[] { path })
+        public AddHateoasLinksAttribute(string propertySetName)
+            : this(new[] { propertySetName })
         {
         }
 
@@ -82,9 +58,12 @@ namespace RDHATEOAS.Filters
         {
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                for (int i = 0; i < _rulesets.Count; i++)
-                {
-                    _linkAdder.AddLinks(okObjectResult.Value, context, 0, i);
+                foreach (IHateoasPropertySet propertySet in _propertySets) {
+                    var parameterNames = propertySet.Parameters;
+                    var ruleset = (IHateoasRuleset)Activator.CreateInstance(propertySet.Ruleset);
+                    var path = propertySet.Path;
+                    var linkAdder = new DefaultLinkAdder(parameterNames, path, ruleset, _parameters);
+                    linkAdder.AddLinks(okObjectResult.Value, context);
                 }
             }
 

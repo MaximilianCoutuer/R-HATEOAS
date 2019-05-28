@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using ExampleAPI.Models;
+    using ExampleAPI.PropertySets;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using RDHATEOAS.Filters;
@@ -40,11 +41,7 @@
 
         // GET api/person
         [HttpGet]
-        [AddHateoasLinks(
-            null,
-            new[] { typeof(ExampleRulesetFullLinksPerson), typeof(ExampleRulesetFullLinksCountry) },
-            new[] { null, "Country" }
-            )]
+        [AddHateoasLinks("ExampleHateoasPropertySet")]
         public async Task<ActionResult<List<Person>>> GetAllPersons()
         {
             IEnumerable<Person> persons = await _context.Persons.Include(p => p.Country).ToListAsync();
@@ -60,11 +57,7 @@
 
         // GET api/person (paginated)
         [HttpGet("{skip, take}")]
-        [AddHateoasLinks(
-            new[] { "skip", "take" },
-            new[] { typeof(ExampleRulesetFullLinksPerson), typeof(ExampleRulesetFullLinksCountry) },
-            new[] { null, "Country" }
-            )]
+        [AddHateoasLinks("ExampleHateoasPropertySet")]
         public async Task<ActionResult<Person>> GetPaginatedList(int skip, int take)
         {
             IEnumerable<Person> persons = await _context.Persons.Skip(skip * take).Take(take).Include(p => p.Country).ToListAsync();
@@ -80,10 +73,7 @@
 
         // GET api/person/5
         [HttpGet("{id}")]
-        [AddHateoasLinks(
-            new[] { "Id" },
-            new[] { typeof(ExampleRulesetFullLinksPerson) },
-            null )]
+        [AddHateoasLinks("ExampleHateoasPropertySet")]
         public async Task<ActionResult<Person>> GetPerson(int id)
         {
             var person = await _context.FindAsync<Person>(id);
