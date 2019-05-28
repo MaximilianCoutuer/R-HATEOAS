@@ -8,7 +8,6 @@ using RDHATEOAS.Rulesets;
 
 namespace RDHATEOAS.Filters
 {
-
     /// <summary>
     /// This filter is applied to a controller method via an attribute.
     /// It intercepts the response and adds links to it.
@@ -20,7 +19,6 @@ namespace RDHATEOAS.Filters
 
         private readonly List<IHateoasPropertySet> _propertySets = new List<IHateoasPropertySet>();
         private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
-        private readonly ILinkAdder _linkAdder;
 
         #endregion
 
@@ -58,7 +56,8 @@ namespace RDHATEOAS.Filters
         {
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
-                foreach (IHateoasPropertySet propertySet in _propertySets) {
+                foreach (IHateoasPropertySet propertySet in _propertySets)
+                {
                     var parameterNames = propertySet.Parameters;
                     var ruleset = (IHateoasRuleset)Activator.CreateInstance(propertySet.Ruleset);
                     var path = propertySet.Path;

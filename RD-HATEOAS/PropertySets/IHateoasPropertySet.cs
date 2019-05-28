@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace RDHATEOAS.PropertySets
 {
-
     public interface IHateoasPropertySet
     {
         Type Ruleset { get; set; }
@@ -11,6 +10,5 @@ namespace RDHATEOAS.PropertySets
         List<string> Path { get; set; }
 
         List<string> Parameters { get; set; }
-
     }
 }
