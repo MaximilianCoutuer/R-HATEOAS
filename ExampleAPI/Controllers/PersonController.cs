@@ -60,10 +60,7 @@
 
         // GET api/person (paginated)
         [HttpGet("{skip, take}")]
-        [AddHateoasLinks(new[] {
-            typeof(ExampleHateoasPropertySetPerson),
-            typeof(ExampleHateoasPropertySetCountry),
-        })]
+        [AddHateoasLinks(typeof(ExampleHateoasPropertySetPerson))]
         public async Task<ActionResult<Person>> GetPaginatedList(int skip, int take)
         {
             IEnumerable<Person> persons = await _context.Persons.Skip(skip * take).Take(take).Include(p => p.Country).ToListAsync();
