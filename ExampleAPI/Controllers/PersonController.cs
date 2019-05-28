@@ -43,7 +43,7 @@
         [HttpGet]
         [AddHateoasLinks(new[] {
             typeof(ExampleHateoasPropertySetPerson),
-            //typeof(ExampleHateoasPropertySetCountry),
+            typeof(ExampleHateoasPropertySetCountry),
         })]
         public async Task<ActionResult<List<Person>>> GetAllPersons()
         {
