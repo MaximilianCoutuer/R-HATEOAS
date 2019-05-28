@@ -104,57 +104,63 @@ namespace RDHATEOAS.LinkAdders
 
         private void AddLinksToObject(ResultExecutingContext context, JObject item)
         {
-            if (_ruleset.AppliesToEachListItem == true)
+            if (item != null)
             {
-                // set fields in ruleset to help rulesets make the correct decisions
-                _ruleset.SetHelpers(context);
-                _ruleset.Parameters = _parameters;
-
-                // apply links from ruleset
-                foreach (HateoasLink link in _ruleset.GetLinks(item))
+                if (_ruleset.AppliesToEachListItem == true)
                 {
-                    item.SetPropertyContent("_links", link);
+                    // set fields in ruleset to help rulesets make the correct decisions
+                    _ruleset.SetHelpers(context);
+                    _ruleset.Parameters = _parameters;
+
+                    // apply links from ruleset
+                    foreach (HateoasLink link in _ruleset.GetLinks(item))
+                    {
+                        item.SetPropertyContent("_links", link);
+                    }
                 }
             }
         }
 
         private void AddLinksToList(ResultExecutingContext context, JToken unformattedList) // Must be a JToken even though it's a JArray because we're replacing it with a JObject later
         {
-            var list = unformattedList as JArray;
-            if (_ruleset.AppliesToEachListItem == true)
+            if (unformattedList != null)
             {
-                for (int i = 0; i < list.Count; i++)
+                var list = unformattedList as JArray;
+                if (_ruleset.AppliesToEachListItem == true)
+                {
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        // set fields in ruleset to help rulesets make the correct decisions
+                        _ruleset.SetHelpers(context);
+                        _ruleset.Parameters = _parameters;
+                        _ruleset.Parameters["RD-ListId"] = i;
+                        _ruleset.Parameters["RD-ListCount"] = list.Count;
+                        if (list[i] is JObject listitem)
+                        {
+                            // apply links from ruleset
+                            foreach (HateoasLink link in _ruleset.GetLinks(listitem))
+                            {
+                                listitem.SetPropertyContent("_links", link);
+                            }
+                        }
+                    }
+                }
+
+                if (_ruleset.AppliesToEachListItem == false)
                 {
                     // set fields in ruleset to help rulesets make the correct decisions
                     _ruleset.SetHelpers(context);
                     _ruleset.Parameters = _parameters;
-                    _ruleset.Parameters["RD-ListId"] = i;
                     _ruleset.Parameters["RD-ListCount"] = list.Count;
-                    if (list[i] is JObject listitem)
+
+                    // apply links from ruleset
+                    foreach (HateoasLink link in _ruleset.GetLinks(unformattedList))
                     {
-                        // apply links from ruleset
-                        foreach (HateoasLink link in _ruleset.GetLinks(listitem))
-                        {
-                            listitem.SetPropertyContent("_links", link);
-                        }
+                        JArray temp = (JArray)unformattedList;
+                        unformattedList = new JObject();
+                        ((JObject)unformattedList).SetPropertyContent("value", temp);
+                        ((JObject)unformattedList).SetPropertyContent("_links", link);
                     }
-                }
-            }
-
-            if (_ruleset.AppliesToEachListItem == false)
-            {
-                // set fields in ruleset to help rulesets make the correct decisions
-                _ruleset.SetHelpers(context);
-                _ruleset.Parameters = _parameters;
-                _ruleset.Parameters["RD-ListCount"] = list.Count;
-
-                // apply links from ruleset
-                foreach (HateoasLink link in _ruleset.GetLinks(unformattedList))
-                {
-                    JArray temp = (JArray)unformattedList;
-                    unformattedList = new JObject();
-                    ((JObject)unformattedList).SetPropertyContent("value", temp);
-                    ((JObject)unformattedList).SetPropertyContent("_links", link);
                 }
             }
         }
