@@ -22,7 +22,7 @@ Fork the project via:
 
 `git clone https:://github.com/MaximilianCoutuer/Realdolmen-HATEOAS.git`
 
-The project will become available through NuGet at version 1.0.
+The project is available on NuGet. Note that it is a work in progress until 1.0.0.
 
 ## Usage
 
