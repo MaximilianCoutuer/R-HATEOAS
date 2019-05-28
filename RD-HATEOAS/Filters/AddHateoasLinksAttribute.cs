@@ -24,11 +24,16 @@ namespace RDHATEOAS.Filters
 
         #region constructors
 
-        public AddHateoasLinksAttribute(string[] propertySetNames)
+        public AddHateoasLinksAttribute(Type[] propertySetTypes)
         {
-            foreach (string propertySetName in propertySetNames)
+            foreach (Type propertySetType in propertySetTypes)
             {
-                var propertySet = (IHateoasPropertySet)Activator.CreateInstance(Type.GetType(propertySetName));
+                var propertySet = (IHateoasPropertySet)Activator.CreateInstance(propertySetType);
+                if (propertySet == null)
+                {
+                    throw new ArgumentException("Type " + propertySetType + " is not a valid HATEOAS property set");
+                }
+
                 if (propertySet.Ruleset == null)
                 {
                     throw new ArgumentException("Ruleset can't be null.");
@@ -43,8 +48,8 @@ namespace RDHATEOAS.Filters
             }
         }
 
-        public AddHateoasLinksAttribute(string propertySetName)
-            : this(new[] { propertySetName })
+        public AddHateoasLinksAttribute(Type propertySetType)
+            : this(new[] { propertySetType })
         {
         }
 
