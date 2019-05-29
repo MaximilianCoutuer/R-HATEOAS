@@ -108,7 +108,7 @@ namespace RDHATEOAS.LinkAdders
 
         private void AddLinksToObject(ResultExecutingContext context, ref JToken item)
         {
-            if (item != null)
+            if (item != null && item.HasValues)
             {
                 if (_ruleset.AppliesToEachListItem == true)
                 {
@@ -125,11 +125,11 @@ namespace RDHATEOAS.LinkAdders
             }
         }
 
-        private void AddLinksToList(ResultExecutingContext context, ref JToken unformattedList) // Must be a JToken even though it's a JArray because we're replacing it with a JObject later
+        private void AddLinksToList(ResultExecutingContext context, ref JToken tokenList) // Must be a JToken even though it's a JArray because we're replacing it with a JObject later
         {
-            if (unformattedList != null)
+            if (tokenList != null && tokenList.HasValues)
             {
-                var list = unformattedList as JArray;
+                var list = tokenList as JArray;
                 if (_ruleset.AppliesToEachListItem == true)
                 {
                     for (int i = 0; i < list.Count; i++)
@@ -158,12 +158,12 @@ namespace RDHATEOAS.LinkAdders
                     _ruleset.Parameters["RD-ListCount"] = list.Count;
 
                     // apply links from ruleset
-                    JArray temp = (JArray)unformattedList.DeepClone();
-                    unformattedList = new JObject();
-                    ((JObject)unformattedList).SetPropertyContent("value", temp);
-                    foreach (HateoasLink link in _ruleset.GetLinks(unformattedList))
+                    JArray temp = (JArray)tokenList.DeepClone();
+                    tokenList = new JObject();
+                    ((JObject)tokenList).SetPropertyContent("values", temp);
+                    foreach (HateoasLink link in _ruleset.GetLinks(tokenList))
                     {
-                        ((JObject)unformattedList).SetPropertyContent("_links", link);
+                        ((JObject)tokenList).SetPropertyContent("_links", link);
                     }
                 }
             }
