@@ -44,12 +44,16 @@ namespace RDHATEOAS.LinkAdders
             var valueSerialized = JsonConvert.SerializeObject(JToken.FromObject(value), settings);
             dynamic valueToProcess = JsonConvert.DeserializeObject(valueSerialized);
 
-            this.RecursiveSearchAndProcessObject(valueToProcess, context, 0);
-
             (context.Result as OkObjectResult).Value = valueToProcess;
+
+            var val = (JToken)(context.Result as OkObjectResult).Value;
+
+            this.RecursiveSearchAndProcessObject(ref val, context, 0);
+
+            (context.Result as OkObjectResult).Value = val;
         }
 
-        private void RecursiveSearchAndProcessObject(JToken currentObjectValue, ResultExecutingContext context, int pathId)
+        private void RecursiveSearchAndProcessObject(ref JToken currentObjectValue, ResultExecutingContext context, int pathId)
         {
             if (pathId < _path.Count)
             {
@@ -64,7 +68,7 @@ namespace RDHATEOAS.LinkAdders
                         if (nestedElement != null)
                         {
                             var nestedObjectValue = nestedElement.Value;
-                            this.RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1);
+                            this.RecursiveSearchAndProcessObject(ref nestedObjectValue, context, pathId + 1);
                         }
                     }
                 }
@@ -76,7 +80,7 @@ namespace RDHATEOAS.LinkAdders
                     if (nestedElement != null)
                     {
                         var nestedObjectValue = nestedElement.Value;
-                        this.RecursiveSearchAndProcessObject(nestedObjectValue, context, pathId + 1);
+                        this.RecursiveSearchAndProcessObject(ref nestedObjectValue, context, pathId + 1);
                     }
                 }
             }
@@ -93,16 +97,16 @@ namespace RDHATEOAS.LinkAdders
 
                 if (currentObjectValue.GetType() == typeof(JArray))
                 {
-                    AddLinksToList(context, currentObjectValue);
+                    AddLinksToList(context, ref currentObjectValue);
                 }
                 else
                 {
-                    AddLinksToObject(context, currentObjectValue as JObject);
+                    AddLinksToObject(context, ref currentObjectValue);
                 }
             }
         }
 
-        private void AddLinksToObject(ResultExecutingContext context, JObject item)
+        private void AddLinksToObject(ResultExecutingContext context, ref JToken item)
         {
             if (item != null)
             {
@@ -115,13 +119,13 @@ namespace RDHATEOAS.LinkAdders
                     // apply links from ruleset
                     foreach (HateoasLink link in _ruleset.GetLinks(item))
                     {
-                        item.SetPropertyContent("_links", link);
+                        ((JObject)item).SetPropertyContent("_links", link);
                     }
                 }
             }
         }
 
-        private void AddLinksToList(ResultExecutingContext context, JToken unformattedList) // Must be a JToken even though it's a JArray because we're replacing it with a JObject later
+        private void AddLinksToList(ResultExecutingContext context, ref JToken unformattedList) // Must be a JToken even though it's a JArray because we're replacing it with a JObject later
         {
             if (unformattedList != null)
             {
@@ -154,7 +158,7 @@ namespace RDHATEOAS.LinkAdders
                     _ruleset.Parameters["RD-ListCount"] = list.Count;
 
                     // apply links from ruleset
-                    JArray temp = (JArray)unformattedList;
+                    JArray temp = (JArray)unformattedList.DeepClone();
                     unformattedList = new JObject();
                     ((JObject)unformattedList).SetPropertyContent("value", temp);
                     foreach (HateoasLink link in _ruleset.GetLinks(unformattedList))
