@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <PackageId>RD-HATEOAS</PackageId>
-    <Version>0.9.0</Version>
+    <Version>0.9.1</Version>
     <Authors>M. Coutuer</Authors>
     <Company />
     <Product>RD-HATEOAS</Product>
