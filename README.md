@@ -22,7 +22,7 @@ Fork the project via:
 
 `git clone https:://github.com/MaximilianCoutuer/Realdolmen-HATEOAS.git`
 
-The project will become available through NuGet at version 1.0.
+The project is available on NuGet. Note that it is a work in progress until 1.0.0.
 
 ## Usage
 
@@ -35,7 +35,7 @@ A *ruleset* is a class that extends the abstract class `HateoasRulesetBase`. It 
 A ruleset typically overrides the following fields and methods:
 
 * `(bool)AppliesToEachListItem`: Indicates whether the ruleset should apply to each item in a list or to the list as a whole. Defaults to true if not overridden.
-* `GetLinks(IIsHateoasEnabled item)`: Returns a `List<HateoasLink>`. To create an instance of a link, use the `HateoasLinkBuilder.Build()` method to generate a basic link based on the parameters passed in, and the methods `AddTitle, AddType, AddHreflang, AddMedia` and `ExtendQueryString` to add further data.
+* `GetLinks(JToken item)`: Returns a `List<HateoasLink>`. To create an instance of a link, use the `HateoasLinkBuilder.Build()` method to generate a basic link based on the parameters passed in, and the methods `AddTitle, AddType, AddHreflang, AddMedia` and `ExtendQueryString` to add further data.
 
 For an example, see the `ExampleRuleset...` classes in ExampleAPI.
 
@@ -46,15 +46,18 @@ To help implement business logic in a ruleset, any request parameters passed to 
 Decorate your controller method with the following attribute:
 
 ```
-[AddHateoasLinks(
-    new[] { "any", "request", "parameters", "to", "pass", "on" },
-    new[] { typeof(NameOfYourRuleset), ... },
-    new[] { "Path|To|Object|In|Output|Object|Hierarchy", ... }
-)]
+[AddHateoasLinks("NameOfPropertySet")]
 ```
-Any request parameters you specify will be passed on to all ruleset(s) (see above). If none, use `null` as the first parameter.
 
-Multiple rulesets can be applied to the same method. The second and third parameters are arrays that are mapped 1:1 onto each other; the second parameter contains one or more rulesets, the third contains one or more paths to the object you wish to apply the corresponding ruleset to.
+A _property set_ is an object that implements `IHateoasPropertySet` and includes three properties:
+
+* `List<string> Parameters` Any request parameters you specify will be passed on to all ruleset(s) (see above). If none, use `null` as the first parameter.
+* `List<string> Path` A list of key names the package should follow in your output to arrive at the object you want to provide with links. For instance, `{ "Country", "Capital" }` will apply links to the Capital object in the Country object in your output. This is nullable, in which case links will be added to the root object or list.
+* `Type Ruleset` The type of your ruleset.
+
+The purpose of a property set is to reduce configuration hassle.
+
+Multiple property sets can be applied to the same method.
 
 A *path* is a pipe separated list of property names that help the application drill down to your desired object. For instance, if your API generates a `List<Person>`, each with a `Country` property with a `Capital` property that is an object of class `City`, and you wish to add links to all capitals, your path should be `Country|Capital`. If you want to add links to the root object, use a path of `null`.
 
