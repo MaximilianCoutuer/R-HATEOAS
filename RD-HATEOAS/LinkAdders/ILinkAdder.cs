@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace RDHATEOAS.LinkAdders
+namespace Rdhateoas.LinkAdders
 {
     public interface ILinkAdder
     {

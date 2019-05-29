@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using RDHATEOAS.Tests.Mocks;
+using Rdhateoas.Tests.Mocks;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RDHATEOAS.Tests.Factories
+namespace Rdhateoas.Tests.Factories
 {
     public class CustomAPIFactory : WebApplicationFactory<TestStartup>
     {

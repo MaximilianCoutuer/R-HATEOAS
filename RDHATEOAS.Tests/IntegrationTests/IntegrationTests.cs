@@ -2,11 +2,11 @@
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using ExampleAPI.Models;
-using RDHATEOAS.Models;
-using RDHATEOAS.Tests.Factories;
+using Rdhateoas.Models;
+using Rdhateoas.Tests.Factories;
 using Xunit;
 
-namespace RDHATEOAS.Tests.IntegrationTests
+namespace Rdhateoas.Tests.IntegrationTests
 {
     public class IntegrationTests : IClassFixture<CustomAPIFactory>
     {

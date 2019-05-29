@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
-using RDHATEOAS.Models;
+using Rdhateoas.Models;
 
-namespace RDHATEOAS.Builders
+namespace Rdhateoas.Builders
 {
     /// <summary>
     /// This class is used to build a HATEOAS link.

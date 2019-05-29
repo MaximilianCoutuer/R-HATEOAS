@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using RDHATEOAS.Builders;
-using RDHATEOAS.Models;
-using RDHATEOAS.Rulesets;
+using Rdhateoas.Builders;
+using Rdhateoas.Models;
+using Rdhateoas.Rulesets;
 
-namespace RDHATEOAS.LinkAdders
+namespace Rdhateoas.LinkAdders
 {
     public class DefaultLinkAdder : ILinkAdder
     {

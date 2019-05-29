@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RDHATEOAS.Tests.Mocks
+namespace Rdhateoas.Tests.Mocks
 {
     public class TestStartup
     {

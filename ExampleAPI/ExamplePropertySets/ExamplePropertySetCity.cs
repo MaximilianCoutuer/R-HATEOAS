@@ -1,5 +1,5 @@
-﻿using RDHATEOAS.PropertySets;
-using RDHATEOAS.Rulesets;
+﻿using Rdhateoas.PropertySets;
+using Rdhateoas.Rulesets;
 using System;
 using System.Collections.Generic;
 

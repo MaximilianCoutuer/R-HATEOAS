@@ -7,7 +7,7 @@
     using ExampleAPI.PropertySets;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-    using RDHATEOAS.Filters;
+    using Rdhateoas.Filters;
 
     /// <summary>
     /// This is an example controller that offers basic functionality.

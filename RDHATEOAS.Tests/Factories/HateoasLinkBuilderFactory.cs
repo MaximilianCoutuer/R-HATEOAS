@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RDHATEOAS.Tests.Builders
+namespace Rdhateoas.Tests.Builders
 {
     class HateoasLinkBuilderFactory
     {

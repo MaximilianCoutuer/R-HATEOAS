@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
-using RDHATEOAS.Builders;
-using RDHATEOAS.Models;
+using Rdhateoas.Builders;
+using Rdhateoas.Models;
 using Xunit;
 
-namespace RDHATEOAS.Tests.UnitTests.Builders
+namespace Rdhateoas.Tests.UnitTests.Builders
 {
     public class LinkBuilderFixture : IDisposable
     {

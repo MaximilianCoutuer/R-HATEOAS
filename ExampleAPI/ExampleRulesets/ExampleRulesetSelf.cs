@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using RDHATEOAS.Models;
+using Rdhateoas.Models;
 
-namespace RDHATEOAS.Rulesets
+namespace Rdhateoas.Rulesets
 {
     /// <summary>
     /// An example Ruleset that adds a self link.
