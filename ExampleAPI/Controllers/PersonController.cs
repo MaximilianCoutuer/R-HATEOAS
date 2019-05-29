@@ -1,6 +1,5 @@
 ﻿namespace ExampleAPI.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -9,7 +8,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using RDHATEOAS.Filters;
-    using RDHATEOAS.Rulesets;
 
     /// <summary>
     /// This is an example controller that offers basic functionality.
@@ -33,6 +31,7 @@
         public PersonController(ExampleDbContext context)
         {
             _context = context;
+            this.SeedDatabase();
         }
 
         #endregion
@@ -148,6 +147,65 @@
             _context.Persons.Remove(person);
             await _context.SaveChangesAsync();
             return Ok();
+        }
+
+        private void SeedDatabase()
+        {
+            // seed database with Person entities at various stages of completion and data correctness
+            if (_context.Persons.Count() == 0)
+            {
+                _context.Add(new Person()
+                {
+                    FirstName = "Maximilian",
+                    LastName = "Coutuer",
+                    Age = 35,
+                    Country = new Country()
+                    {
+                        Name = "Belgium",
+                        Capital = new City()
+                        {
+                            Name = "Brussels",
+                            Population = 1199000,
+                            HistoricName = "Bruoxala"
+                        },
+                        Population = 11350000,
+                    },
+                });
+                _context.Add(new Person()
+                {
+                    FirstName = "Guðni",
+                    LastName = "Jóhannesson",
+                    Age = 34,
+                    Country = new Country()
+                    {
+                        Name = "Iceland",
+                        Capital = new City()
+                        {
+                            Name = "Reykjavik",
+                            Population = 112853,
+                        },
+                        Population = 338349,
+                    },
+                });
+                _context.Add(new Person()
+                {
+                    FirstName = "Xi",
+                    LastName = "Jinping",
+                    Country = null,
+                });
+                _context.Add(new Person()
+                {
+                    FirstName = "Halimah",
+                    LastName = "Yacob",
+                    Country = new Country()
+                    {
+                        Name = "Singapore",
+                        Population = 5612000,
+                        Capital = null,
+                    },
+                });
+                _context.SaveChanges();
+            }
         }
 
         #endregion

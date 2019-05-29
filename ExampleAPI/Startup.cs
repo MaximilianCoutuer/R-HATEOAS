@@ -22,7 +22,8 @@ namespace ExampleAPI
         {
             // TODO: otherwise UrlHelper crashes https://github.com/aspnet/AspNetCore/issues/4418
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDbContext<ExampleDbContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("exampleapi")));
+            services.AddDbContext<ExampleDbContext>(options => options.UseInMemoryDatabase("exampleapi"));
+            //services.AddDbContext<ExampleDbContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("exampleapi")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

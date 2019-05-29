@@ -1,23 +1,23 @@
 ﻿namespace ExampleAPI.Models
 {
-    public class Country
+    public class City
     {
         public string Id { get; set; }
 
         public string Name { get; set; }
 
-        public City Capital { get; set; }
+        public string HistoricName { get; set; }
 
         public int? Population { get; set; }
 
-        public Country()
+        public City()
         {
         }
 
-        public Country(string name, City capital, int? population)
+        public City(string name, string historicname, int? population)
         {
             Name = name;
-            Capital = capital;
+            HistoricName = historicname;
             Population = population;
         }
     }
