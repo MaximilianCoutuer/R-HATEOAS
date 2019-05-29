@@ -154,11 +154,11 @@ namespace RDHATEOAS.LinkAdders
                     _ruleset.Parameters["RD-ListCount"] = list.Count;
 
                     // apply links from ruleset
+                    JArray temp = (JArray)unformattedList;
+                    unformattedList = new JObject();
+                    ((JObject)unformattedList).SetPropertyContent("value", temp);
                     foreach (HateoasLink link in _ruleset.GetLinks(unformattedList))
                     {
-                        JArray temp = (JArray)unformattedList;
-                        unformattedList = new JObject();
-                        ((JObject)unformattedList).SetPropertyContent("value", temp);
                         ((JObject)unformattedList).SetPropertyContent("_links", link);
                     }
                 }
