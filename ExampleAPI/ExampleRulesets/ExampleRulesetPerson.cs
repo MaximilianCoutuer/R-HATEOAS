@@ -26,7 +26,7 @@ namespace RDHATEOAS.Rulesets
     /// </item>
     /// </list>
     /// </summary>
-    public class ExampleRulesetFullLinksPerson : HateoasRulesetBase
+    public class ExampleRulesetPerson : HateoasRulesetBase
     {
         public override bool AppliesToEachListItem { get; set; } = true;
 

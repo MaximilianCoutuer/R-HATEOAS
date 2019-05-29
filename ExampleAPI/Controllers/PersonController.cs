@@ -47,12 +47,18 @@
         /// </returns>
         [HttpGet]
         [AddHateoasLinks(new[] {
-            typeof(ExampleHateoasPropertySetPerson),
-            typeof(ExampleHateoasPropertySetCountry),
+            typeof(ExamplePropertySetSelf),
+            typeof(ExamplePropertySetPerson),
+            typeof(ExamplePropertySetCountry),
+            typeof(ExamplePropertySetCity),
+            typeof(ExamplePropertySetInvalid),
         })]
         public async Task<ActionResult<List<Person>>> GetAllPersons()
         {
-            IEnumerable<Person> persons = await _context.Persons.Include(p => p.Country).ToListAsync();
+            IEnumerable<Person> persons = await _context.Persons
+                .Include(p => p.Country)
+                .Include(p => p.Country.Capital)
+                .ToListAsync();
             if (persons.Count() == 0)
             {
                 return NotFound();
@@ -73,7 +79,7 @@
         /// 200 OK unless there are no valid Person entries, in which case 404 Not Found.
         /// </returns>
         [HttpGet("{skip, take}")]
-        [AddHateoasLinks(typeof(ExampleHateoasPropertySetPerson))]
+        [AddHateoasLinks(typeof(ExamplePropertySetPerson))]
         public async Task<ActionResult<Person>> GetPaginatedList(int skip, int take)
         {
             IEnumerable<Person> persons = await _context.Persons.Skip(skip * take).Take(take).Include(p => p.Country).ToListAsync();
@@ -97,12 +103,19 @@
         /// </returns>
         [HttpGet("{id}")]
         [AddHateoasLinks(new[] {
-            typeof(ExampleHateoasPropertySetPerson),
-            typeof(ExampleHateoasPropertySetCountry),
+            typeof(ExamplePropertySetSelf),
+            typeof(ExamplePropertySetPerson),
+            typeof(ExamplePropertySetCountry),
+            typeof(ExamplePropertySetCity),
+            typeof(ExamplePropertySetInvalid),
         })]
         public async Task<ActionResult<Person>> GetPerson(int id)
         {
-            var person = await _context.FindAsync<Person>(id);
+            var person = await _context
+                .Persons
+                .Include(p => p.Country)
+                .Include(p => p.Country.Capital)
+                .FirstOrDefaultAsync<Person>( p => p.Id == id);
 
             if (person == null)
             {

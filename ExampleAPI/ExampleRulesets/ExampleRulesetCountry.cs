@@ -23,7 +23,7 @@ namespace RDHATEOAS.Rulesets
     /// </item>
     /// </list>
     /// </summary>
-    public class ExampleRulesetFullLinksCountry : HateoasRulesetBase
+    public class ExampleRulesetCountry : HateoasRulesetBase
     {
         public override bool AppliesToEachListItem { get; set; } = true;
 
