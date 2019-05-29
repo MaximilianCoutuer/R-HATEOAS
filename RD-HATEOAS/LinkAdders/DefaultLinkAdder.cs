@@ -110,17 +110,14 @@ namespace RDHATEOAS.LinkAdders
         {
             if (item != null && item.HasValues)
             {
-                if (_ruleset.AppliesToEachListItem == true)
-                {
-                    // set fields in ruleset to help rulesets make the correct decisions
-                    _ruleset.SetHelpers(context);
-                    _ruleset.Parameters = _parameters;
+                // set fields in ruleset to help rulesets make the correct decisions
+                _ruleset.SetHelpers(context);
+                _ruleset.Parameters = _parameters;
 
-                    // apply links from ruleset
-                    foreach (HateoasLink link in _ruleset.GetLinks(item))
-                    {
-                        ((JObject)item).SetPropertyContent("_links", link);
-                    }
+                // apply links from ruleset
+                foreach (HateoasLink link in _ruleset.GetLinks(item))
+                {
+                    ((JObject)item).SetPropertyContent("_links", link);
                 }
             }
         }
