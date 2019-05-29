@@ -9,10 +9,6 @@ namespace RDHATEOAS.Rulesets
     /// An example Ruleset that adds a number of relevant links to a Person entity:
     /// <list type="bullet">
     /// <item>
-    /// <term>Self link</term>
-    /// <description>A link to self. This uses the BuildSelfLink shorthand.</description>
-    /// </item>
-    /// <item>
     /// <term>Index</term>
     /// <description>A link to the list of Persons.</description>
     /// </item>
@@ -34,10 +30,6 @@ namespace RDHATEOAS.Rulesets
         {
             return new List<HateoasLink>
             {
-                HateoasLinkBuilder.BuildSelfLink(Context)
-                    .AddHreflang("be-nl")
-                    .AddTitle("Link to self")
-                    .AddType("json"),
                 HateoasLinkBuilder.Build(Context, "default", "Person", string.Empty, "list", HttpMethod.Get)
                     .AddHreflang("be-nl")
                     .AddTitle("List of persons")
