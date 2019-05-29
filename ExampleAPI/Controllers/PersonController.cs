@@ -14,7 +14,7 @@
     /// It supports basic CRUD operations.
     /// </summary>
     /// <remarks>
-    /// The HATEOAS package supports any kind of controller method.
+    /// The HATEOAS package does support any kind of controller method.
     /// </remarks>
     [Route("api/[controller]")]
     [ApiController]
@@ -38,7 +38,13 @@
 
         #region methods
 
-        // GET api/person
+        /// <summary>
+        /// GET api/person
+        /// Example API method that returns a list of all Person entities in the database.
+        /// </summary>
+        /// <returns>
+        /// 200 OK unless there are no Person entries, in which case 404 Not Found.
+        /// </returns>
         [HttpGet]
         [AddHateoasLinks(new[] {
             typeof(ExampleHateoasPropertySetPerson),
@@ -57,7 +63,15 @@
             }
         }
 
-        // GET api/person (paginated)
+        /// <summary>
+        /// GET api/person?skip=X&take=Y
+        /// Example API method that returns a paginated list of a subset of Person entities in the database.
+        /// </summary>
+        /// <param name="skip">Number of Person entries to skip.</param>
+        /// <param name="take">Number of Person entries to take.</param>
+        /// <returns>
+        /// 200 OK unless there are no valid Person entries, in which case 404 Not Found.
+        /// </returns>
         [HttpGet("{skip, take}")]
         [AddHateoasLinks(typeof(ExampleHateoasPropertySetPerson))]
         public async Task<ActionResult<Person>> GetPaginatedList(int skip, int take)
@@ -73,7 +87,14 @@
             }
         }
 
-        // GET api/person/5
+        /// <summary>
+        /// GET api/person/5
+        /// Example API method that returns a single Person entity based on its ID.
+        /// </summary>
+        /// <param name="id">The person ID in the database.</param>
+        /// <returns>
+        /// 200 OK unless there is no Person entry meeting the ID, in which case 404 Not Found.
+        /// </returns>
         [HttpGet("{id}")]
         [AddHateoasLinks(new[] {
             typeof(ExampleHateoasPropertySetPerson),
@@ -93,22 +114,37 @@
             }
         }
 
-        // POST api/person
+        /// <summary>
+        /// POST api/person
+        /// Example API method that allows posting a Person entity into the database.
+        /// </summary>
+        /// <param name="person">A valid Person record.</param>
+        /// <returns>
+        /// 201 Created with location header containing GET link to newly created object in database.
+        /// </returns>
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(Person person)
         {
-            // returns 201 Created with location header containing GET link to newly created object in DB
             _context.Add<Person>(person);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetPerson), new { person.Id }, person);
         }
 
-        // PUT api/values/5
+        /// <summary>
+        /// PUT api/person/5
+        /// Example API method that allows putting a Person entity into the database.
+        /// </summary>
+        /// <param name="id">The ID of the Person record to update.</param>
+        /// <param name="person">The Person record to replace it with.</param>
+        /// <returns>
+        /// 204 No Content, or 201 Created if the ID doesn't already exist, or 404 Not Found if ID mismatch.
+        /// </returns>
+        /// <remarks>
+        /// In other systems, may return 200 OK, or 400 Bad Request if ID is invalid.
+        /// </remarks>
         [HttpPut("{id}")]
         public async Task<ActionResult<Person>> PutPerson(int id, Person person)
         {
-            // returns 404 Not Found if ID invalid
-            // (may also return 400 Bad Request)
             if (id != person.Id)
             {
                 return NotFound();
@@ -116,28 +152,32 @@
 
             if (_context.Find<Person>(id) != null)
             {
-                // returns 204 No Content
-                // (may also return 200 OK)
                 _context.Update<Person>(person);
                 await _context.SaveChangesAsync();
                 return NoContent();
             }
             else
             {
-                // returns 201 Created
                 _context.Add<Person>(person);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction(nameof(GetPerson), new { person.Id }, person);
             }
         }
 
-        // DELETE api/person/5
+        /// <summary>
+        /// DELETE api/person/5
+        /// Example API method that allows deleting a Person entity based on its ID.
+        /// </summary>
+        /// <param name="id">ID of the Person to delete.</param>
+        /// <returns>
+        /// 200 OK, or 404 Not Found if ID doesn't exist in the database.
+        /// </returns>
+        /// <remarks>
+        /// In other systems, may return 202 Accepted or 204 No Content.
+        /// </remarks>
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePerson(int id)
         {
-            // returns 404 Not Found if ID invalid
-            // returns 200 OK
-            // (may also return 202 Accepted or 204 No Content)
             Person person = await _context.Persons.FindAsync(id);
             if (person == null)
             {
@@ -149,9 +189,11 @@
             return Ok();
         }
 
+        /// <summary>
+        /// Seeds the database with Person entities at various stages of data integrity
+        /// </summary>
         private void SeedDatabase()
         {
-            // seed database with Person entities at various stages of completion and data correctness
             if (_context.Persons.Count() == 0)
             {
                 _context.Add(new Person()
@@ -175,7 +217,7 @@
                 {
                     FirstName = "Guðni",
                     LastName = "Jóhannesson",
-                    Age = 34,
+                    Age = 51,
                     Country = new Country()
                     {
                         Name = "Iceland",

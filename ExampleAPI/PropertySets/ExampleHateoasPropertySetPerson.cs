@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 namespace ExampleAPI.PropertySets
 {
+    /// <summary>
+    /// An example PropertySet that can be attached to an API method to indicate it
+    /// should add links to any objects in the root of the returned object hierarchy,
+    /// using the ExampleRulesetFullLinksPerson ruleset.
+    /// </summary>
     public class ExampleHateoasPropertySetPerson : IHateoasPropertySet
     {
         public Type Ruleset { get; set; } = typeof(ExampleRulesetFullLinksPerson);
