@@ -2,20 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <PackageId>RD-HATEOAS</PackageId>
-    <Version>0.9.3</Version>
+    <PackageId>R-HATEOAS</PackageId>
+    <Version>0.9.4</Version>
     <Authors>M. Coutuer</Authors>
     <Company />
-    <Product>RD-HATEOAS</Product>
+    <Product>R-HATEOAS</Product>
     <Copyright>Copyright © M. Coutuer 2019</Copyright>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/MaximilianCoutuer/RD-HATEOAS</RepositoryUrl>
+    <RepositoryUrl>https://github.com/MaximilianCoutuer/R-HATEOAS</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <PackageReleaseNotes>Breaking change: Change namespace casing</PackageReleaseNotes>
+    <PackageReleaseNotes>Breaking change: Rename to R-HATEOAS by client demand</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>An easy to use but powerful and flexible way to add HATEOAS support to an arbitrary API.</Description>
     <PackageTags>hateoas</PackageTags>
+    <AssemblyVersion>0.9.4.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
