@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Rdhateoas.LinkAdders;
-using Rdhateoas.PropertySets;
-using Rdhateoas.Rulesets;
+using Rhateoas.LinkAdders;
+using Rhateoas.PropertySets;
+using Rhateoas.Rulesets;
 
-namespace Rdhateoas.Filters
+namespace Rhateoas.Filters
 {
     /// <summary>
     /// This filter is applied to a controller method via an attribute.

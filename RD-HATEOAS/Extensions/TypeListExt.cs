@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Rdhateoas.Extensions
+namespace Rhateoas.Extensions
 {
     public static class TypeListExt
     {

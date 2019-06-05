@@ -1,7 +1,7 @@
-﻿using Rdhateoas.Models;
+﻿using Rhateoas.Models;
 using Xunit;
 
-namespace Rdhateoas.Tests.UnitTests.Entities
+namespace Rhateoas.Tests.UnitTests.Entities
 {
     public class HateoasLinkBuilderEntityTests
     {

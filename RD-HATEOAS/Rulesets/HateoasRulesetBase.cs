@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json.Linq;
-using Rdhateoas.Builders;
-using Rdhateoas.Models;
+using Rhateoas.Builders;
+using Rhateoas.Models;
 
-namespace Rdhateoas.Rulesets
+namespace Rhateoas.Rulesets
 {
     /// <summary>
     /// The base class for a HATEOAS ruleset.

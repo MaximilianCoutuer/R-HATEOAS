@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json.Linq;
-using Rdhateoas.Models;
+using Rhateoas.Models;
 
-namespace Rdhateoas.Rulesets
+namespace Rhateoas.Rulesets
 {
     /// <summary>
     /// The interface that defines a ruleset.

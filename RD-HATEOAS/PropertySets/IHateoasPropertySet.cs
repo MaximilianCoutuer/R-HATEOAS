@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Rdhateoas.PropertySets
+namespace Rhateoas.PropertySets
 {
     public interface IHateoasPropertySet
     {

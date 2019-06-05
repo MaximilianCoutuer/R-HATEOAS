@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
-using Rdhateoas.Models;
+using Rhateoas.Models;
 
-namespace Rdhateoas.Rulesets
+namespace Rhateoas.Rulesets
 {
     /// <summary>
     /// An example Ruleset that adds a number of relevant links to a City entity.

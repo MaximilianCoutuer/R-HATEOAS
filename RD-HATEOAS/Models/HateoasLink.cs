@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Text;
 
-namespace Rdhateoas.Models
+namespace Rhateoas.Models
 {
     /// <summary>
     /// A HATEOAS link.

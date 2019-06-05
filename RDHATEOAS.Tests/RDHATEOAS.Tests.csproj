@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ExampleAPI\ExampleAPI.csproj" />
-    <ProjectReference Include="..\RD-HATEOAS\RDHATEOAS.csproj" />
+    <ProjectReference Include="..\RD-HATEOAS\RHATEOAS.csproj" />
   </ItemGroup>
 
   <ItemGroup>
