@@ -33,15 +33,16 @@ namespace Rhateoas.Builders
         /// <param name="linkRel">The link rel property.</param>
         /// <param name="linkMethod">The link HTTP method.</param>
         /// <param name="linkId">If the link has an ID number, use this.</param>
+        /// <param name="hostName">Overrides hostname of server with custom hostname.</param>
         /// <returns>A HATEOAS link object.</returns>
-        public HateoasLink Build(ActionContext response, string routeUrl, string routeUrlController, string routeUrlAction, string linkRel, HttpMethod linkMethod, object linkId = null)
+        public HateoasLink Build(ActionContext response, string routeUrl, string routeUrlController, string routeUrlAction, string linkRel, HttpMethod linkMethod, object linkId = null, string hostName = null)
         {
             if (routeUrl == null || routeUrlController == null || routeUrlAction == null || linkRel == null || linkMethod == null)
             {
                 throw new ArgumentNullException();
             }
 
-            var uri = (response.HttpContext.Request.Host.Value == null ? "Localhost" : response.HttpContext.Request.Host.ToUriComponent())
+            var uri = (hostName != null ? hostName : (response.HttpContext.Request.Host.Value == null ? "Localhost" : response.HttpContext.Request.Host.ToUriComponent()))
                 + _urlHelper.RouteUrl(routeUrl, new
                 {
                     controller = routeUrlController,
