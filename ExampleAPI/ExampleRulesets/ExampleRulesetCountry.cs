@@ -32,16 +32,16 @@ namespace Rhateoas.Rulesets
             return new List<HateoasLink>
             {
                 HateoasLinkBuilder.Build(Context, "default", "Country", string.Empty, "list", HttpMethod.Get, null, "www.microsoft.com")
-                    .AddHreflang("be-nl")
+                    .AddHreflang("nl-be")
                     .AddTitle("List of countries")
                     .AddType("json"),
                 HateoasLinkBuilder.Build(Context, "default", "Country", "Edit", "edit", HttpMethod.Post)
-                    .AddHreflang("be-nl")
+                    .AddHreflang("nl-be")
                     .AddTitle("Edit this country")
                     .AddType("json")
                     .ExtendQueryString("id", item["Id"].ToString()),
                 HateoasLinkBuilder.Build(Context, "default", "Country", "Delete", "delete", HttpMethod.Delete)
-                    .AddHreflang("be-nl")
+                    .AddHreflang("nl-be")
                     .AddTitle("Delete this country")
                     .AddType("json")
                     .ExtendQueryString("id", item["Id"].ToString()),

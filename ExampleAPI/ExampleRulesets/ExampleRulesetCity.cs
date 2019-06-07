@@ -28,11 +28,11 @@ namespace Rhateoas.Rulesets
             return new List<HateoasLink>
             {
                 HateoasLinkBuilder.Build(Context, "default", "City", "List", "list", HttpMethod.Get)
-                    .AddHreflang("be-nl")
+                    .AddHreflang("nl-be")
                     .AddTitle("List of cities")
                     .AddType("json"),
                 HateoasLinkBuilder.Build(Context, "default", "City", "Details", "details", HttpMethod.Get)
-                    .AddHreflang("be-nl")
+                    .AddHreflang("nl-be")
                     .AddTitle("Details of this city")
                     .AddType("json")
                     .ExtendQueryString("name", item["Name"].ToString()),

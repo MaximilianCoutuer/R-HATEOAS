@@ -22,7 +22,7 @@ namespace Rhateoas.Rulesets
             return new List<HateoasLink>
             {
                 HateoasLinkBuilder.BuildSelfLink(Context)
-                    .AddHreflang("be-nl")
+                    .AddHreflang("nl-be")
                     .AddTitle("Link to self")
                     .AddType("json"),
             };

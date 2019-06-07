@@ -31,15 +31,15 @@ namespace Rhateoas.Rulesets
             return new List<HateoasLink>
             {
                 HateoasLinkBuilder.Build(Context, "default", "Person", string.Empty, "list", HttpMethod.Get)
-                    .AddHreflang("be-nl")
+                    .AddHreflang("nl-be")
                     .AddTitle("List of persons")
                     .AddType("json"),
                 HateoasLinkBuilder.Build(Context, "default", "Person", "Edit", "edit", HttpMethod.Post, item["Id"])
-                    .AddHreflang("be-nl")
+                    .AddHreflang("nl-be")
                     .AddTitle("Edit this person")
                     .AddType("json"),
                 HateoasLinkBuilder.Build(Context, "default", "Person", "Delete", "delete", HttpMethod.Delete, item["Id"])
-                    .AddHreflang("be-nl")
+                    .AddHreflang("nl-be")
                     .AddTitle("Delete this person")
                     .AddType("json"),
             };
