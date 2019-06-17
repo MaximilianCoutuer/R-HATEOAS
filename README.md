@@ -96,8 +96,6 @@ This project is licensed under the MIT License. Feel free to fork and improve on
 
 * **Maximilian Coutuer** - [Github](https://github.com/MaximilianCoutuer) | [LinkedIn](https://be.linkedin.com/in/maximilian-coutuer-0ba4a517) | [Patreon](https://patreon.com/enaisiaion)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
 ## Acknowledgments
 
 * N.Zawada and K.Dockx, for technical and moral support
