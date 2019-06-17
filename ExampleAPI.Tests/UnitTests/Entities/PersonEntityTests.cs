@@ -81,11 +81,11 @@ namespace ExampleAPI.Tests.UnitTests.Entities
         }
 
         [Theory, MemberData(nameof(CountryData))]
-        public void SetPersonCountry_ShouldSet(string name, string capital, int? population)
+        public void SetPersonCountry_ShouldSet(string name, City capital, int? population)
         {
             // arrange
             var person = new Person();
-            var country = new Country(name, capital, population);
+            var country = new Country(name, new City(), population);
 
             // act
             person.Country = country;
@@ -100,9 +100,9 @@ namespace ExampleAPI.Tests.UnitTests.Entities
             {
                 return new[]
                 {
-                    new Object[] { "Test", "Test", 500000 },
+                    new Object[] { "Test", new City(), 500000 },
                     new Object[] { "Test", null, 500000 },
-                    new Object[] { "Test", "Test", null},
+                    new Object[] { "Test", new City(), null},
                     new Object[] { null, null, null },
             }   ;
             }
