@@ -52,7 +52,11 @@ namespace ExampleAPI.Tests.UnitTests.Controllers
                 Country = new Country()
                 {
                     Name = GetRandomString(16),
-                    Capital = GetRandomString(16),
+                    Capital = new City()
+                    {
+                        Name = GetRandomString(16),
+                        HistoricName = GetRandomString(16),
+                    },
                     Population = new Random().Next(0, 5000000),
                 },
             };

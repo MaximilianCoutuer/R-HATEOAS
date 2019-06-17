@@ -33,15 +33,15 @@ namespace Rhateoas.Rulesets
                 HateoasLinkBuilder.Build(Context, "default", "Person", string.Empty, "list", HttpMethod.Get)
                     .AddHreflang("nl-be")
                     .AddTitle("List of persons")
-                    .AddType("json"),
+                    .AddType("application/json+hal"),
                 HateoasLinkBuilder.Build(Context, "default", "Person", "Edit", "edit", HttpMethod.Post, item["Id"])
                     .AddHreflang("nl-be")
                     .AddTitle("Edit this person")
-                    .AddType("json"),
+                    .AddType("application/json+hal"),
                 HateoasLinkBuilder.Build(Context, "default", "Person", "Delete", "delete", HttpMethod.Delete, item["Id"])
                     .AddHreflang("nl-be")
                     .AddTitle("Delete this person")
-                    .AddType("json"),
+                    .AddType("application/json+hal"),
             };
             // Tip: if the API method returns a List<Person>, one could access the ID of the Person in said list via:
             // Parameters.GetValueOrDefault("RD-ListId");

@@ -30,11 +30,11 @@ namespace Rhateoas.Rulesets
                 HateoasLinkBuilder.Build(Context, "default", "City", "List", "list", HttpMethod.Get)
                     .AddHreflang("nl-be")
                     .AddTitle("List of cities")
-                    .AddType("json"),
+                    .AddType("application/json+hal"),
                 HateoasLinkBuilder.Build(Context, "default", "City", "Details", "details", HttpMethod.Get)
                     .AddHreflang("nl-be")
                     .AddTitle("Details of this city")
-                    .AddType("json")
+                    .AddType("application/json+hal")
                     .ExtendQueryString("name", item["Name"].ToString()),
             };
         }
