@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Rhateoas.LinkAdders;
@@ -59,6 +60,9 @@ namespace Rhateoas.Filters
 
         public override void OnResultExecuting(ResultExecutingContext context)
         {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+
             if (context.Result is OkObjectResult okObjectResult && okObjectResult.StatusCode == 200)
             {
                 foreach (IHateoasPropertySet propertySet in _propertySets)
@@ -70,6 +74,14 @@ namespace Rhateoas.Filters
                     linkAdder.AddLinks(context);
                 }
             }
+            
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            Console.WriteLine("R-HATEOAS run time: " + elapsedTime);
 
             base.OnResultExecuting(context);
         }
