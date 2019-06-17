@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <PackageId>R-HATEOAS</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>M. Coutuer</Authors>
     <Company />
     <Product>R-HATEOAS</Product>
@@ -12,11 +12,11 @@
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/MaximilianCoutuer/R-HATEOAS</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <PackageReleaseNotes>Add support for custom hostnames</PackageReleaseNotes>
+    <PackageReleaseNotes>Clean up some class interactions</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>An easy to use but powerful and flexible way to add HATEOAS support to an arbitrary API.</Description>
     <PackageTags>hateoas</PackageTags>
-    <AssemblyVersion>0.9.4.0</AssemblyVersion>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
