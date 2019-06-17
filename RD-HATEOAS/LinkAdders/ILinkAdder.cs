@@ -4,6 +4,6 @@ namespace Rhateoas.LinkAdders
 {
     public interface ILinkAdder
     {
-        void AddLinks(object currentObjectValue, ResultExecutingContext context);
+        void AddLinks(ResultExecutingContext context);
     }
 }
