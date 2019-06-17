@@ -1,4 +1,4 @@
-# RD-HATEOAS
+# R-HATEOAS
 
 ## About the project
 
