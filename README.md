@@ -1,4 +1,4 @@
-# RD-HATEOAS
+# R-HATEOAS
 
 ## About the project
 
@@ -24,9 +24,9 @@ This repository also contains an `ExampleAPI` project featuring a basic API with
 
 Fork the project via:
 
-`git clone https:://github.com/MaximilianCoutuer/Realdolmen-HATEOAS.git`
+`git clone https:://github.com/MaximilianCoutuer/R-HATEOAS.git`
 
-The project is available on NuGet as `RD-HATEOAS`. Note that it is a work in progress until 1.0.0.
+The project is available on NuGet as `R-HATEOAS`.
 
 ## Usage
 
