@@ -84,8 +84,8 @@ Because the package needs to add properties to the object hierarchy and C# is st
 The following features are planned in future releases:
 
 * Full test coverage. The test projects are currently incomplete as a result of rapid iteration on the main package.
+* Simplify by eliminating the property set concept.
 * Verify correct functionality with XML output or other output formats.
-* Clarify or replace the property set system.
 * Add more example rulesets.
 
 ## License
