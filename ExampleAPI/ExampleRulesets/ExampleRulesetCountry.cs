@@ -31,7 +31,7 @@ namespace Rhateoas.Rulesets
         {
             return new List<HateoasLink>
             {
-                HateoasLinkBuilder.Build(Context, "default", "Country", string.Empty, "list", HttpMethod.Get, null, "www.microsoft.com")
+                HateoasLinkBuilder.Build(Context, "default", "Country", string.Empty, "list", HttpMethod.Get, null, "www.exampledomainname.com")
                     .AddHreflang("nl-be")
                     .AddTitle("List of countries")
                     .AddType("application/json+hal"),

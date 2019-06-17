@@ -20,7 +20,7 @@ namespace Rhateoas.Tests.UnitTests.Entities
         }
 
         [Theory]
-        [InlineData("http://www.realdolmen.com")]
+        [InlineData("http://www.awesome.com")]
         [InlineData("")]
         public void SetLinkHref_ShouldSet(string data)
         {
