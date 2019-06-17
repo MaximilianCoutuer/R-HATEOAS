@@ -67,7 +67,7 @@ namespace Rhateoas.Filters
                     var ruleset = (IHateoasRuleset)Activator.CreateInstance(propertySet.Ruleset);
                     var path = propertySet.Path;
                     var linkAdder = new DefaultLinkAdder(parameterNames, path, ruleset, _parameters);
-                    linkAdder.AddLinks(okObjectResult.Value, context);
+                    linkAdder.AddLinks(context);
                 }
             }
 

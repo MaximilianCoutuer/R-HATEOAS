@@ -13,6 +13,9 @@ using Rhateoas.Rulesets;
 
 namespace Rhateoas.LinkAdders
 {
+    /// <summary>
+    /// This class adds HATEOAS links to a context that is passed in.
+    /// </summary>
     public class DefaultLinkAdder : ILinkAdder
     {
         private readonly List<string> _parameterNames;
@@ -31,8 +34,9 @@ namespace Rhateoas.LinkAdders
             _parameters = parameters;
        }
 
-        public void AddLinks(object currentObjectValue, ResultExecutingContext context)
+        public void AddLinks(ResultExecutingContext context)
         {
+            var currentObjectValue = (context.Result as OkObjectResult).Value;
             _urlHelper = new UrlHelper(context);
             _hateoasLinkBuilder = new HateoasLinkBuilder(_urlHelper);
 
