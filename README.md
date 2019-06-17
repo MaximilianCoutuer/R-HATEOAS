@@ -63,9 +63,9 @@ or
 [AddHateoasLinks(new[] { typeof(YourPropertySet), typeof(AnotherPropertySet, ... } )
 ```
 
-You will need a *property set*. A property set is an options object that defines *which* ruleset should be applied to *which* object(s) in the object hierarchy of your API output.
+You will need a *property set*. A property set is an options object that defines *which* ruleset should be applied to *which* object(s) in the object hierarchy of your API output. Its purpose is to prevent the number of parameters in your controller from snowballing out of control.
 
-For instance, say your API returns a list of `Person` objects, each with a `Capital` key that is a `Country` object. You created a ruleset that defines a number of country related links and now wish to apply it to the countries in your output. The property set tells the package where the countries in your output are and to apply the correct ruleset to them.
+For instance, say your API returns a list of `Person` objects, each with a `Country` object. You created a ruleset that defines a number of country related links and now wish to apply it to the countries in your output. The property set tells the package where the countries in your output are and to apply the correct ruleset to them.
 
 A property set implements `IHateoasPropertySet` and includes three properties:
 
@@ -81,10 +81,11 @@ Because the package needs to add properties to the object hierarchy and C# is st
 
 ## To do
 
-This is a prerelease version. The following features are planned:
+The following features are planned in future releases:
 
 * Full test coverage. The test projects are currently incomplete as a result of rapid iteration on the main package.
 * Verify correct functionality with XML output or other output formats.
+* Clarify or replace the property set system.
 * Add more example rulesets.
 
 ## License
